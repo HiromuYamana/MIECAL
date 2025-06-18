@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'MIECAL',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
@@ -68,3 +68,4 @@ class _MyHomePageState extends State<MyHomePage> {
 
 //適当にコメントアウトしてみた
 //見えてたら下に追記よろしく
+//見ました
