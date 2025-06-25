@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'dart:html' as html;
 
 void main() {
   runApp(const MyApp());
@@ -12,16 +14,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MIECAL',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'MIECAL'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
 
   @override
@@ -35,6 +36,16 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
+  }
+
+  void _showQrCodePage() {
+    final currentUrl = html.window.location.href;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QrPage(data: currentUrl),
+      ),
+    );
   }
 
   @override
@@ -53,6 +64,11 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: _showQrCodePage,
+              child: const Text('QRコード作成 Making QR'),
+            ),
           ],
         ),
       ),
@@ -65,7 +81,34 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class QrPage extends StatelessWidget {
+  final String data;
 
-//適当にコメントアウトしてみた
-//見えてたら下に追記よろしく
-//見ました
+  const QrPage({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('QRコード表示 Showing QR')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child:Center(
+                child: QrImageView(
+                data: data,
+                version: QrVersions.auto,
+                size: 200.0,
+                ),   
+              ),
+            ),
+            Expanded(
+                child: Text('ご記入ありがとうございました。',style: TextStyle(fontSize: 30))
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
