@@ -28,3 +28,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/onset_date.png
+    - assets/QR.png

@@ -110,7 +110,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         "${selectedDay.year}/${selectedDay.month}/${selectedDay.day}";
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('$formattedDate が選択されました。'),
+                        content: Text('$formattedDate '),
                         duration: const Duration(seconds: 2),
                         action: SnackBarAction(label: '閉じる', onPressed: () {}),
                       ),

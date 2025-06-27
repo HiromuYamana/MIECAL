@@ -121,6 +121,7 @@ class DatePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //発症日カレンダー
     return Table_Calendar();
   }
 }
