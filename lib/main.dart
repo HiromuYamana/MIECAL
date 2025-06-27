@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miecal/table_calendar.dart';
 import 'package:miecal/other_page.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:html' as html;
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const MyHomePage(),
-        '/PersonalInformationPage':(context) => const PersonalInformationPage(),
+        '/PersonalInformationPage':
+            (context) => const PersonalInformationPage(),
         '/LoginPage': (context) => const LoginPage(),
         '/SymptomPage': (context) => const SymptomPage(),
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key,});
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -87,25 +89,25 @@ class LoginPage extends StatelessWidget {
         title: const Text('ログイン・新規登録'),
         actions: [
           PopupMenuButton<String>(
-            icon: Icon(Icons.menu), 
+            icon: Icon(Icons.menu),
             onSelected: (value) {
               if (value == 'home') {
                 Navigator.pushNamed(context, '/');
-              }
-              else if (value == 'profile') {
-                Navigator.pushNamed(context,'/PersonalInformationPage');
+              } else if (value == 'profile') {
+                Navigator.pushNamed(context, '/PersonalInformationPage');
               }
             },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'home',
-                child: Text('ホーム'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'profile',
-                child: Text('プロフィール変更'),
-              ),
-            ],
+            itemBuilder:
+                (BuildContext context) => <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: 'home',
+                    child: Text('ホーム'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'profile',
+                    child: Text('プロフィール変更'),
+                  ),
+                ],
           ),
         ],
       ),
@@ -126,8 +128,8 @@ class SymptomPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('症状入力')),
-        body: Center(
-        child:ElevatedButton(
+      body: Center(
+        child: ElevatedButton(
           onPressed: () => Navigator.pushNamed(context, '/AffectedAreaPage'),
           child: const Text('Next'),
         ),
@@ -144,7 +146,7 @@ class AffectedAreaPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('患部')),
       body: Center(
-        child:ElevatedButton(
+        child: ElevatedButton(
           onPressed: () => Navigator.pushNamed(context, '/DatePage'),
           child: const Text('Next'),
         ),
@@ -158,15 +160,8 @@ class DatePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('日付')),
-      body: Center(
-        child:ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/SufferLevelPage'),
-          child: const Text('Next'),
-        ),
-      ),
-    );
+    //発症日カレンダー
+    return Table_Calendar();
   }
 }
 
@@ -178,7 +173,7 @@ class SufferLevelPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('程度選択')),
       body: Center(
-        child:ElevatedButton(
+        child: ElevatedButton(
           onPressed: () => Navigator.pushNamed(context, '/CousePage'),
           child: const Text('Next'),
         ),
@@ -195,8 +190,9 @@ class CousePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('原因')),
       body: Center(
-        child:ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/OtherInformationPage'),
+        child: ElevatedButton(
+          onPressed:
+              () => Navigator.pushNamed(context, '/OtherInformationPage'),
           child: const Text('Next'),
         ),
       ),
@@ -335,7 +331,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('その他情報入力')),
       body: Center(
-        child:ElevatedButton(
+        child: ElevatedButton(
           onPressed: () => Navigator.pushNamed(context, '/QuestionnairePage'),
           child: const Text('Next'),
         ),
@@ -351,9 +347,7 @@ class QuestionnairePage extends StatelessWidget {
     final currentUrl = html.window.location.href;
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => QrPage(data: currentUrl),
-      ),
+      MaterialPageRoute(builder: (context) => QrPage(data: currentUrl)),
     );
   }
 
@@ -362,7 +356,7 @@ class QuestionnairePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('問診表')),
       body: Center(
-        child:ElevatedButton(
+        child: ElevatedButton(
           onPressed: () => _showQrCodePage(context),
           child: const Text('QRコード作成 Create QRcode'),
         ),
@@ -384,16 +378,16 @@ class QrPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              child:Center(
+              child: Center(
                 child: QrImageView(
-                data: data,
-                version: QrVersions.auto,
-                size: 200.0,
+                  data: data,
+                  version: QrVersions.auto,
+                  size: 200.0,
                 ),
-              )
+              ),
             ),
             Expanded(
-                child: Text('ご記入ありがとうございました。',style: TextStyle(fontSize: 30))
+              child: Text('ご記入ありがとうございました。', style: TextStyle(fontSize: 30)),
             ),
           ],
         ),
