@@ -32,7 +32,6 @@ flutter:
     - assets/sample_image4.png
     - assets/sample_image5.png
     - assets/sample_image6.png
-  uses-material-design: true
-  assets:
     - assets/onset_date.png
     - assets/QR.png
+  uses-material-design: true
