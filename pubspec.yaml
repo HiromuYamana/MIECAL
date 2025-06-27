@@ -25,6 +25,13 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
+  assets:
+    - assets/sample_image1.png
+    - assets/sample_image2.png
+    - assets/sample_image3.png
+    - assets/sample_image4.png
+    - assets/sample_image5.png
+    - assets/sample_image6.png
   uses-material-design: true
   assets:
     - assets/onset_date.png
