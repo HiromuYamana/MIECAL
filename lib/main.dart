@@ -16,15 +16,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const MyHomePage(title: 'MIECAL'),
-        '/PersonalInfomationPage':(context) => const PersonalInfomationPage(),
+        '/': (context) => const MyHomePage(),
+        '/PersonalInformationPage':(context) => const PersonalInformationPage(),
         '/LoginPage': (context) => const LoginPage(),
         '/SymptomPage': (context) => const SymptomPage(),
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),
         '/DatePage': (context) => const DatePage(),
         '/SufferLevelPage': (context) => const SufferLevelPage(),
         '/CousePage': (context) => const CousePage(),
-        '/OtherInfomationPage': (context) => const OtherInfomationPage(),
+        '/OtherInformationPage': (context) => const OtherInformationPage(),
         '/QuestionnairePage': (context) => const QuestionnairePage(),
       },
     );
@@ -32,8 +32,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({super.key,});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -65,13 +64,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class PersonalInfomationPage extends StatelessWidget {
-  const PersonalInfomationPage({super.key});
+class PersonalInformationPage extends StatelessWidget {
+  const PersonalInformationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('個人情報入力')),
+      appBar: AppBar(title: const Text('プロフィール')),
       body: Center(),
     );
   }
@@ -93,7 +92,7 @@ class LoginPage extends StatelessWidget {
                 Navigator.pushNamed(context, '/');
               }
               else if (value == 'profile') {
-                Navigator.pushNamed(context,'/PersonalInfomationPage');
+                Navigator.pushNamed(context,'/PersonalInformationPage');
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -196,7 +195,7 @@ class CousePage extends StatelessWidget {
       appBar: AppBar(title: const Text('原因')),
       body: Center(
         child:ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/OtherInfomationPage'),
+          onPressed: () => Navigator.pushNamed(context, '/OtherInformationPage'),
           child: const Text('Next'),
         ),
       ),
@@ -204,8 +203,8 @@ class CousePage extends StatelessWidget {
   }
 }
 
-class OtherInfomationPage extends StatelessWidget {
-  const OtherInfomationPage({super.key});
+class OtherInformationPage extends StatelessWidget {
+  const OtherInformationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
