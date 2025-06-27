@@ -14,9 +14,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MIECAL',
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const MyHomePage(title: 'MIECAL'),
+        '/': (context) => const MyHomePage(),
+        '/PersonalInformationPage':(context) => const PersonalInformationPage(),
         '/LoginPage': (context) => const LoginPage(),
         '/SymptomPage': (context) => const SymptomPage(),
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),
@@ -25,47 +27,55 @@ class MyApp extends StatelessWidget {
         '/CousePage': (context) => const CousePage(),
         '/OtherInformationPage': (context) => const OtherInformationPage(),
         '/QuestionnairePage': (context) => const QuestionnairePage(),
-        
       },
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
-      ),
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({super.key,});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  void _goToLoginPage() {
+    Navigator.pushNamed(context, '/LoginPage');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/LoginPage'),
-              child: const Text('Next'),
+      body: GestureDetector(
+        onTap: _goToLoginPage,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.transparent,
+          child: const Center(
+            child: Text(
+              'Please Tap the Screen',
+              style: TextStyle(fontSize: 20),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
+class PersonalInformationPage extends StatelessWidget {
+  const PersonalInformationPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('プロフィール')),
+      body: Center(),
+    );
+  }
+}
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -73,9 +83,34 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ログイン・新規登録')),
+      appBar: AppBar(
+        title: const Text('ログイン・新規登録'),
+        actions: [
+          PopupMenuButton<String>(
+            icon: Icon(Icons.menu), 
+            onSelected: (value) {
+              if (value == 'home') {
+                Navigator.pushNamed(context, '/');
+              }
+              else if (value == 'profile') {
+                Navigator.pushNamed(context,'/PersonalInformationPage');
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'home',
+                child: Text('ホーム'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'profile',
+                child: Text('プロフィール変更'),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: Center(
-        child:ElevatedButton(
+        child: ElevatedButton(
           onPressed: () => Navigator.pushNamed(context, '/SymptomPage'),
           child: const Text('Next'),
         ),
@@ -335,8 +370,6 @@ class QuestionnairePage extends StatelessWidget {
     );
   }
 }
-
-
 
 class QrPage extends StatelessWidget {
   final String data;
