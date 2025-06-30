@@ -2,23 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:miecal/main.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Table_Calendar extends StatelessWidget {
-  const Table_Calendar({super.key});
+class DatePage extends StatefulWidget {
+  const DatePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const CalendarPage();
-  }
+  _DatePageState createState() => _DatePageState();
 }
 
-class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
-
-  @override
-  _CalendarPageState createState() => _CalendarPageState();
-}
-
-class _CalendarPageState extends State<CalendarPage> {
+class _DatePageState extends State<DatePage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
