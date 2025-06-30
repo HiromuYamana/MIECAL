@@ -3,6 +3,7 @@ import 'package:miecal/table_calendar.dart';
 import 'package:miecal/other_information.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:html' as html;
+import 'package:miecal/vertical_slide_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,7 +44,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   void _goToLoginPage() {
-    Navigator.pushNamed(context, '/LoginPage');
+    Navigator.push(context, VerticalSlideRoute(page: const LoginPage()));
   }
 
   @override
@@ -94,7 +95,10 @@ class LoginPage extends StatelessWidget {
               if (value == 'home') {
                 Navigator.pushNamed(context, '/');
               } else if (value == 'profile') {
-                Navigator.pushNamed(context, '/PersonalInformationPage');
+                Navigator.push(
+                  context,
+                  VerticalSlideRoute(page: const PersonalInformationPage()),
+                );
               }
             },
             itemBuilder:
@@ -113,7 +117,11 @@ class LoginPage extends StatelessWidget {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/SymptomPage'),
+          onPressed:
+              () => Navigator.push(
+                context,
+                VerticalSlideRoute(page: const SymptomPage()),
+              ),
           child: const Text('Next'),
         ),
       ),
@@ -130,7 +138,11 @@ class SymptomPage extends StatelessWidget {
       appBar: AppBar(title: const Text('症状入力')),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/AffectedAreaPage'),
+          onPressed:
+              () => Navigator.push(
+                context,
+                VerticalSlideRoute(page: const AffectedAreaPage()),
+              ),
           child: const Text('Next'),
         ),
       ),
@@ -147,7 +159,11 @@ class AffectedAreaPage extends StatelessWidget {
       appBar: AppBar(title: const Text('患部')),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/DatePage'),
+          onPressed:
+              () => Navigator.push(
+                context,
+                VerticalSlideRoute(page: const DatePage()),
+              ),
           child: const Text('Next'),
         ),
       ),
@@ -164,7 +180,11 @@ class SufferLevelPage extends StatelessWidget {
       appBar: AppBar(title: const Text('程度選択')),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/CousePage'),
+          onPressed:
+              () => Navigator.push(
+                context,
+                VerticalSlideRoute(page: const CousePage()),
+              ),
           child: const Text('Next'),
         ),
       ),
@@ -182,7 +202,10 @@ class CousePage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed:
-              () => Navigator.pushNamed(context, '/OtherInformationPage'),
+              () => Navigator.push(
+                context,
+                VerticalSlideRoute(page: const OtherInformationPage()),
+              ),
           child: const Text('Next'),
         ),
       ),
@@ -195,10 +218,7 @@ class QuestionnairePage extends StatelessWidget {
 
   void _showQrCodePage(BuildContext context) {
     final currentUrl = html.window.location.href;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => QrPage(data: currentUrl)),
-    );
+    Navigator.push(context, VerticalSlideRoute(page: QrPage(data: currentUrl)));
   }
 
   @override

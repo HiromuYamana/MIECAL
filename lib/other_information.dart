@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:miecal/main.dart';
+import 'package:miecal/vertical_slide_page.dart';
 
 class OtherInformationPage extends StatefulWidget {
   const OtherInformationPage({super.key});
@@ -9,7 +11,7 @@ class OtherInformationPage extends StatefulWidget {
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
   List<int?> selectedInRow = [null, null, null];
-  
+
   final List<String> imagePaths = [
     'assets/sample_image1.png',
     'assets/sample_image2.png',
@@ -49,22 +51,31 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                                 color: Colors.black12,
                                 blurRadius: 4,
                                 offset: Offset(2, 2),
-                              )
+                              ),
                             ],
                           ),
                           child: Row(
                             children: List.generate(2, (colIndex) {
                               int index = rowIndex * 2 + colIndex;
-                              bool isSelected = selectedInRow[rowIndex] == colIndex;
+                              bool isSelected =
+                                  selectedInRow[rowIndex] == colIndex;
 
                               return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     fixedSize: const Size(100, 100),
-                                    backgroundColor: isSelected
-                                        ? const Color.fromARGB(255, 225, 171, 85)
-                                        : Colors.grey[300],
+                                    backgroundColor:
+                                        isSelected
+                                            ? const Color.fromARGB(
+                                              255,
+                                              225,
+                                              171,
+                                              85,
+                                            )
+                                            : Colors.grey[300],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
@@ -72,7 +83,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                                   onPressed: () {
                                     setState(() {
                                       selectedInRow[rowIndex] =
-                                        isSelected ? null : colIndex;
+                                          isSelected ? null : colIndex;
                                     });
                                   },
                                   child: Column(
@@ -109,11 +120,17 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
             padding: const EdgeInsets.only(bottom: 32.0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 16,
+                ),
                 textStyle: const TextStyle(fontSize: 18),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/QuestionnairePage');
+                Navigator.push(
+                  context,
+                  VerticalSlideRoute(page: const QuestionnairePage()),
+                );
               },
               child: const Text('Next'),
             ),

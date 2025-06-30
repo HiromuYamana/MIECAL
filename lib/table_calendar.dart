@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:miecal/main.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:miecal/vertical_slide_page.dart';
 
 class DatePage extends StatefulWidget {
   const DatePage({super.key});
@@ -165,7 +167,21 @@ class _DatePageState extends State<DatePage> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/SufferLevelPage');
+                    if (_selectedDay != null) {
+                      final String message =
+                          "選択された日付: ${_selectedDay!.year}年${_selectedDay!.month}月${_selectedDay!.day}日";
+                      Navigator.push(
+                        context,
+                        VerticalSlideRoute(page: const SufferLevelPage()),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('日付を選択してください．'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
