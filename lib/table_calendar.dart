@@ -7,11 +7,12 @@ class DatePage extends StatefulWidget {
   const DatePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _DatePageState createState() => _DatePageState();
 }
 
 class _DatePageState extends State<DatePage> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
@@ -33,7 +34,6 @@ class _DatePageState extends State<DatePage> {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       body: Column(
         children: [
@@ -90,7 +90,7 @@ class _DatePageState extends State<DatePage> {
                   );
                   return dateToCheck.isBefore(
                     today.add(const Duration(days: 1)),
-                  ); // const を追加
+                  );
                 },
                 onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDay, selectedDay)) {
@@ -163,7 +163,7 @@ class _DatePageState extends State<DatePage> {
                 child: IconButton(
                   icon: const Icon(
                     Icons.arrow_downward,
-                    size: 70,
+                    size: 50,
                     color: Colors.white,
                   ),
                   onPressed: () {
