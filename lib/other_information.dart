@@ -4,6 +4,7 @@ class OtherInformationPage extends StatefulWidget {
   const OtherInformationPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _OtherInformationPageState createState() => _OtherInformationPageState();
 }
 

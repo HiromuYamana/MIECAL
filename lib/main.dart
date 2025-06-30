@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'affected_area.dart';
 import 'package:miecal/table_calendar.dart';
 import 'package:miecal/other_information.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'dart:html' as html;
+import 'package:miecal/qr.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const MyHomePage(),
+        '/': (context) => const TopPage(),
         '/PersonalInformationPage':
             (context) => const PersonalInformationPage(),
         '/LoginPage': (context) => const LoginPage(),
@@ -34,14 +34,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class TopPage extends StatefulWidget {
+  const TopPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<TopPage> createState() => _TopPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _TopPageState extends State<TopPage> {
   void _goToLoginPage() {
     Navigator.pushNamed(context, '/LoginPage');
   }
@@ -138,22 +138,7 @@ class SymptomPage extends StatelessWidget {
   }
 }
 
-class AffectedAreaPage extends StatelessWidget {
-  const AffectedAreaPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('患部')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/DatePage'),
-          child: const Text('Next'),
-        ),
-      ),
-    );
-  }
-}
 
 class SufferLevelPage extends StatelessWidget {
   const SufferLevelPage({super.key});
@@ -190,58 +175,3 @@ class CousePage extends StatelessWidget {
   }
 }
 
-class QuestionnairePage extends StatelessWidget {
-  const QuestionnairePage({super.key});
-
-  void _showQrCodePage(BuildContext context) {
-    final currentUrl = html.window.location.href;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => QrPage(data: currentUrl)),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('問診表')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => _showQrCodePage(context),
-          child: const Text('QRコード作成 Create QRcode'),
-        ),
-      ),
-    );
-  }
-}
-
-class QrPage extends StatelessWidget {
-  final String data;
-  const QrPage({super.key, required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('QRコード表示 Showing QR')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: QrImageView(
-                  data: data,
-                  version: QrVersions.auto,
-                  size: 200.0,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Text('ご記入ありがとうございました。', style: TextStyle(fontSize: 30)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
