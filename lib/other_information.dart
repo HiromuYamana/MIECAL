@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:miecal/main.dart';
+import 'package:miecal/questionnaire.dart';
 import 'package:miecal/vertical_slide_page.dart';
-import 'package:miecal/qr.dart';
 
 class OtherInformationPage extends StatefulWidget {
   const OtherInformationPage({super.key});

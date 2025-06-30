@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miecal/main.dart';
+import 'package:miecal/suffer_level.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:miecal/vertical_slide_page.dart';
 
@@ -168,8 +168,6 @@ class _DatePageState extends State<DatePage> {
                   ),
                   onPressed: () {
                     if (_selectedDay != null) {
-                      final String message =
-                          "選択された日付: ${_selectedDay!.year}年${_selectedDay!.month}月${_selectedDay!.day}日";
                       Navigator.push(
                         context,
                         VerticalSlideRoute(page: const SufferLevelPage()),
