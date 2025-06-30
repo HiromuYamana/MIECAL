@@ -150,27 +150,6 @@ class SymptomPage extends StatelessWidget {
   }
 }
 
-class AffectedAreaPage extends StatelessWidget {
-  const AffectedAreaPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('患部')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed:
-              () => Navigator.push(
-                context,
-                VerticalSlideRoute(page: const DatePage()),
-              ),
-          child: const Text('Next'),
-        ),
-      ),
-    );
-  }
-}
-
 class SufferLevelPage extends StatelessWidget {
   const SufferLevelPage({super.key});
 
