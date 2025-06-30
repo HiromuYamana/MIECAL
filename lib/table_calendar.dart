@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:miecal/main.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Table_Calendar extends StatelessWidget {
