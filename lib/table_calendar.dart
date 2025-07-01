@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:miecal/main.dart';
+import 'package:miecal/suffer_level.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:miecal/vertical_slide_page.dart';
 
-class Table_Calendar extends StatelessWidget {
-  const Table_Calendar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const CalendarPage();
-  }
-}
-
-class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
+class DatePage extends StatefulWidget {
+  const DatePage({super.key});
 
   @override
-  _CalendarPageState createState() => _CalendarPageState();
+  // ignore: library_private_types_in_public_api
+  _DatePageState createState() => _DatePageState();
 }
 
-class _CalendarPageState extends State<CalendarPage> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+class _DatePageState extends State<DatePage> {
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
@@ -41,7 +34,6 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       body: Column(
         children: [
@@ -98,7 +90,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   );
                   return dateToCheck.isBefore(
                     today.add(const Duration(days: 1)),
-                  ); // const を追加
+                  );
                 },
                 onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDay, selectedDay)) {
@@ -171,11 +163,23 @@ class _CalendarPageState extends State<CalendarPage> {
                 child: IconButton(
                   icon: const Icon(
                     Icons.arrow_downward,
-                    size: 70,
+                    size: 50,
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/SufferLevelPage');
+                    if (_selectedDay != null) {
+                      Navigator.push(
+                        context,
+                        VerticalSlideRoute(page: const SufferLevelPage()),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('日付を選択してください．'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
