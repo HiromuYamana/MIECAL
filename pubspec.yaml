@@ -35,6 +35,6 @@ flutter:
     - assets/onset_date.png
     - assets/QR.png
     - assets/images/
-
+    - assets/
     - assets/human_outline.png
   uses-material-design: true
