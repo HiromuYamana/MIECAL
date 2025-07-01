@@ -25,8 +25,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const TopPage(),
-        '/PersonalInformationPage':
-            (context) => const PersonalInformationPage(),
+        '/PersonalInformationPage':(context) => const PersonalInformationPage(),
         '/LoginPage': (context) => const LoginPage(),
         '/SymptomPage': (context) => const SymptomPage(),
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),

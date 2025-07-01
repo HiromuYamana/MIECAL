@@ -62,7 +62,7 @@ class _DatePageState extends State<DatePage> {
                       fit: BoxFit.contain,
                     ),
                     const Text(
-                      '発症日(table calendar)',
+                      '発症日(Date of onset)',
                       style: TextStyle(color: Colors.black),
                     ),
                   ],

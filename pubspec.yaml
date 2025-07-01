@@ -34,7 +34,7 @@ flutter:
     - assets/sample_image6.png
     - assets/onset_date.png
     - assets/QR.png
+    - assets/show_screen.png
     - assets/images/
-
     - assets/human_outline.png
   uses-material-design: true

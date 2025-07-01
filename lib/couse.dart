@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:miecal/suffer_level.dart';
 import 'package:miecal/other_information.dart';
 import 'package:miecal/vertical_slide_page.dart';
 
@@ -11,9 +10,7 @@ class CousePage extends StatefulWidget {
 }
  
 class _CousePageState extends State<CousePage> {
-  // 画像のパス
- 
-  final List<String> images_Couse = [
+  final List<String> imagesCouse = [
   'assets/images/ziko.png',
   'assets/images/tennraku.png',
   'assets/images/fukutuu.png',
@@ -21,13 +18,12 @@ class _CousePageState extends State<CousePage> {
   'assets/images/metabo.png',
 ];
  
-  // 選択状態
   late List<bool> isSelected;
  
   @override
   void initState() {
     super.initState();
-    isSelected = List.filled(images_Couse.length, false); // 全部未選択で初期化
+    isSelected = List.filled(imagesCouse.length, false);
   }
  
   @override
@@ -41,26 +37,21 @@ class _CousePageState extends State<CousePage> {
               color: const Color.fromARGB(255, 207, 227, 230),
               padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 36,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_upward,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ),
           ),
           Expanded(
-            flex: 8,
+            flex: 7,
             child: GridView.builder(
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -69,7 +60,7 @@ class _CousePageState extends State<CousePage> {
                 mainAxisSpacing: 10,
                 childAspectRatio: 1,
               ),
-              itemCount: images_Couse.length,
+              itemCount: imagesCouse.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -94,16 +85,15 @@ class _CousePageState extends State<CousePage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.asset(
-                            images_Couse[index],
+                            imagesCouse[index],
                             fit: BoxFit.cover,
-                         
                           ),
                         ),
                       ),
                       if (isSelected[index])
                         Container(
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 252, 166, 7).withOpacity(0.3),
+                            color: const Color.fromARGB(255, 252, 166, 7).withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
@@ -114,7 +104,7 @@ class _CousePageState extends State<CousePage> {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Container(
               color: Colors.blueGrey,
               child: Center(
