@@ -71,7 +71,7 @@ class _DatePageState extends State<DatePage> {
             ),
           ),
           Expanded(
-            flex: 5,
+            flex: 6,
             child: Container(
               color: Colors.white10,
               child: TableCalendar(
@@ -103,7 +103,7 @@ class _DatePageState extends State<DatePage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('$formattedDate '),
-                        duration: const Duration(seconds: 2),
+                        duration: const Duration(seconds: 1),
                         action: SnackBarAction(label: '閉じる', onPressed: () {}),
                       ),
                     );
@@ -176,7 +176,7 @@ class _DatePageState extends State<DatePage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('日付を選択してください．'),
-                          duration: Duration(seconds: 2),
+                          duration: Duration(seconds: 1),
                         ),
                       );
                     }
