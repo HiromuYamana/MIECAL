@@ -26,7 +26,7 @@ class _CousePageState extends State<CousePage> {
   @override
   void initState() {
     super.initState();
-    isSelected = List.filled(images_Couse.length, false); // 全部未選択で初期化
+    isSelected = List.filled(imagesCouse.length, false);
   }
 
   @override
@@ -123,6 +123,7 @@ class _CousePageState extends State<CousePage> {
             ),
           ),
           Expanded(
+            flex: 1,
             flex: 1,
             child: Container(
               color: Colors.blueGrey,
