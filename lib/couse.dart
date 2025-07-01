@@ -19,7 +19,6 @@ class _CousePageState extends State<CousePage> {
   'assets/images/fukutuu.png',
   'assets/images/kossetu.png',
   'assets/images/metabo.png',
- 
 ];
  
   // 選択状態
@@ -34,21 +33,38 @@ class _CousePageState extends State<CousePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('原因'),
-                     automaticallyImplyLeading: false,), //左上戻るボタン削除
       body: Column(
         children: [
-          ElevatedButton(onPressed: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context)=>SufferLevelPage())
-            );
-          }, child: Image.asset('assets/images/yazirusi(up).jpg',width: 50,height: 50,)),
           Expanded(
+            flex: 1,
+            child: Container(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_upward,
+                        color: Colors.white,
+                        size: 36,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 8,
             child: GridView.builder(
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, // 横2列
+                crossAxisCount: 3, 
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 childAspectRatio: 1,
@@ -97,13 +113,26 @@ class _CousePageState extends State<CousePage> {
               },
             ),
           ),
-          ElevatedButton(
-            onPressed:
-            () => Navigator.push(
-              context,
-              VerticalSlideRoute(page: const OtherInformationPage()),
+          Expanded(
+            flex: 2,
+            child: Container(
+              color: Colors.blueGrey,
+              child: Center(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_downward,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      VerticalSlideRoute(page: const  OtherInformationPage()),
+                    );
+                  },
+                ),
+              ),
             ),
-            child: const Text('Next'),
           ),
         ],
       ),
