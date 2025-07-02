@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:miecal/suffer_level.dart';
+import 'package:miecal/suffer_level.dart'; // SufferLevelPage をインポート
 import 'package:table_calendar/table_calendar.dart';
 import 'package:miecal/vertical_slide_page.dart';
 
 class DatePage extends StatefulWidget {
-  const DatePage({super.key});
+  // DatePage が以前のページからデータを受け取る必要があればここに追加します
+  final String? symptom; // 例えば SymptomPage から症状を受け取る場合
+  final String? affectedArea; // 例えば AffectedAreaPage から患部を受け取る場合
+
+  const DatePage({super.key, this.symptom, this.affectedArea});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -17,7 +21,9 @@ class _DatePageState extends State<DatePage> {
   DateTime? _selectedDay;
 
   final DateTime _now = DateTime.now();
+  // 現在の日付から1年前をfirstDayに設定 (年/月/日を考慮)
   late final DateTime _firstDay = DateTime(_now.year - 1, _now.month, _now.day);
+  // 現在の月の最終日をlastDayに設定
   late final DateTime _lastDay = DateTime(_now.year, _now.month + 1, 0);
 
   final List<String> _japaneseWeekdays = ['月', '火', '水', '木', '金', '土', '日'];
@@ -53,7 +59,7 @@ class _DatePageState extends State<DatePage> {
                         size: 36,
                       ),
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context); // 前の画面に戻る
                       },
                     ),
                     Image.asset(
@@ -102,7 +108,9 @@ class _DatePageState extends State<DatePage> {
                         "${selectedDay.year}/${selectedDay.month}/${selectedDay.day}";
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('$formattedDate '),
+                        content: Text(
+                          '$formattedDate が選択されました．',
+                        ), // スナックバーのテキストを修正
                         duration: const Duration(seconds: 1),
                         action: SnackBarAction(label: '閉じる', onPressed: () {}),
                       ),
@@ -127,7 +135,7 @@ class _DatePageState extends State<DatePage> {
                   titleCentered: true,
                   formatButtonShowsNext: false,
                   titleTextFormatter: (date, locale) {
-                    return '${date.year}/${date.month}';
+                    return '${date.year}年${date.month}月'; // フォーマットを「YYYY年M月」に戻す
                   },
                 ),
                 calendarBuilders: CalendarBuilders(
@@ -168,9 +176,17 @@ class _DatePageState extends State<DatePage> {
                   ),
                   onPressed: () {
                     if (_selectedDay != null) {
+                      // 選択された日付と、このページが受け取った過去のデータをSufferLevelPageに渡す
                       Navigator.push(
                         context,
-                        VerticalSlideRoute(page: const SufferLevelPage()),
+                        VerticalSlideRoute(
+                          page: SufferLevelPage(
+                            selectedOnsetDay: _selectedDay, // このページで選択された日付
+                            symptom: widget.symptom, // 以前のページから受け取った症状
+                            affectedArea:
+                                widget.affectedArea, // 以前のページから受け取った患部
+                          ),
+                        ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
