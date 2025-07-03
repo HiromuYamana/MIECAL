@@ -3,21 +3,34 @@ import 'package:miecal/other_information.dart';
 import 'package:miecal/vertical_slide_page.dart';
 
 class CousePage extends StatefulWidget {
-  const CousePage({super.key});
+  // これまでのページから受け取る問診票データを定義します
+  final DateTime? selectedOnsetDay;
+  final String? symptom;
+  final String? affectedArea;
+  final String? sufferLevel;
+
+  const CousePage({
+    super.key,
+    this.selectedOnsetDay,
+    this.symptom,
+    this.affectedArea,
+    this.sufferLevel,
+  });
 
   @override
   State<CousePage> createState() => _CousePageState();
 }
 
 class _CousePageState extends State<CousePage> {
-  // 画像のパス
-
-  final List<String> images_Couse = [
-    'assets/images/ziko.png',
-    'assets/images/tennraku.png',
-    'assets/images/fukutuu.png',
-    'assets/images/kossetu.png',
-    'assets/images/metabo.png',
+  // 画像のパスと対応する日本語名をペアで保持するリスト
+  // Mapのキーが画像パス、値が日本語名
+  final List<Map<String, String>> couseItems = const [
+    {'path': 'assets/images/ziko.png', 'name': '事故'},
+    {'path': 'assets/images/tennraku.png', 'name': '転落'},
+    {'path': 'assets/images/fukutuu.png', 'name': '腹痛'},
+    {'path': 'assets/images/kossetu.png', 'name': '骨折'},
+    {'path': 'assets/images/metabo.png', 'name': 'メタボ'}, // 例: 必要に応じて追加
+    // 他の原因があればここに追加
   ];
 
   // 選択状態
@@ -26,11 +39,25 @@ class _CousePageState extends State<CousePage> {
   @override
   void initState() {
     super.initState();
-    isSelected = List.filled(images_Couse.length, false);
+    // couseItems の数に合わせて、全て未選択 (false) で初期化
+    isSelected = List.filled(couseItems.length, false);
+  }
+
+  // 選択された原因を日本語名でまとめるヘルパー関数
+  String _getSelectedCauseSummary() {
+    List<String> selectedCauseNames = [];
+    for (int i = 0; i < isSelected.length; i++) {
+      if (isSelected[i]) {
+        selectedCauseNames.add(couseItems[i]['name']!); // 日本語名を取得
+      }
+    }
+    return selectedCauseNames.isEmpty ? '未選択' : selectedCauseNames.join(', ');
   }
 
   @override
   Widget build(BuildContext context) {
+    final double topPadding = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       body: Column(
         children: [
@@ -38,7 +65,7 @@ class _CousePageState extends State<CousePage> {
             flex: 1,
             child: Container(
               color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              padding: EdgeInsets.only(top: topPadding),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -71,7 +98,7 @@ class _CousePageState extends State<CousePage> {
                   mainAxisSpacing: 10,
                   childAspectRatio: 1,
                 ),
-                itemCount: images_Couse.length,
+                itemCount: couseItems.length, // couseItemsの数を使用
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
@@ -82,9 +109,10 @@ class _CousePageState extends State<CousePage> {
                     child: Stack(
                       children: [
                         Container(
-                          margin: EdgeInsets.all(8),
-                          width: 1050,
-                          height: 1050,
+                          margin: const EdgeInsets.all(8),
+                          // width, heightはGridViewが自動調整するため削除または調整
+                          // width: 1050,
+                          // height: 1050,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color:
@@ -98,7 +126,7 @@ class _CousePageState extends State<CousePage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.asset(
-                              images_Couse[index],
+                              couseItems[index]['path']!, // 画像パスを使用
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -115,6 +143,29 @@ class _CousePageState extends State<CousePage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
+                        // 画像の下に日本語名をテキストで表示
+                        Positioned(
+                          bottom: 10,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            color: Colors.black54, // テキストの背景を半透明にする
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 8,
+                            ),
+                            child: Text(
+                              couseItems[index]['name']!, // 日本語名を表示
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis, // 長すぎる場合は省略
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -134,9 +185,20 @@ class _CousePageState extends State<CousePage> {
                     color: Colors.white,
                   ),
                   onPressed: () {
+                    final String selectedCause =
+                        _getSelectedCauseSummary(); // 日本語名で原因を取得
+
                     Navigator.push(
                       context,
-                      VerticalSlideRoute(page: const OtherInformationPage()),
+                      VerticalSlideRoute(
+                        page: OtherInformationPage(
+                          selectedOnsetDay: widget.selectedOnsetDay,
+                          symptom: widget.symptom,
+                          affectedArea: widget.affectedArea,
+                          sufferLevel: widget.sufferLevel,
+                          cause: selectedCause, // ここで日本語名を渡す
+                        ),
+                      ),
                     );
                   },
                 ),
