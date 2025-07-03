@@ -53,7 +53,7 @@ class _RippleEffectState extends State<RippledEffect> with SingleTickerProviderS
             height: _animation.value,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: widget.color.withOpacity(1 - _animation.value / widget.size),
+              color: widget.color.withValues(alpha: 1 - _animation.value / widget.size),
             ),
           ),
         );
@@ -61,8 +61,6 @@ class _RippleEffectState extends State<RippledEffect> with SingleTickerProviderS
     );
   }
 }
-
-
 
 
 
@@ -132,8 +130,6 @@ class _TopPageState extends State<TopPage> {
                   RippledEffect()
                   ]
                 ),
-                
-                
                 
                 Positioned(
                   bottom: 0,
