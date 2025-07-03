@@ -83,7 +83,7 @@ class _SymptomPageState extends State<SymptomPage> {
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 10,
+                  crossAxisSpacing: 10, 
                   mainAxisSpacing: 10,
                   childAspectRatio: 1,
                 ),
@@ -140,21 +140,23 @@ class _SymptomPageState extends State<SymptomPage> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
+            child: Material(
               color: Colors.blueGrey,
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
+              child: InkWell(
+                onTap: (){
+                  Navigator.push(
                       context,
                       VerticalSlideRoute(page: const AffectedAreaPage()),
                     );
-                  },
+                },
+                child: SizedBox.expand(
+                  child: Center(
+                    child: Icon(
+                    Icons.arrow_downward,
+                    size: 50,
+                    color: Colors.white,
+                  ),)
+                
                 ),
               ),
             ),
