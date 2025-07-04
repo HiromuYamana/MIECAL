@@ -94,7 +94,8 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
           ),
           Expanded(
             flex: 8,
-            child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(4, (rowIndex) {
@@ -119,58 +120,35 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                           ),
                           child: Row(
                             children: List.generate(2, (colIndex) {
-                              int index =
-                                  rowIndex * 2 + colIndex; // imagePaths のインデックス
-                              bool isSelected =
-                                  selectedInRow[rowIndex] == colIndex;
-
-                              // 画像パスの範囲チェック
-                              if (index >= imagePaths.length) {
-                                // 存在しないインデックスの場合のハンドリング
-                                return const SizedBox.shrink(); // 何も表示しない
-                              }
-
+                              int index = rowIndex * 2 + colIndex;
+                              bool isSelected = selectedInRow[rowIndex] == colIndex;
+                              if (index >= imagePaths.length) return const SizedBox.shrink();
                               return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    fixedSize: const Size(
-                                      100,
-                                      100,
-                                    ), // ボタンの固定サイズ
-                                    backgroundColor:
-                                        isSelected
-                                            ? const Color.fromARGB(
-                                              255,
-                                              225,
-                                              171,
-                                              85,
-                                            ) // 選択時
-                                            : Colors.grey[300], // 未選択時
+                                    fixedSize: const Size(100, 100),
+                                    backgroundColor: isSelected
+                                        ? const Color.fromARGB(255, 225, 171, 85)
+                                        : Colors.grey[300],
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        16,
-                                      ), // ボタンの角丸
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      // 同じボタンをもう一度押すと選択解除
-                                      selectedInRow[rowIndex] =
-                                          isSelected ? null : colIndex;
+                                      selectedInRow[rowIndex] = isSelected ? null : colIndex;
                                     });
                                   },
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        width: 80, // 画像サイズを少し小さく
-                                        height: 80, // 画像サイズを少し小さく
+                                        width: 80,
+                                        height: 80,
                                         child: Image.asset(
                                           imagePaths[index]['path']!,
-                                          fit: BoxFit.contain, // 画像のフィット方法
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
                                     ],
@@ -182,7 +160,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                         ),
                         const SizedBox(width: 16),
                         Text(
-                          labels[rowIndex], // 各行のラベル
+                          labels[rowIndex],
                           style: const TextStyle(fontSize: 18),
                         ),
                       ],
