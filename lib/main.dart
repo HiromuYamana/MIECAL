@@ -2,13 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:miecal/table_calendar.dart';
 import 'package:miecal/other_page.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'dart:html' as html;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miecal/login_page.dart';
+import 'package:miecal/firebase_options.dart';
+import 'package:miecal/registar_page.dart';
+import 'package:miecal/personal_information_page.dart';
+import 'dart:html' as html; 
 
-void main() {
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  
   const MyApp({super.key});
 
   @override
@@ -17,11 +31,13 @@ class MyApp extends StatelessWidget {
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
+      //home: const AuthGate(),
       routes: {
         '/': (context) => const MyHomePage(),
-        '/PersonalInformationPage':
+        '/LoginPage': (context) => const LoginScreen(),
+        '/RegisterPage': (context) => const RegisterPage(),
+         '/PersonalInformationPage':
             (context) => const PersonalInformationPage(),
-        '/LoginPage': (context) => const LoginPage(),
         '/SymptomPage': (context) => const SymptomPage(),
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),
         '/DatePage': (context) => const DatePage(),
@@ -39,6 +55,8 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
+
+  
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -67,59 +85,28 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class PersonalInformationPage extends StatelessWidget {
-  const PersonalInformationPage({super.key});
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('プロフィール')),
-      body: Center(),
-    );
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // 🔐ログイン済み → 次の画面へ
+      return const SymptomPage(); // または MyHomePage
+    } else {
+      // 🔓未ログイン → ログイン画面へ
+      return const LoginScreen();
+    }
   }
 }
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ログイン・新規登録'),
-        actions: [
-          PopupMenuButton<String>(
-            icon: Icon(Icons.menu),
-            onSelected: (value) {
-              if (value == 'home') {
-                Navigator.pushNamed(context, '/');
-              } else if (value == 'profile') {
-                Navigator.pushNamed(context, '/PersonalInformationPage');
-              }
-            },
-            itemBuilder:
-                (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'home',
-                    child: Text('ホーム'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'profile',
-                    child: Text('プロフィール変更'),
-                  ),
-                ],
-          ),
-        ],
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/SymptomPage'),
-          child: const Text('Next'),
-        ),
-      ),
-    );
-  }
-}
+
+
+
+
 
 class SymptomPage extends StatelessWidget {
   const SymptomPage({super.key});
@@ -128,6 +115,30 @@ class SymptomPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('症状入力')),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              child: Text('メニュー'),
+            ),
+            ListTile(
+              title: const Text('プロフィール編集'),
+              onTap: () {
+                Navigator.pop(context); // ドロワー閉じる
+                Navigator.pushNamed(context, '/PersonalInformationPage'); // 編集画面へ遷移
+              },
+            ),
+            ListTile(
+              title: const Text('ログアウト'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/LoginPage', (route) => false); // ログイン画面に遷移（履歴も削除）
+              },
+            ),
+          ],
+        ),
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () => Navigator.pushNamed(context, '/AffectedAreaPage'),
