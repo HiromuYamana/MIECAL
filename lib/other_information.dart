@@ -26,7 +26,7 @@ class OtherInformationPage extends StatefulWidget {
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
   // 各行で選択された項目のインデックスを保持 (0または1、未選択はnull)
-  List<int?> selectedInRow = [null, null, null];
+  List<int?> selectedInRow = [null, null, null, null];
 
   final List<Map<String, String>> imagePaths = [
     {'path': 'assets/sample_image1.png', 'name': '飲む'},
@@ -35,9 +35,11 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
     {'path': 'assets/sample_image4.png', 'name': '吸わない'},
     {'path': 'assets/sample_image5.png', 'name': 'あり'},
     {'path': 'assets/sample_image6.png', 'name': 'なし'},
+    {'path': 'assets/sample_image7.png', 'name': '妊娠している'},
+    {'path': 'assets/sample_image8.png', 'name': '妊娠していない'},
   ];
 
-  final List<String> labels = ['飲酒', '喫煙', 'お薬']; // 各行のラベル
+  final List<String> labels = ['飲酒', '喫煙', 'お薬', '妊娠']; // 各行のラベル
 
   @override
   void initState() {
@@ -63,15 +65,39 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('その他の情報入力')),
-      backgroundColor: const Color.fromARGB(255, 182, 210, 237), // 背景色
+      backgroundColor: const Color.fromARGB(255, 218, 246, 250), // 背景色
       body: Column(
         children: [
           Expanded(
+            flex: 1,
+            child: Container(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_upward,
+                        color: Colors.white,
+                        size: 36,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context); // 前の画面に戻る
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 8,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (rowIndex) {
+                children: List.generate(4, (rowIndex) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Row(
@@ -167,37 +193,39 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
             ),
           ),
           // 次へボタン
-          Padding(
-            padding: const EdgeInsets.only(bottom: 32.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 16,
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
-              onPressed: () {
-                final String otherInformationSummary =
-                    _getOtherInformationSummary();
-
-                // これまでのページから受け取ったデータと、このページで選択した情報をまとめて渡す
-                Navigator.push(
-                  context,
-                  VerticalSlideRoute(
-                    page: QuestionnairePage(
-                      selectedOnsetDay: widget.selectedOnsetDay, // DatePageから
-                      symptom: widget.symptom, // SymptomPageから
-                      affectedArea: widget.affectedArea, // AffectedAreaPageから
-                      sufferLevel: widget.sufferLevel, // SufferLevelPageから
-                      cause: widget.cause, // CousePageから
-                      otherInformation:
-                          otherInformationSummary, // このOtherInformationPageから
-                    ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.blueGrey,
+              child: Center(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_downward,
+                    size: 50,
+                    color: Colors.white,
                   ),
-                );
-              },
-              child: const Text('Next'),
+                  onPressed: () {
+                    final String otherInformationSummary =
+                        _getOtherInformationSummary();
+
+                    // これまでのページから受け取ったデータと、このページで選択した情報をまとめて渡す
+                    Navigator.push(
+                      context,
+                      VerticalSlideRoute(
+                        page: QuestionnairePage(
+                          selectedOnsetDay: widget.selectedOnsetDay, // DatePageから
+                          symptom: widget.symptom, // SymptomPageから
+                          affectedArea: widget.affectedArea, // AffectedAreaPageから
+                          sufferLevel: widget.sufferLevel, // SufferLevelPageから
+                          cause: widget.cause, // CousePageから
+                          otherInformation:
+                              otherInformationSummary, // このOtherInformationPageから
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ],

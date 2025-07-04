@@ -33,6 +33,8 @@ flutter:
     - assets/sample_image4.png
     - assets/sample_image5.png
     - assets/sample_image6.png
+    - assets/sample_image7.png
+    - assets/sample_image8.png
     - assets/onset_date.png
     - assets/QR.png
     - assets/show_screen.png
