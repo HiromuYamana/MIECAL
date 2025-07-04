@@ -35,11 +35,11 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
     {'path': 'assets/sample_image4.png', 'name': '吸わない'},
     {'path': 'assets/sample_image5.png', 'name': 'あり'},
     {'path': 'assets/sample_image6.png', 'name': 'なし'},
-    {'path': 'assets/sample_image7.png', 'name': '妊娠している'},
-    {'path': 'assets/sample_image8.png', 'name': '妊娠していない'},
+    {'path': 'assets/sample_image7.png', 'name': 'はい'},
+    {'path': 'assets/sample_image8.png', 'name': 'いいえ'},
   ];
 
-  final List<String> labels = ['飲酒', '喫煙', 'お薬', '妊娠']; // 各行のラベル
+  final List<String> labels = ['飲酒', '喫煙', 'お薬', '妊娠中']; // 各行のラベル
 
   @override
   void initState() {
@@ -213,9 +213,11 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                       context,
                       VerticalSlideRoute(
                         page: QuestionnairePage(
-                          selectedOnsetDay: widget.selectedOnsetDay, // DatePageから
+                          selectedOnsetDay:
+                              widget.selectedOnsetDay, // DatePageから
                           symptom: widget.symptom, // SymptomPageから
-                          affectedArea: widget.affectedArea, // AffectedAreaPageから
+                          affectedArea:
+                              widget.affectedArea, // AffectedAreaPageから
                           sufferLevel: widget.sufferLevel, // SufferLevelPageから
                           cause: widget.cause, // CousePageから
                           otherInformation:
