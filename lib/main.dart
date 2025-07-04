@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/couse.dart';
 import 'package:miecal/login.dart';
-import 'package:miecal/personal_information.dart';
+
 import 'package:miecal/questionnaire.dart';
 import 'package:miecal/suffer_level.dart';
 import 'package:miecal/symptom.dart';
@@ -74,6 +74,70 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         // その他のテーマ設定
+      ),
+    );
+  }
+}
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // 🔐ログイン済み → 次の画面へ
+      return const SymptomPage(); // または MyHomePage
+    } else {
+      // 🔓未ログイン → ログイン画面へ
+      return const LoginScreen();
+    }
+  }
+}
+
+
+
+
+
+
+
+class SymptomPage extends StatelessWidget {
+  const SymptomPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('症状入力')),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              child: Text('メニュー'),
+            ),
+            ListTile(
+              title: const Text('プロフィール編集'),
+              onTap: () {
+                Navigator.pop(context); // ドロワー閉じる
+                Navigator.pushNamed(context, '/PersonalInformationPage'); // 編集画面へ遷移
+              },
+            ),
+            ListTile(
+              title: const Text('ログアウト'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/LoginPage', (route) => false); // ログイン画面に遷移（履歴も削除）
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => Navigator.pushNamed(context, '/AffectedAreaPage'),
+          child: const Text('Next'),
+        ),
       ),
     );
   }

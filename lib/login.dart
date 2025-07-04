@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miecal/personal_information.dart';
+import 'package:miecal/personal_information_page.dart';
 import 'package:miecal/symptom.dart';
 import 'package:miecal/vertical_slide_page.dart';
 
