@@ -11,13 +11,27 @@ import 'package:miecal/table_calendar.dart';
 import 'package:miecal/other_information.dart';
 
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html; // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miecal/login_page.dart';
+import 'package:miecal/firebase_options.dart';
+import 'package:miecal/registar_page.dart';
+import 'package:miecal/personal_information_page.dart';
+import 'dart:html' as html;  // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
 
-void main() {
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  
   const MyApp({super.key});
 
   @override
@@ -26,11 +40,13 @@ class MyApp extends StatelessWidget {
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
+      //home: const AuthGate(),
       routes: {
         '/': (context) => const TopPage(),
-        '/PersonalInformationPage':
+        '/LoginPage': (context) => const LoginScreen(),
+        '/RegisterPage': (context) => const RegisterPage(),
+         '/PersonalInformationPage':
             (context) => const PersonalInformationPage(),
-        '/LoginPage': (context) => const LoginPage(),
         '/SymptomPage': (context) => const SymptomPage(),
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),
         '/DatePage': (context) => const DatePage(),
