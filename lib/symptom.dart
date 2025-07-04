@@ -155,8 +155,8 @@ class _SymptomPageState extends State<SymptomPage> {
                     Icons.arrow_downward,
                     size: 50,
                     color: Colors.white,
-                  ),)
-                
+                    ),
+                  )
                 ),
               ),
             ),
