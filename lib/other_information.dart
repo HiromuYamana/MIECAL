@@ -21,6 +21,7 @@ class OtherInformationPage extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _OtherInformationPageState createState() => _OtherInformationPageState();
 }
 
@@ -142,17 +143,10 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                                     ), // ボタンの固定サイズ
                                     backgroundColor:
                                         isSelected
-                                            ? const Color.fromARGB(
-                                              255,
-                                              225,
-                                              171,
-                                              85,
-                                            ) // 選択時
+                                            ? const Color.fromARGB(255, 225, 171, 85,) // 選択時
                                             : Colors.grey[300], // 未選択時
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        16,
-                                      ), // ボタンの角丸
+                                      borderRadius: BorderRadius.circular(16,), // ボタンの角丸
                                     ),
                                   ),
                                   onPressed: () {
@@ -192,7 +186,6 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
               ),
             ),
           ),
-          // 次へボタン
           Expanded(
             flex: 1,
             child: Container(

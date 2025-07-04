@@ -50,14 +50,14 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     const Color.fromARGB(255, 255, 64, 128): '左腿',
     const Color.fromARGB(255, 128, 255, 64): '左ふくらはぎ',
     const Color.fromARGB(255, 128, 64, 255): '左足',
-    const Color.fromARGB(255, 64, 255, 128): '右肩',
-    const Color.fromARGB(255, 64, 128, 255): '右上腕',
-    const Color.fromARGB(255, 255, 64, 0): '右前腕',
-    const Color.fromARGB(255, 255, 0, 64): '右手',
-    const Color.fromARGB(255, 64, 255, 0): '左肩',
-    const Color.fromARGB(255, 64, 0, 255): '左上腕',
-    const Color.fromARGB(255, 0, 255, 64): '左前腕',
-    const Color.fromARGB(255, 0, 64, 255): '左手',
+    const Color.fromARGB(255, 64, 255, 128): '左肩',
+    const Color.fromARGB(255, 64, 128, 255): '左上腕',
+    const Color.fromARGB(255, 255, 64, 0): '左前腕',
+    const Color.fromARGB(255, 255, 0, 64): '左手',
+    const Color.fromARGB(255, 64, 255, 0): '右肩',
+    const Color.fromARGB(255, 64, 0, 255): '右上腕',
+    const Color.fromARGB(255, 0, 255, 64): '右前腕',
+    const Color.fromARGB(255, 0, 64, 255): '右手',
   };
  
   String? selectedPart; // 選択された患部を保持
@@ -93,27 +93,36 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
       print("マスク画像がまだロードされていません。");
       return;
     }
-    final RenderBox? imageBox = _imageKey.currentContext?.findRenderObject() as RenderBox?;
-    if (imageBox == null) {
-      print("画像の RenderBox が見つかりません。");
-      return;
+    final RenderBox box = _imageKey.currentContext!.findRenderObject() as RenderBox;
+    final Size imageSize = box.size;
+    final double widgetAspectRatio = imageSize.width / imageSize.height;
+    final double imageAspectRatio = _maskImage!.width / _maskImage!.height;
+
+    // 実際に表示されている画像のサイズを計算
+    double displayedWidth, displayedHeight;
+    if (widgetAspectRatio > imageAspectRatio) {
+      // 高さに合わせてスケーリング
+      displayedHeight = imageSize.height;
+      displayedWidth = displayedHeight * imageAspectRatio;
+    } else {
+      // 幅に合わせてスケーリング
+      displayedWidth = imageSize.width;
+      displayedHeight = displayedWidth / imageAspectRatio;
     }
-    // タップされた位置を画像上のローカル座標に変換
-    final localPos = imageBox.globalToLocal(details.globalPosition);
-    // 画像の実際のサイズと表示サイズからスケールを計算
-    final double scaleX = _rawMaskImage!.width / imageBox.size.width;
-    final double scaleY = _rawMaskImage!.height / imageBox.size.height;
-    // マスク画像上のピクセル座標に変換
-    final int x = (localPos.dx * scaleX).toInt();
-    final int y = (localPos.dy * scaleY).toInt();
-    // 座標が画像範囲内にあるかチェック
-    if (x < 0 || x >= _rawMaskImage!.width || y < 0 || y >= _rawMaskImage!.height) {
-      print("タップ位置が画像範囲外です。");
-      return;
-    }
-    // ピクセルデータを取得
+
+    // 左上のオフセット
+    final double dx = (imageSize.width - displayedWidth) / 2;
+    final double dy = (imageSize.height - displayedHeight) / 2;
+
+    // タップ座標を補正
+    final Offset localPos = box.globalToLocal(details.globalPosition);
+    final double xInImage = ((localPos.dx - dx) / displayedWidth) * _maskImage!.width;
+    final double yInImage = ((localPos.dy - dy) / displayedHeight) * _maskImage!.height;
+
+    final int x = xInImage.toInt();
+    final int y = yInImage.toInt();
+
     final pixel = _rawMaskImage!.getPixel(x, y);
-    // ピクセルからARGB値を取得 (imageパッケージのPixelクラスはARGBの順)
     final int a = pixel.a.toInt(); // アルファ
     final int r = pixel.r.toInt(); // 赤
     final int g = pixel.g.toInt(); // 緑
@@ -177,7 +186,6 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
               ),
             ),
           ),
-          // 人体アウトライン画像表示とタップ検出部分
           Expanded(
             flex: 7, // 画像表示領域の割合
             child: _maskImage == null // マスク画像が読み込み中か確認
