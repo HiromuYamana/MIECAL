@@ -75,24 +75,19 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
               color: const Color.fromARGB(255, 207, 227, 230),
               padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 36,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
-                      },
+                child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                      size: 36,
                     ),
-                  ],
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
           Expanded(
             flex: 8,
             child: Center(
