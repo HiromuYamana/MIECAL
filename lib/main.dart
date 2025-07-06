@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/couse.dart';
-import 'package:miecal/login.dart';
-import 'package:miecal/personal_information.dart';
+
+
 import 'package:miecal/questionnaire.dart';
 import 'package:miecal/suffer_level.dart';
 import 'package:miecal/symptom.dart';
@@ -11,13 +11,27 @@ import 'package:miecal/table_calendar.dart';
 import 'package:miecal/other_information.dart';
 
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html; // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miecal/login_page.dart';
+import 'package:miecal/firebase_options.dart';
+import 'package:miecal/registar_page.dart';
+import 'package:miecal/personal_information_page.dart';
+import 'dart:html' as html;  // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
 
-void main() {
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  
   const MyApp({super.key});
 
   @override
@@ -26,11 +40,13 @@ class MyApp extends StatelessWidget {
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
+      //home: const AuthGate(),
       routes: {
         '/': (context) => const TopPage(),
-        '/PersonalInformationPage':
+        '/LoginPage': (context) => const LoginScreen(),
+        '/RegisterPage': (context) => const RegisterPage(),
+         '/PersonalInformationPage':
             (context) => const PersonalInformationPage(),
-        '/LoginPage': (context) => const LoginPage(),
         '/SymptomPage': (context) => const SymptomPage(),
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),
         '/DatePage': (context) => const DatePage(),
@@ -58,6 +74,70 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         // その他のテーマ設定
+      ),
+    );
+  }
+}
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // 🔐ログイン済み → 次の画面へ
+      return const SymptomPage(); // または MyHomePage
+    } else {
+      // 🔓未ログイン → ログイン画面へ
+      return const LoginScreen();
+    }
+  }
+}
+
+
+
+
+
+
+
+class SymptomPage extends StatelessWidget {
+  const SymptomPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('症状入力')),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              child: Text('メニュー'),
+            ),
+            ListTile(
+              title: const Text('プロフィール編集'),
+              onTap: () {
+                Navigator.pop(context); // ドロワー閉じる
+                Navigator.pushNamed(context, '/PersonalInformationPage'); // 編集画面へ遷移
+              },
+            ),
+            ListTile(
+              title: const Text('ログアウト'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/LoginPage', (route) => false); // ログイン画面に遷移（履歴も削除）
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => Navigator.pushNamed(context, '/AffectedAreaPage'),
+          child: const Text('Next'),
+        ),
       ),
     );
   }
