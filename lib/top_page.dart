@@ -67,23 +67,7 @@ class _RippleEffectState extends State<RippledEffect> with SingleTickerProviderS
 class _TopPageState extends State<TopPage> {
   void _goToLoginPage() {
     Navigator.of(context).push(
-      PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 500),
-        pageBuilder: (context,animation,secondaryAnimation) => LoginScreen(),
-        transitionsBuilder: (context,animation,secondaryAnimation,child){
-          const begin =Offset(0.0,1.0);
-          const end =Offset.zero;
-          const curve =Curves.ease;
-
-          final tween = Tween(begin: begin,end:end).chain(CurveTween(curve:curve));
-          final slideAnimation =animation.drive(tween);
-
-          return SlideTransition(
-            position: slideAnimation,
-            child: child,
-            );
-        },
-      ),
+      VerticalSlideRoute(page: const LoginScreen()),
     );
   }
 
@@ -141,7 +125,6 @@ class _TopPageState extends State<TopPage> {
                     child:Image.asset("assets/タッチアイコン.png",width: 100,)
                   )
                 ),
-                  
                ]
               ),           
             ]

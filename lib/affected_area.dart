@@ -8,7 +8,13 @@ import 'package:miecal/vertical_slide_page.dart';
 
 class AffectedAreaPage extends StatefulWidget {
   final String? symptom;
-  const AffectedAreaPage({super.key, this.symptom});
+  final String? sufferLevel;
+
+  const AffectedAreaPage({
+    super.key,
+    this.symptom,
+    this.sufferLevel,
+  });
 
   @override
   State<AffectedAreaPage> createState() => _AffectedAreaPageState();
@@ -60,7 +66,6 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
   };
 
   final Set<Color> _selectedColors = {};
-  String? _lastSelectedPart;
 
   @override
   void initState() {
@@ -118,7 +123,6 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     final part = colorToPart[pixelColor];
     if (part != null) {
       setState(() {
-        _lastSelectedPart = part;
         if (_selectedColors.contains(pixelColor)) {
           _selectedColors.remove(pixelColor);
         } else {
@@ -249,7 +253,7 @@ class MaskOverlayPainter extends CustomPainter {
     final double scaleY = displayHeight / maskImage.height;
 
     final paint = Paint()
-      ..color = Colors.red.withOpacity(0.5)
+      ..color = Colors.red.withValues(alpha: 0.5)
       ..style = PaintingStyle.fill;
 
     for (int y = 0; y < maskImage.height; y++) {

@@ -18,6 +18,7 @@ import 'package:miecal/login_page.dart';
 import 'package:miecal/firebase_options.dart';
 import 'package:miecal/registar_page.dart';
 import 'package:miecal/personal_information_page.dart';
+// ignore: deprecated_member_use, unused_import, avoid_web_libraries_in_flutter
 import 'dart:html' as html;  // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
 
 
@@ -93,52 +94,5 @@ class AuthGate extends StatelessWidget {
       // 🔓未ログイン → ログイン画面へ
       return const LoginScreen();
     }
-  }
-}
-
-
-
-
-
-
-
-class SymptomPage extends StatelessWidget {
-  const SymptomPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('症状入力')),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            const DrawerHeader(
-              child: Text('メニュー'),
-            ),
-            ListTile(
-              title: const Text('プロフィール編集'),
-              onTap: () {
-                Navigator.pop(context); // ドロワー閉じる
-                Navigator.pushNamed(context, '/PersonalInformationPage'); // 編集画面へ遷移
-              },
-            ),
-            ListTile(
-              title: const Text('ログアウト'),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/LoginPage', (route) => false); // ログイン画面に遷移（履歴も削除）
-              },
-            ),
-          ],
-        ),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/AffectedAreaPage'),
-          child: const Text('Next'),
-        ),
-      ),
-    );
   }
 }
