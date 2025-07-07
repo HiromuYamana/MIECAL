@@ -8,13 +8,8 @@ import 'package:miecal/vertical_slide_page.dart';
 
 class AffectedAreaPage extends StatefulWidget {
   final String? symptom;
-  final String? sufferLevel;
 
-  const AffectedAreaPage({
-    super.key,
-    this.symptom,
-    this.sufferLevel,
-  });
+  const AffectedAreaPage({super.key, this.symptom});
 
   @override
   State<AffectedAreaPage> createState() => _AffectedAreaPageState();
@@ -40,13 +35,13 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     const Color.fromARGB(255, 128, 0, 0): '右肩',
     const Color.fromARGB(255, 255, 128, 255): '右上腕',
     const Color.fromARGB(255, 255, 128, 128): '右前腕',
-    const Color.fromARGB(255, 255, 128, 0): '右手',    
+    const Color.fromARGB(255, 255, 128, 0): '右手',
     const Color.fromARGB(255, 0, 128, 255): '左肩',
     const Color.fromARGB(255, 0, 128, 128): '左上腕',
     const Color.fromARGB(255, 0, 128, 0): '左前腕',
     const Color.fromARGB(255, 0, 0, 128): '左手',
     const Color.fromARGB(255, 64, 255, 255): '頭',
-    const Color.fromARGB(255, 255, 64, 255): '首',
+    const Color.fromARGB(255, 255, 64, 255): '項',
     const Color.fromARGB(255, 255, 255, 64): '背中',
     const Color.fromARGB(255, 255, 64, 64): '臀部',
     const Color.fromARGB(255, 64, 255, 64): '右腿',
@@ -67,7 +62,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
 
   final Set<Color> _selectedColors = {};
   final Map<Color, List<Offset>> _colorPixelCache = {}; // キャッシュ
-
+  ui.Image? _highlightedOverlayImage;
 
   @override
   void initState() {
@@ -90,9 +85,16 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     for (int y = 0; y < _rawMaskImage!.height; y++) {
       for (int x = 0; x < _rawMaskImage!.width; x++) {
         final pixel = _rawMaskImage!.getPixel(x, y);
-        final color = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+        final color = Color.fromARGB(
+          pixel.a.toInt(),
+          pixel.r.toInt(),
+          pixel.g.toInt(),
+          pixel.b.toInt(),
+        );
         if (colorToPart.containsKey(color)) {
-          _colorPixelCache.putIfAbsent(color, () => []).add(Offset(x.toDouble(), y.toDouble()));
+          _colorPixelCache
+              .putIfAbsent(color, () => [])
+              .add(Offset(x.toDouble(), y.toDouble()));
         }
       }
     }
@@ -101,7 +103,8 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
   void _onTap(TapUpDetails details) {
     if (_maskImage == null || _rawMaskImage == null) return;
 
-    final RenderBox box = _imageKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox box =
+        _imageKey.currentContext!.findRenderObject() as RenderBox;
     final Size widgetSize = box.size;
     final Offset localPos = box.globalToLocal(details.globalPosition);
 
@@ -120,16 +123,27 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     final dx = (widgetSize.width - displayWidth) / 2;
     final dy = (widgetSize.height - displayHeight) / 2;
 
-    final double xInImage = ((localPos.dx - dx) / displayWidth) * _rawMaskImage!.width;
-    final double yInImage = ((localPos.dy - dy) / displayHeight) * _rawMaskImage!.height;
+    final double xInImage =
+        ((localPos.dx - dx) / displayWidth) * _rawMaskImage!.width;
+    final double yInImage =
+        ((localPos.dy - dy) / displayHeight) * _rawMaskImage!.height;
 
     final int x = xInImage.toInt();
     final int y = yInImage.toInt();
 
-    if (x < 0 || y < 0 || x >= _rawMaskImage!.width || y >= _rawMaskImage!.height) return;
+    if (x < 0 ||
+        y < 0 ||
+        x >= _rawMaskImage!.width ||
+        y >= _rawMaskImage!.height)
+      return;
 
     final pixel = _rawMaskImage!.getPixel(x, y);
-    final pixelColor = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+    final pixelColor = Color.fromARGB(
+      pixel.a.toInt(),
+      pixel.r.toInt(),
+      pixel.g.toInt(),
+      pixel.b.toInt(),
+    );
 
     final part = colorToPart[pixelColor];
     if (part != null) {
@@ -143,64 +157,75 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     }
   }
 
+  String getSelectedPartsSummary() {
+    if (_selectedColors.isEmpty) {
+      return '未選択';
+    }
+    final List<String> parts = [];
+    for (final color in _selectedColors) {
+      parts.add(colorToPart[color]!);
+    }
+    return parts.join(', ');
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Column(
         children: [
           Expanded(
-              flex: 1,
-              child: Container(
-                color: const Color.fromARGB(255, 207, 227, 230),
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                child: Center(
-                  child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 36,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+            flex: 1,
+            child: Container(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: Center(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_upward,
+                    color: Colors.white,
+                    size: 36,
                   ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
               ),
+            ),
+          ),
           Expanded(
             flex: 8,
-            child: _maskImage == null
-                ? const Center(child: CircularProgressIndicator())
-                : LayoutBuilder(
-                    builder: (context, constraints) {
-                      return GestureDetector(
-                        onTapUp: _onTap,
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: Image.asset(
-                                'assets/human_outline.png',
-                                key: _imageKey,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: CustomPaint(
-                                painter: MaskOverlayPainter(
-                                  selectedColors: _selectedColors,
-                                  colorPixelCache: _colorPixelCache,
-                                  referenceImage: _maskImage!,
-                                  imageWidth: _rawMaskImage!.width,
-                                  imageHeight: _rawMaskImage!.height,
+            child:
+                _maskImage == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : LayoutBuilder(
+                      builder: (context, constraints) {
+                        return GestureDetector(
+                          onTapUp: _onTap,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: Image.asset(
+                                  'assets/human_outline.png',
+                                  key: _imageKey,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                              Positioned.fill(
+                                child: CustomPaint(
+                                  painter: MaskOverlayPainter(
+                                    selectedColors: _selectedColors,
+                                    colorPixelCache: _colorPixelCache,
+                                    referenceImage: _maskImage!,
+                                    imageWidth: _rawMaskImage!.width,
+                                    imageHeight: _rawMaskImage!.height,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
           ),
           Expanded(
             flex: 1,
@@ -214,12 +239,14 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                     color: Colors.white,
                   ),
                   onPressed: () {
+                    final String selectedAffectedArea =
+                        getSelectedPartsSummary();
                     Navigator.push(
                       context,
                       VerticalSlideRoute(
                         page: DatePage(
                           symptom: widget.symptom,
-                          // sufferLevel: widget.sufferLevel,
+                          affectedArea: selectedAffectedArea,
                         ),
                       ),
                     );
@@ -269,9 +296,10 @@ class MaskOverlayPainter extends CustomPainter {
     final double scaleX = displayWidth / imageWidth;
     final double scaleY = displayHeight / imageHeight;
 
-    final paint = Paint()
-      ..color = Colors.red.withOpacity(0.5)
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..color = Colors.red.withOpacity(0.5)
+          ..style = PaintingStyle.fill;
 
     for (final color in selectedColors) {
       final pixels = colorPixelCache[color];
