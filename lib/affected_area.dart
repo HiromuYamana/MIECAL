@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
-import 'package:image/image.dart' as img; // image パッケージを img としてインポート
-import 'package:miecal/table_calendar.dart'; // DatePage が定義されているファイル
-import 'package:miecal/vertical_slide_page.dart'; // VerticalSlideRoute の定義があるファイル
+import 'package:image/image.dart' as img;
+import 'package:miecal/suffer_level.dart';
+import 'package:miecal/table_calendar.dart';
+import 'package:miecal/vertical_slide_page.dart';
 
 class AffectedAreaPage extends StatefulWidget {
-  final String? symptom; // SymptomPageから受け取る症状
-  const AffectedAreaPage({super.key, this.symptom});
+  final String? symptom;
+  final String? sufferLevel;
+
+  const AffectedAreaPage({
+    super.key,
+    this.symptom,
+    this.sufferLevel,
+  });
+
   @override
   State<AffectedAreaPage> createState() => _AffectedAreaPageState();
 }
- 
-class _AffectedAreaPageState extends State<AffectedAreaPage> {
-  ui.Image? _maskImage; // UI用 (ui.Imageは描画用)
-  img.Image? _rawMaskImage; // ピクセル取得用 (image.Imageはピクセルデータ操作用)
-  Offset? _selectedPosition; // タップした位置
-  bool _showMaskOverlay = false; // デバッグ用: マスク画像を表示するかどうか
 
-  final GlobalKey _imageKey = GlobalKey(); // 画像のRenderBoxを取得するためのキー
-  // カラーコードと患部のマッピング
+class _AffectedAreaPageState extends State<AffectedAreaPage> {
+  ui.Image? _maskImage;
+  img.Image? _rawMaskImage;
+  final GlobalKey _imageKey = GlobalKey();
+
   final Map<Color, String> colorToPart = {
     const Color.fromARGB(255, 255, 0, 0): '顔',
     const Color.fromARGB(255, 0, 255, 0): '首',
@@ -50,186 +55,144 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     const Color.fromARGB(255, 255, 64, 128): '左腿',
     const Color.fromARGB(255, 128, 255, 64): '左ふくらはぎ',
     const Color.fromARGB(255, 128, 64, 255): '左足',
-    const Color.fromARGB(255, 64, 255, 128): '右肩',
-    const Color.fromARGB(255, 64, 128, 255): '右上腕',
-    const Color.fromARGB(255, 255, 64, 0): '右前腕',
-    const Color.fromARGB(255, 255, 0, 64): '右手',
-    const Color.fromARGB(255, 64, 255, 0): '左肩',
-    const Color.fromARGB(255, 64, 0, 255): '左上腕',
-    const Color.fromARGB(255, 0, 255, 64): '左前腕',
-    const Color.fromARGB(255, 0, 64, 255): '左手',
+    const Color.fromARGB(255, 64, 255, 128): '左肩',
+    const Color.fromARGB(255, 64, 128, 255): '左上腕',
+    const Color.fromARGB(255, 255, 64, 0): '左前腕',
+    const Color.fromARGB(255, 255, 0, 64): '左手',
+    const Color.fromARGB(255, 64, 255, 0): '右肩',
+    const Color.fromARGB(255, 64, 0, 255): '右上腕',
+    const Color.fromARGB(255, 0, 255, 64): '右前腕',
+    const Color.fromARGB(255, 0, 64, 255): '右手',
   };
- 
-  String? selectedPart; // 選択された患部を保持
- 
+
+  final Set<Color> _selectedColors = {};
+
   @override
   void initState() {
     super.initState();
-    _loadMaskImage(); // マスク画像を読み込む
+    _loadMaskImage();
   }
-  // マスク画像をアセットから読み込む非同期関数
 
   Future<void> _loadMaskImage() async {
-    try {
-      final byteData = await rootBundle.load('assets/body_mask.png'); // マスク画像のパス
-      final buffer = byteData.buffer;
-      final rawImage = img.decodeImage(buffer.asUint8List())!; // ピクセル取得用の画像データ
-      final codec = await ui.instantiateImageCodec(buffer.asUint8List());
-      final frame = await codec.getNextFrame();
-      setState(() {
-        _rawMaskImage = rawImage;
-        _maskImage = frame.image;
-      });
-    } catch (e) {
-      print("マスク画像のロードに失敗しました: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('マスク画像のロードに失敗しました: $e')),
-      );
-    }
-  }
-  // 画像がタップされた時の処理
-  void _onTap(TapUpDetails details) {
-    if (_maskImage == null || _rawMaskImage == null) {
-      print("マスク画像がまだロードされていません。");
-      return;
-    }
-    final RenderBox? imageBox = _imageKey.currentContext?.findRenderObject() as RenderBox?;
-    if (imageBox == null) {
-      print("画像の RenderBox が見つかりません。");
-      return;
-    }
-    // タップされた位置を画像上のローカル座標に変換
-    final localPos = imageBox.globalToLocal(details.globalPosition);
-    // 画像の実際のサイズと表示サイズからスケールを計算
-    final double scaleX = _rawMaskImage!.width / imageBox.size.width;
-    final double scaleY = _rawMaskImage!.height / imageBox.size.height;
-    // マスク画像上のピクセル座標に変換
-    final int x = (localPos.dx * scaleX).toInt();
-    final int y = (localPos.dy * scaleY).toInt();
-    // 座標が画像範囲内にあるかチェック
-    if (x < 0 || x >= _rawMaskImage!.width || y < 0 || y >= _rawMaskImage!.height) {
-      print("タップ位置が画像範囲外です。");
-      return;
-    }
-    // ピクセルデータを取得
-    final pixel = _rawMaskImage!.getPixel(x, y);
-    // ピクセルからARGB値を取得 (imageパッケージのPixelクラスはARGBの順)
-    final int a = pixel.a.toInt(); // アルファ
-    final int r = pixel.r.toInt(); // 赤
-    final int g = pixel.g.toInt(); // 緑
-    final int b = pixel.b.toInt(); // 青
-    final pixelColor = Color.fromARGB(a, r, g, b); // アルファ値も考慮
-    final part = colorToPart[pixelColor];
+    final byteData = await rootBundle.load('assets/body_mask.png');
+    final buffer = byteData.buffer.asUint8List();
+    final rawImage = img.decodeImage(buffer)!;
+
+    final codec = await ui.instantiateImageCodec(buffer);
+    final frame = await codec.getNextFrame();
+
     setState(() {
-      _selectedPosition = localPos; // タップ位置を更新してハイライト表示を更新
-      if (part != null) {
-        selectedPart = part; // 選択された患部名を更新
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$part が選ばれました')), // スナックバーで通知
-        );
-      }
-      else {
-        selectedPart = null; // マッピングにない色の場合、選択解除
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('対応する患部が見つかりませんでした。透明な部分をタップした可能性があります。')),
-        );
-      }
+      _rawMaskImage = rawImage;
+      _maskImage = frame.image;
     });
+  }
+
+  void _onTap(TapUpDetails details) {
+    if (_maskImage == null || _rawMaskImage == null) return;
+
+    final RenderBox box = _imageKey.currentContext!.findRenderObject() as RenderBox;
+    final Size widgetSize = box.size;
+    final Offset localPos = box.globalToLocal(details.globalPosition);
+
+    final double imageAspect = _maskImage!.width / _maskImage!.height;
+    final double widgetAspect = widgetSize.width / widgetSize.height;
+
+    double displayWidth, displayHeight;
+    if (widgetAspect > imageAspect) {
+      displayHeight = widgetSize.height;
+      displayWidth = displayHeight * imageAspect;
+    } else {
+      displayWidth = widgetSize.width;
+      displayHeight = displayWidth / imageAspect;
+    }
+
+    final dx = (widgetSize.width - displayWidth) / 2;
+    final dy = (widgetSize.height - displayHeight) / 2;
+
+    final double xInImage = ((localPos.dx - dx) / displayWidth) * _rawMaskImage!.width;
+    final double yInImage = ((localPos.dy - dy) / displayHeight) * _rawMaskImage!.height;
+
+    final int x = xInImage.toInt();
+    final int y = yInImage.toInt();
+
+    if (x < 0 || y < 0 || x >= _rawMaskImage!.width || y >= _rawMaskImage!.height) return;
+
+    final pixel = _rawMaskImage!.getPixel(x, y);
+    final pixelColor = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+
+    final part = colorToPart[pixelColor];
+    if (part != null) {
+      setState(() {
+        if (_selectedColors.contains(pixelColor)) {
+          _selectedColors.remove(pixelColor);
+        } else {
+          _selectedColors.add(pixelColor);
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final double topPadding = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       body: Column(
         children: [
           Expanded(
-            flex: 1,
-            child: Container(
-              color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: topPadding), // 上部パディング
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
+              flex: 1,
+              child: Container(
+                color: const Color.fromARGB(255, 207, 227, 230),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: Center(
+                  child: IconButton(
                       icon: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
                       onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
-                      },
-                    ),
-
-                    const Text('患部選択', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)), 
-                    if (selectedPart != null) // 選択された患部を表示
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          '選択中: $selectedPart',
-                          style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // 人体アウトライン画像表示とタップ検出部分
-          Expanded(
-            flex: 7, // 画像表示領域の割合
-            child: _maskImage == null // マスク画像が読み込み中か確認
-                ? const Center(child: CircularProgressIndicator()) // 読み込み中はローディング表示
-                : Container( // 画像を囲むコンテナを追加 (fit: BoxFit.containがStack内で正しく機能するよう)
-                    color: Colors.transparent, // 必要であれば背景色設定
-                    child: LayoutBuilder( // タップ位置計算のためLayoutBuilderを維持
-                      builder: (context, constraints) {
-                        return GestureDetector(
-                          onTapUp: _onTap, // onTapUp の引数を修正
-                          child: Stack( // 画像とハイライトを重ねる
-                            children: [
-                              Positioned.fill( // 画像を親のサイズに合わせる
-                                child: Image.asset(
-                                  'assets/human_outline.png', // 人体のアウトライン画像
-                                  key: _imageKey, // <-- ここにGlobalKeyを設定
-                                  fit: BoxFit.contain, // コンテナに合わせて画像をフィット
-                                ),
-                              ),
-
-                              if (_showMaskOverlay)
-                                Positioned.fill(
-                                  child: Opacity(
-                                    opacity: 0.5,
-                                    child: RawImage(
-                                      image: _maskImage,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-
-                              if (_selectedPosition != null) // タップ位置が選択されていればハイライト表示
-                                Positioned.fill(
-                                  child: CustomPaint(
-                                    painter: HighlightPainter(
-                                      position: _selectedPosition!,
-                                      color: Colors.yellow.withValues(alpha: 0.3), // 半透明の黄色でハイライト
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        );
+                        Navigator.pop(context);
                       },
                     ),
                   ),
-          ),
-          // 下部のナビゲーションボタン部分
+                ),
+              ),
           Expanded(
-            flex: 1, // 下部のボタン領域の割合
+            flex: 8,
+            child: _maskImage == null
+                ? const Center(child: CircularProgressIndicator())
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      return GestureDetector(
+                        onTapUp: _onTap,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Image.asset(
+                                'assets/human_outline.png',
+                                key: _imageKey,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            Positioned.fill(
+                              child: CustomPaint(
+                                painter: MaskOverlayPainter(
+                                  maskImage: _rawMaskImage!,
+                                  selectedColors: _selectedColors,
+                                  referenceImage: _maskImage!,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+          ),
+          Expanded(
+            flex: 1,
             child: Container(
-              color: Colors.blueGrey, // 背景色
+              color: Colors.blueGrey,
               child: Center(
                 child: IconButton(
                   icon: const Icon(
@@ -238,28 +201,15 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    if (selectedPart != null) {
-                      // 選択された患部と、これまでのページから受け取ったデータを
-                      // DatePageへ渡す
-                      Navigator.push(
-                        context,
-                        VerticalSlideRoute(
-                          page: DatePage(
-                            symptom: widget.symptom,    // SymptomPageから受け取った症状
-                            affectedArea: selectedPart, // このAffectedAreaPageで選択した患部
-                          ),
+                    Navigator.push(
+                      context,
+                      VerticalSlideRoute(
+                        page: DatePage(
+                          symptom: widget.symptom,
+                          // sufferLevel: widget.sufferLevel,
                         ),
-                      );
-                    }
-                    else {
-                      // 患部が選択されていない場合の警告
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('患部を選択してください．'),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-                    }
+                      ),
+                    );
                   },
                 ),
               ),
@@ -270,21 +220,61 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     );
   }
 }
-// HighlightPainter クラスは変更なし (以前のコードからそのまま)
-class HighlightPainter extends CustomPainter {
-  final Offset position;
-  final Color color;
-  HighlightPainter({required this.position, required this.color});
+
+class MaskOverlayPainter extends CustomPainter {
+  final img.Image maskImage;
+  final Set<Color> selectedColors;
+  final ui.Image referenceImage;
+
+  MaskOverlayPainter({
+    required this.maskImage,
+    required this.selectedColors,
+    required this.referenceImage,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color;
-    canvas.drawCircle(position, 30, paint); // ハイライト半径
+    final double imageAspect = referenceImage.width / referenceImage.height;
+    final double canvasAspect = size.width / size.height;
+
+    double displayWidth, displayHeight;
+    if (canvasAspect > imageAspect) {
+      displayHeight = size.height;
+      displayWidth = displayHeight * imageAspect;
+    } else {
+      displayWidth = size.width;
+      displayHeight = displayWidth / imageAspect;
+    }
+
+    final double offsetX = (size.width - displayWidth) / 2;
+    final double offsetY = (size.height - displayHeight) / 2;
+
+    final double scaleX = displayWidth / maskImage.width;
+    final double scaleY = displayHeight / maskImage.height;
+
+    final paint = Paint()
+      ..color = Colors.red.withValues(alpha: 0.5)
+      ..style = PaintingStyle.fill;
+
+    for (int y = 0; y < maskImage.height; y++) {
+      for (int x = 0; x < maskImage.width; x++) {
+        final pixel = maskImage.getPixel(x, y);
+        final pixelColor = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+        if (selectedColors.contains(pixelColor)) {
+          final rect = Rect.fromLTWH(
+            offsetX + x * scaleX,
+            offsetY + y * scaleY,
+            scaleX,
+            scaleY,
+          );
+          canvas.drawRect(rect, paint);
+        }
+      }
+    }
   }
- 
+
   @override
-  bool shouldRepaint(covariant HighlightPainter oldDelegate) {
-    return oldDelegate.position != position || oldDelegate.color != color;
+  bool shouldRepaint(covariant MaskOverlayPainter oldDelegate) {
+    return oldDelegate.selectedColors != selectedColors;
   }
 }
- 
