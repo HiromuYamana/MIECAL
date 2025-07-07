@@ -175,32 +175,34 @@ class _CousePageState extends State<CousePage> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
+            child: Material(
               color: Colors.blueGrey,
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
+              child: InkWell(
+                onTap:(){
+                  final String selectedCause =
+                        _getSelectedCauseSummary(); // 日本語名で原因を取得
+
+                  Navigator.push(
+                    context,
+                    VerticalSlideRoute(
+                      page: OtherInformationPage(
+                        selectedOnsetDay: widget.selectedOnsetDay,
+                        symptom: widget.symptom,
+                        affectedArea: widget.affectedArea,
+                        sufferLevel: widget.sufferLevel,
+                        cause: selectedCause, // ここで日本語名を渡す
+                      ),
+                    ),
+                  );
+                },
+                child: SizedBox(
+                  child:Center(
+                    child: const Icon(
                     Icons.arrow_downward,
                     size: 50,
                     color: Colors.white,
-                  ),
-                  onPressed: () {
-                    final String selectedCause =
-                        _getSelectedCauseSummary(); // 日本語名で原因を取得
-
-                    Navigator.push(
-                      context,
-                      VerticalSlideRoute(
-                        page: OtherInformationPage(
-                          selectedOnsetDay: widget.selectedOnsetDay,
-                          symptom: widget.symptom,
-                          affectedArea: widget.affectedArea,
-                          sufferLevel: widget.sufferLevel,
-                          cause: selectedCause, // ここで日本語名を渡す
-                        ),
-                      ),
-                    );
-                  },
+                  ),)
+                  
                 ),
               ),
             ),
