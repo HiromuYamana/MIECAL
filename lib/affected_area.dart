@@ -66,6 +66,8 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
   };
 
   final Set<Color> _selectedColors = {};
+  final Map<Color, List<Offset>> _colorPixelCache = {}; // キャッシュ
+
 
   @override
   void initState() {
@@ -85,6 +87,15 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
       _rawMaskImage = rawImage;
       _maskImage = frame.image;
     });
+    for (int y = 0; y < _rawMaskImage!.height; y++) {
+      for (int x = 0; x < _rawMaskImage!.width; x++) {
+        final pixel = _rawMaskImage!.getPixel(x, y);
+        final color = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+        if (colorToPart.containsKey(color)) {
+          _colorPixelCache.putIfAbsent(color, () => []).add(Offset(x.toDouble(), y.toDouble()));
+        }
+      }
+    }
   }
 
   void _onTap(TapUpDetails details) {
@@ -177,9 +188,11 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                             Positioned.fill(
                               child: CustomPaint(
                                 painter: MaskOverlayPainter(
-                                  maskImage: _rawMaskImage!,
                                   selectedColors: _selectedColors,
+                                  colorPixelCache: _colorPixelCache,
                                   referenceImage: _maskImage!,
+                                  imageWidth: _rawMaskImage!.width,
+                                  imageHeight: _rawMaskImage!.height,
                                 ),
                               ),
                             ),
@@ -222,14 +235,18 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
 }
 
 class MaskOverlayPainter extends CustomPainter {
-  final img.Image maskImage;
   final Set<Color> selectedColors;
+  final Map<Color, List<Offset>> colorPixelCache;
   final ui.Image referenceImage;
+  final int imageWidth;
+  final int imageHeight;
 
   MaskOverlayPainter({
-    required this.maskImage,
     required this.selectedColors,
+    required this.colorPixelCache,
     required this.referenceImage,
+    required this.imageWidth,
+    required this.imageHeight,
   });
 
   @override
@@ -249,26 +266,25 @@ class MaskOverlayPainter extends CustomPainter {
     final double offsetX = (size.width - displayWidth) / 2;
     final double offsetY = (size.height - displayHeight) / 2;
 
-    final double scaleX = displayWidth / maskImage.width;
-    final double scaleY = displayHeight / maskImage.height;
+    final double scaleX = displayWidth / imageWidth;
+    final double scaleY = displayHeight / imageHeight;
 
     final paint = Paint()
-      ..color = Colors.red.withValues(alpha: 0.5)
+      ..color = Colors.red.withOpacity(0.5)
       ..style = PaintingStyle.fill;
 
-    for (int y = 0; y < maskImage.height; y++) {
-      for (int x = 0; x < maskImage.width; x++) {
-        final pixel = maskImage.getPixel(x, y);
-        final pixelColor = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
-        if (selectedColors.contains(pixelColor)) {
-          final rect = Rect.fromLTWH(
-            offsetX + x * scaleX,
-            offsetY + y * scaleY,
-            scaleX,
-            scaleY,
-          );
-          canvas.drawRect(rect, paint);
-        }
+    for (final color in selectedColors) {
+      final pixels = colorPixelCache[color];
+      if (pixels == null) continue;
+
+      for (final p in pixels) {
+        final rect = Rect.fromLTWH(
+          offsetX + p.dx * scaleX,
+          offsetY + p.dy * scaleY,
+          scaleX,
+          scaleY,
+        );
+        canvas.drawRect(rect, paint);
       }
     }
   }
