@@ -111,7 +111,7 @@ class _CousePageState extends State<CousePage> {
                         Container(
                           margin: const EdgeInsets.all(8),
                           // width, heightはGridViewが自動調整するため削除または調整
-                          // width: 1050,
+                          width: 1050,
                           // height: 1050,
                           decoration: BoxDecoration(
                             border: Border.all(
