@@ -4,7 +4,6 @@ import 'package:miecal/vertical_slide_page.dart';
 
 class OtherInformationPage extends StatefulWidget {
   // これまでのページから受け取る問診票データを定義します
-  // 例: 発症日、症状、患部、程度、原因など
   final DateTime? selectedOnsetDay;
   final String? symptom;
   final String? affectedArea;
@@ -26,7 +25,7 @@ class OtherInformationPage extends StatefulWidget {
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
   // 各行で選択された項目のインデックスを保持 (0または1、未選択はnull)
-  List<int?> selectedInRow = [null, null, null, null];
+  List<int?> selectedInRow = [null, null, null, null]; // 4項目に対応
 
   final List<Map<String, String>> imagePaths = [
     {'path': 'assets/sample_image1.png', 'name': '飲む'},
@@ -39,7 +38,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
     {'path': 'assets/sample_image8.png', 'name': 'いいえ'},
   ];
 
-  final List<String> labels = ['飲酒', '喫煙', 'お薬', '妊娠中']; // 各行のラベル
+  final List<String> labels = ['飲酒', '喫煙', 'お薬', '妊娠']; // 各行のラベル
 
   @override
   void initState() {
@@ -49,17 +48,20 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
 
   // 選択された情報を文字列としてまとめるヘルパー関数
   String _getOtherInformationSummary() {
-    List<String> selectedLabels = [];
+    List<String> selectedSummaryParts = [];
     for (int i = 0; i < selectedInRow.length; i++) {
       if (selectedInRow[i] != null) {
-        // 例: 「a: sample_image1」のような形式で追加
+        // 選択された場合
         int imageIndex = i * 2 + selectedInRow[i]!;
-        // images_Couseには画像パスが入っているため、適宜表示名を調整
-        String selectedImageName = imagePaths[imageIndex]['name']!;
-        selectedLabels.add('${labels[i]}: $selectedImageName');
+        String selectedOptionName = imagePaths[imageIndex]['name']!;
+        selectedSummaryParts.add('${labels[i]}: $selectedOptionName');
+      } else {
+        // 未選択の場合も情報として含める
+        selectedSummaryParts.add('${labels[i]}: 未選択');
       }
     }
-    return selectedLabels.isEmpty ? 'なし' : selectedLabels.join(', ');
+    // 全ての行の情報を含めて結合
+    return selectedSummaryParts.join('; '); // 各項目をセミコロンとスペースで区切る
   }
 
   @override
@@ -98,6 +100,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(4, (rowIndex) {
+                  // 4行に対応
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Row(
