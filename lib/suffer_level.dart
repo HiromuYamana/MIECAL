@@ -61,7 +61,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
           Expanded(
             flex: 1, // 上部のヘッダー部分の割合
             child: Container(
-              color: const Color.fromARGB(255, 207, 227, 230), // 背景色
+              color: const Color.fromARGB(255, 218, 246, 250), // 背景色
               padding: EdgeInsets.only(top: topPadding), // 上部パディング
               child: Center(
                 child: Column(
@@ -93,13 +93,13 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
           Expanded(
             flex: 7, // スライダーと表情画像の領域の割合
             child: Container(
-              decoration:
-                  LinearGradient(
-                    // 背景グラデーション
-                    colors: [Colors.lightBlue.shade100, Colors.white],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ).asBoxDecoration(), // LinearGradientをBoxDecorationとして使うヘルパー
+              // decoration:
+              //     // LinearGradient(
+              //     //   // 背景グラデーション
+              //     //   colors: [Colors.lightBlue.shade100, Colors.white],
+              //     //   begin: Alignment.topCenter,
+              //     //   end: Alignment.bottomCenter,
+              //     // ).asBoxDecoration(), // LinearGradientをBoxDecorationとして使うヘルパー
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
