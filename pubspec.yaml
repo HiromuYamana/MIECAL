@@ -23,6 +23,11 @@ dependencies:
   firebase_auth: ^4.17.4
   cloud_firestore: ^4.15.5
 
+
+
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -47,3 +52,4 @@ flutter:
     - assets/human_outline.png
     - assets/body_mask.png
   uses-material-design: true
+  generate: true
