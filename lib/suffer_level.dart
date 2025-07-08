@@ -144,17 +144,11 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
           ),
           Expanded(
             flex: 1, // 下部のナビゲーションボタン部分の割合
-            child: Container(
+            child: Material(
               color: Colors.blueGrey, // 背景色
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    final String sufferLevelSummary =
+              child: InkWell(
+                onTap:(){
+                  final String sufferLevelSummary =
                         _getSufferLevelSummary(); // 選択された程度を取得
 
                     // Nextボタンが押されたら、これまでのデータとこのページで選択したデータを
@@ -173,7 +167,16 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                         ),
                       ),
                     );
-                  },
+                },
+                child: SizedBox(
+                  child:Center(
+                    child: const Icon(
+                      Icons.arrow_downward,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                  )
+                  
                 ),
               ),
             ),
