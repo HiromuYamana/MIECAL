@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:miecal/login_page.dart';
-import 'package:miecal/main.dart';
+import 'package:miecal/menu_page.dart';
+import 'dart:math';
 
 class PersonalInformationPage extends StatefulWidget {
   const PersonalInformationPage({super.key});
@@ -18,9 +18,17 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _birthdayController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _allergyController = TextEditingController();
+  final _surgeryController = TextEditingController();
+
+  String? gender; // 'male' or 'female'
+  int? age;
+  bool hadSurgery = false;
 
   bool isLoading = true;
   String errorMessage = '';
+  String? profileImageUrl;
 
   @override
   void initState() {
@@ -40,14 +48,20 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       }
 
       final doc = await _firestore.collection('users').doc(user.uid).get();
-
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
         _nameController.text = data['name'] ?? '';
         _addressController.text = data['address'] ?? '';
         _birthdayController.text = data['birthday'] ?? '';
-      } else {
-        errorMessage = 'ユーザー情報は未登録です。';
+        _phoneController.text = data['phone'] ?? '';
+        _allergyController.text = data['allergy'] ?? '';
+        gender = data['gender'];
+        hadSurgery = data['surgery'] ?? false;
+
+        // 年齢自動計算
+        if (_birthdayController.text.isNotEmpty) {
+          age = _calculateAge(_birthdayController.text);
+        }
       }
     } catch (e) {
       errorMessage = '読み込みエラー: $e';
@@ -55,6 +69,20 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  int? _calculateAge(String dateString) {
+    try {
+      final birthDate = DateTime.parse(dateString);
+      final today = DateTime.now();
+      int calculatedAge = today.year - birthDate.year;
+      if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
+        calculatedAge--;
+      }
+      return calculatedAge;
+    } catch (_) {
+      return null;
     }
   }
 
@@ -78,25 +106,25 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         'name': _nameController.text.trim(),
         'address': _addressController.text.trim(),
         'birthday': _birthdayController.text.trim(),
+        'phone': _phoneController.text.trim(),
+        'gender': gender,
+        'allergy': _allergyController.text.trim(),
+        'surgery': hadSurgery,
+        'updatedAt': FieldValue.serverTimestamp(),
       });
+
+      if (!mounted) return;
 
       setState(() {
         isLoading = false;
       });
 
-      if (!mounted) return;
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('保存しました')),
       );
 
-      // 保存後にログアウト
-      await _auth.signOut();
-
-      // ログインページへ遷移（履歴をクリア）
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (route) => false,
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const MenuPage()),
       );
     } catch (e) {
       setState(() {
@@ -111,42 +139,128 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     _nameController.dispose();
     _addressController.dispose();
     _birthdayController.dispose();
+    _phoneController.dispose();
+    _allergyController.dispose();
+    _surgeryController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('プロフィール編集')),
+      appBar: AppBar(title: const Text('プロフィール')),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   if (errorMessage.isNotEmpty)
                     Text(errorMessage, style: const TextStyle(color: Colors.red)),
-                  TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(labelText: '名前'),
+
+                  const SizedBox(height: 16),
+
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.grey[200],
+                    child: const Icon(Icons.person, size: 40),
                   ),
-                  TextField(
-                    controller: _addressController,
-                    decoration: const InputDecoration(labelText: '住所'),
+
+                  const SizedBox(height: 16),
+
+                  _buildIconTextField(Icons.person, _nameController),
+                  _buildIconTextField(Icons.home, _addressController),
+
+                  GestureDetector(
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime(2000),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now(),
+                      );
+                      if (pickedDate != null) {
+                        String dateStr =
+                            '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
+                        setState(() {
+                          _birthdayController.text = dateStr;
+                          age = _calculateAge(dateStr);
+                        });
+                      }
+                    },
+                    child: AbsorbPointer(
+                      child: _buildIconTextField(Icons.calendar_today, _birthdayController),
+                    ),
                   ),
-                  TextField(
-                    controller: _birthdayController,
-                    decoration:
-                        const InputDecoration(labelText: '生年月日 (例: 1990-01-01)'),
+
+                  if (age != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text('年齢: $age 歳', style: const TextStyle(color: Colors.grey)),
+                    ),
+
+                  const SizedBox(height: 12),
+
+                  // 性別アイコン
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.male,
+                            size: 40,
+                            color: gender == 'male' ? Colors.blue : Colors.grey),
+                        onPressed: () => setState(() => gender = 'male'),
+                      ),
+                      const SizedBox(width: 24),
+                      IconButton(
+                        icon: Icon(Icons.female,
+                            size: 40,
+                            color: gender == 'female' ? Colors.pink : Colors.grey),
+                        onPressed: () => setState(() => gender = 'female'),
+                      ),
+                    ],
                   ),
+
+                  _buildIconTextField(Icons.phone, _phoneController, keyboardType: TextInputType.phone),
+                  _buildIconTextField(Icons.warning, _allergyController),
+                  
+                  Row(
+                    children: [
+                      const Icon(Icons.local_hospital),
+                      const SizedBox(width: 10),
+                      const Text('手術歴'),
+                      const Spacer(),
+                      Switch(
+                        value: hadSurgery,
+                        onChanged: (val) => setState(() => hadSurgery = val),
+                      ),
+                    ],
+                  ),
+
                   const SizedBox(height: 20),
-                  ElevatedButton(
+                  ElevatedButton.icon(
                     onPressed: saveUserData,
-                    child: const Text('保存'),
+                    icon: const Icon(Icons.save),
+                    label: const Text('保存'),
                   ),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildIconTextField(IconData icon, TextEditingController controller, {TextInputType keyboardType = TextInputType.text}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          prefixIcon: Icon(icon),
+          border: const OutlineInputBorder(),
+        ),
+      ),
     );
   }
 }

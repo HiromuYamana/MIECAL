@@ -104,17 +104,6 @@ class _DatePageState extends State<DatePage> {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
                     });
-                    final formattedDate =
-                        "${selectedDay.year}/${selectedDay.month}/${selectedDay.day}";
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          '$formattedDate が選択されました．',
-                        ), // スナックバーのテキストを修正
-                        duration: const Duration(seconds: 1),
-                        action: SnackBarAction(label: '閉じる', onPressed: () {}),
-                      ),
-                    );
                   }
                 },
                 onPageChanged: (focusedDay) => _focusedDay = focusedDay,
@@ -186,13 +175,6 @@ class _DatePageState extends State<DatePage> {
                             affectedArea:
                                 widget.affectedArea, // 以前のページから受け取った患部
                           ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('日付を選択してください．'),
-                          duration: Duration(seconds: 1),
                         ),
                       );
                     }
