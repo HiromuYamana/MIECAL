@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:miecal/main.dart';
 import 'package:miecal/login_page.dart';
+import 'package:miecal/menu_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // 🔐 ログイン成功時に問診ページに遷移
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/SymptomPage');
+      Navigator.pushReplacementNamed(context, '/Menupage');
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message ?? 'ログインに失敗しました';

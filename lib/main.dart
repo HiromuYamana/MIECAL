@@ -17,8 +17,10 @@ import 'package:miecal/login_page.dart';
 import 'package:miecal/firebase_options.dart';
 import 'package:miecal/registar_page.dart';
 import 'package:miecal/personal_information_page.dart';
+import 'package:miecal/menu_page.dart';
 // ignore: deprecated_member_use, unused_import, avoid_web_libraries_in_flutter
 import 'dart:html' as html;  // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
+import 'package:miecal/l10n/app_localizations.dart';
 
 
 
@@ -31,22 +33,23 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+//      locale: const Locale('en'),
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       initialRoute: '/',
       //home: const AuthGate(),
       routes: {
         '/': (context) => const TopPage(),
         '/LoginPage': (context) => const LoginScreen(),
         '/RegisterPage': (context) => const RegisterPage(),
-         '/PersonalInformationPage':
-            (context) => const PersonalInformationPage(),
+         '/PersonalInformationPage': (context) => const PersonalInformationPage(),
+        '/Menupage': (context) => const MenuPage(),
         '/SymptomPage': (context) => const SymptomPage(),
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),
         '/DatePage': (context) => const DatePage(),
@@ -69,12 +72,15 @@ class MyApp extends StatelessWidget {
             otherInformation: args?['otherInformation'] as String?, // その他情報
           );
         },
+        
       },
       // 必要に応じてテーマを設定
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         // その他のテーマ設定
       ),
+
+      
     );
   }
 }
