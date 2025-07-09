@@ -12,7 +12,6 @@ import 'package:miecal/other_information.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miecal/login_page.dart';
 import 'package:miecal/firebase_options.dart';
 import 'package:miecal/registar_page.dart';
@@ -33,6 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: const Locale('en'),
       //slocale: const Locale('en'),
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,

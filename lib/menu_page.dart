@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:miecal/main.dart';
 import 'package:miecal/symptom.dart';
 import 'package:miecal/top_page.dart';
 import 'package:miecal/personal_information_page.dart';
-import 'package:miecal/l10n/app_localizations.dart'; // ★ 追加
+import 'package:miecal/l10n/app_localizations.dart'; 
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final local = AppLocalizations.of(context)!; // ★ ローカライズ文字列を取得
+    final local = AppLocalizations.of(context)!; 
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(local.menuTitle), // ★ 多言語化
+        title: Text(local.menuTitle), 
         backgroundColor: Colors.teal,
       ),
       body: Column(
@@ -27,7 +26,7 @@ class MenuPage extends StatelessWidget {
             children: [
               _MenuIconButton(
                 imagePath: 'assets/icons/medical_form.png',
-                label: local.symptomForm, // ★ 多言語化
+                label: local.symptomForm, 
                 onTap: () {
                   Navigator.push(
                     context,
@@ -37,7 +36,7 @@ class MenuPage extends StatelessWidget {
               ),
               _MenuIconButton(
                 imagePath: 'assets/icons/profile_edit.png',
-                label: local.profileEdit, // ★ 多言語化
+                label: local.profileEdit,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -61,7 +60,7 @@ class MenuPage extends StatelessWidget {
               },
               icon: const Icon(Icons.logout, size: 18, color: Colors.grey),
               label: Text(
-                local.logout, // ★ 多言語化
+                local.logout,
                 style: const TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ),
@@ -73,7 +72,6 @@ class MenuPage extends StatelessWidget {
 }
 
 
-// アイコン付きボタン（イラスト + タップ）
 class _MenuIconButton extends StatelessWidget {
   final String imagePath;
   final String label;

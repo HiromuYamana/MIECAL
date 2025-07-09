@@ -3,5 +3,32 @@
   "menuTitle": "Menu",
   "symptomForm": "Medical Form",
   "profileEdit": "Profile",
-  "logout": "Logout"
+  "logout": "Logout",
+  
+  "notSelected": "Not selected",
+  "partFace": "Face",
+  "partNeck": "Neck",
+  "partChest": "Chest",
+  "partAbdomen": "Abdomen",
+  "partGroin": "Groin",
+  "partRightThigh": "Right thigh",
+  "partRightCalf": "Right calf",
+  "partRightFoot": "Right foot",
+  "partLeftThigh": "Left thigh",
+  "partLeftCalf": "Left calf",
+  "partLeftFoot": "Left foot",
+  "partRightShoulder": "Right shoulder",
+  "partRightUpperArm": "Right upper arm",
+  "partRightForearm": "Right forearm",
+  "partRightHand": "Right hand",
+  "partLeftShoulder": "Left shoulder",
+  "partLeftUpperArm": "Left upper arm",
+  "partLeftForearm": "Left forearm",
+  "partLeftHand": "Left hand",
+  "partHead": "Head",
+  "partNape": "Nape",
+  "partBack": "Back",
+  "partButtocks": "Buttocks",
+
+  "choosingTheLevelofPain": "Choosing the level of pain"
 }

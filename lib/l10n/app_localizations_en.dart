@@ -19,4 +19,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get notSelected => 'Not selected';
+
+  @override
+  String get partFace => 'Face';
+
+  @override
+  String get partNeck => 'Neck';
+
+  @override
+  String get partChest => 'Chest';
+
+  @override
+  String get partAbdomen => 'Abdomen';
+
+  @override
+  String get partGroin => 'Groin';
+
+  @override
+  String get partRightThigh => 'Right thigh';
+
+  @override
+  String get partRightCalf => 'Right calf';
+
+  @override
+  String get partRightFoot => 'Right foot';
+
+  @override
+  String get partLeftThigh => 'Left thigh';
+
+  @override
+  String get partLeftCalf => 'Left calf';
+
+  @override
+  String get partLeftFoot => 'Left foot';
+
+  @override
+  String get partRightShoulder => 'Right shoulder';
+
+  @override
+  String get partRightUpperArm => 'Right upper arm';
+
+  @override
+  String get partRightForearm => 'Right forearm';
+
+  @override
+  String get partRightHand => 'Right hand';
+
+  @override
+  String get partLeftShoulder => 'Left shoulder';
+
+  @override
+  String get partLeftUpperArm => 'Left upper arm';
+
+  @override
+  String get partLeftForearm => 'Left forearm';
+
+  @override
+  String get partLeftHand => 'Left hand';
+
+  @override
+  String get partHead => 'Head';
+
+  @override
+  String get partNape => 'Nape';
+
+  @override
+  String get partBack => 'Back';
+
+  @override
+  String get partButtocks => 'Buttocks';
+
+  @override
+  String get choosingTheLevelofPain => 'Choosing the level of pain';
 }

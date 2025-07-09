@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/couse.dart';
 import 'package:miecal/vertical_slide_page.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 
 class SufferLevelPage extends StatefulWidget {
   // これまでのページから受け取る問診票データを定義します
@@ -56,6 +57,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
 
     // 画面の安全な領域の上部パディングを取得 (ノッチなど)
     final double topPadding = MediaQuery.of(context).padding.top;
+        final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Column(
@@ -79,9 +81,9 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                         Navigator.pop(context); // 前の画面に戻る
                       },
                     ),
-                    const Text(
-                      '程度の選択',
-                      style: TextStyle(
+                    Text(
+                      loc.choosingTheLevelofPain,
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -94,53 +96,44 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
           ),
           Expanded(
             flex: 7, // スライダーと表情画像の領域の割合
-            child: Container(
-              // decoration:
-              //     // LinearGradient(
-              //     //   // 背景グラデーション
-              //     //   colors: [Colors.lightBlue.shade100, Colors.white],
-              //     //   begin: Alignment.topCenter,
-              //     //   end: Alignment.bottomCenter,
-              //     // ).asBoxDecoration(), // LinearGradientをBoxDecorationとして使うヘルパー
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      faceImages[selectedIndex], // スライダー値に応じて表情画像を表示
-                      width: 100,
-                      height: 100,
-                    ),
-                    const SizedBox(height: 30), // 画像とスライダーの間のスペース
-                    SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        trackHeight: 8.0, // トラックの高さ
-                        thumbShape: const RoundSliderThumbShape(
-                          enabledThumbRadius: 14.0, // 親指の半径
-                        ),
-                        trackShape: GradientSliderTrackShape(
-                          // カスタムトラックシェイプ
-                          gradient: const LinearGradient(
-                            colors: [Colors.green, Colors.yellow, Colors.red],
-                          ),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    faceImages[selectedIndex], // スライダー値に応じて表情画像を表示
+                    width: 100,
+                    height: 100,
+                  ),
+                  const SizedBox(height: 30), // 画像とスライダーの間のスペース
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      trackHeight: 8.0, // トラックの高さ
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 14.0, // 親指の半径
+                      ),
+                      trackShape: GradientSliderTrackShape(
+                        // カスタムトラックシェイプ
+                        gradient: const LinearGradient(
+                          colors: [Colors.green, Colors.yellow, Colors.red],
                         ),
                       ),
-                      child: Slider(
-                        value: severity, // スライダーの現在値
-                        min: 0, // 最小値
-                        max: 10, // 最大値
-                        divisions: 10, // 分割数 (0から10まで11段階)
-                        label: severity.toStringAsFixed(0), // スライダーの上に表示されるラベル
-                        onChanged: (value) {
-                          setState(() {
-                            severity = value; // スライダー値が変更されたら状態を更新
-                          });
-                        },
-                      ),
                     ),
-                  ],
-                ),
+                    child: Slider(
+                      value: severity, // スライダーの現在値
+                      min: 0, // 最小値
+                      max: 10, // 最大値
+                      divisions: 10, // 分割数 (0から10まで11段階)
+                      label: severity.toStringAsFixed(0), // スライダーの上に表示されるラベル
+                      onChanged: (value) {
+                        setState(() {
+                          severity = value; // スライダー値が変更されたら状態を更新
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -188,9 +181,6 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
 
 // LinearGradient を BoxDecoration に直接渡せるようにする拡張機能 (Option)
 extension _LinearGradientAsBoxDecoration on LinearGradient {
-  BoxDecoration asBoxDecoration() {
-    return BoxDecoration(gradient: this);
-  }
 }
 
 // GradientSliderTrackShape は変更なし (以前のコードからそのまま)

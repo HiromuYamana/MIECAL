@@ -19,4 +19,79 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get logout => 'ログアウト';
+
+  @override
+  String get notSelected => '未選択';
+
+  @override
+  String get partFace => '顔';
+
+  @override
+  String get partNeck => '首';
+
+  @override
+  String get partChest => '胸';
+
+  @override
+  String get partAbdomen => '腹';
+
+  @override
+  String get partGroin => '股';
+
+  @override
+  String get partRightThigh => '右腿';
+
+  @override
+  String get partRightCalf => '右ふくらはぎ';
+
+  @override
+  String get partRightFoot => '右足';
+
+  @override
+  String get partLeftThigh => '左腿';
+
+  @override
+  String get partLeftCalf => '左ふくらはぎ';
+
+  @override
+  String get partLeftFoot => '左足';
+
+  @override
+  String get partRightShoulder => '右肩';
+
+  @override
+  String get partRightUpperArm => '右上腕';
+
+  @override
+  String get partRightForearm => '右前腕';
+
+  @override
+  String get partRightHand => '右手';
+
+  @override
+  String get partLeftShoulder => '左肩';
+
+  @override
+  String get partLeftUpperArm => '左上腕';
+
+  @override
+  String get partLeftForearm => '左前腕';
+
+  @override
+  String get partLeftHand => '左手';
+
+  @override
+  String get partHead => '頭';
+
+  @override
+  String get partNape => '項';
+
+  @override
+  String get partBack => '背中';
+
+  @override
+  String get partButtocks => '臀部';
+
+  @override
+  String get choosingTheLevelofPain => '程度の選択';
 }

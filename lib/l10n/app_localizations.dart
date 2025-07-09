@@ -118,6 +118,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
+
+  /// No description provided for @notSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not selected'**
+  String get notSelected;
+
+  /// No description provided for @partFace.
+  ///
+  /// In en, this message translates to:
+  /// **'Face'**
+  String get partFace;
+
+  /// No description provided for @partNeck.
+  ///
+  /// In en, this message translates to:
+  /// **'Neck'**
+  String get partNeck;
+
+  /// No description provided for @partChest.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get partChest;
+
+  /// No description provided for @partAbdomen.
+  ///
+  /// In en, this message translates to:
+  /// **'Abdomen'**
+  String get partAbdomen;
+
+  /// No description provided for @partGroin.
+  ///
+  /// In en, this message translates to:
+  /// **'Groin'**
+  String get partGroin;
+
+  /// No description provided for @partRightThigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Right thigh'**
+  String get partRightThigh;
+
+  /// No description provided for @partRightCalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Right calf'**
+  String get partRightCalf;
+
+  /// No description provided for @partRightFoot.
+  ///
+  /// In en, this message translates to:
+  /// **'Right foot'**
+  String get partRightFoot;
+
+  /// No description provided for @partLeftThigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Left thigh'**
+  String get partLeftThigh;
+
+  /// No description provided for @partLeftCalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Left calf'**
+  String get partLeftCalf;
+
+  /// No description provided for @partLeftFoot.
+  ///
+  /// In en, this message translates to:
+  /// **'Left foot'**
+  String get partLeftFoot;
+
+  /// No description provided for @partRightShoulder.
+  ///
+  /// In en, this message translates to:
+  /// **'Right shoulder'**
+  String get partRightShoulder;
+
+  /// No description provided for @partRightUpperArm.
+  ///
+  /// In en, this message translates to:
+  /// **'Right upper arm'**
+  String get partRightUpperArm;
+
+  /// No description provided for @partRightForearm.
+  ///
+  /// In en, this message translates to:
+  /// **'Right forearm'**
+  String get partRightForearm;
+
+  /// No description provided for @partRightHand.
+  ///
+  /// In en, this message translates to:
+  /// **'Right hand'**
+  String get partRightHand;
+
+  /// No description provided for @partLeftShoulder.
+  ///
+  /// In en, this message translates to:
+  /// **'Left shoulder'**
+  String get partLeftShoulder;
+
+  /// No description provided for @partLeftUpperArm.
+  ///
+  /// In en, this message translates to:
+  /// **'Left upper arm'**
+  String get partLeftUpperArm;
+
+  /// No description provided for @partLeftForearm.
+  ///
+  /// In en, this message translates to:
+  /// **'Left forearm'**
+  String get partLeftForearm;
+
+  /// No description provided for @partLeftHand.
+  ///
+  /// In en, this message translates to:
+  /// **'Left hand'**
+  String get partLeftHand;
+
+  /// No description provided for @partHead.
+  ///
+  /// In en, this message translates to:
+  /// **'Head'**
+  String get partHead;
+
+  /// No description provided for @partNape.
+  ///
+  /// In en, this message translates to:
+  /// **'Nape'**
+  String get partNape;
+
+  /// No description provided for @partBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get partBack;
+
+  /// No description provided for @partButtocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Buttocks'**
+  String get partButtocks;
+
+  /// No description provided for @choosingTheLevelofPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Choosing the level of pain'**
+  String get choosingTheLevelofPain;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
