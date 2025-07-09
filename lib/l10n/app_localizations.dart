@@ -263,11 +263,17 @@ abstract class AppLocalizations {
   /// **'Buttocks'**
   String get partButtocks;
 
-  /// No description provided for @choosingTheLevelofPain.
+  /// No description provided for @dateOfOnset.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of onset'**
+  String get dateOfOnset;
+
+  /// No description provided for @choosingTheLevelOfPain.
   ///
   /// In en, this message translates to:
   /// **'Choosing the level of pain'**
-  String get choosingTheLevelofPain;
+  String get choosingTheLevelOfPain;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:miecal/suffer_level.dart'; // SufferLevelPage をインポート
 import 'package:table_calendar/table_calendar.dart';
 import 'package:miecal/vertical_slide_page.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 
 class DatePage extends StatefulWidget {
   // DatePage が以前のページからデータを受け取る必要があればここに追加します
@@ -28,19 +29,12 @@ class _DatePageState extends State<DatePage> {
   late final DateTime _lastDay = DateTime(_now.year, _now.month + 1, 0);
 
   final List<String> _japaneseWeekdays = ['月', '火', '水', '木', '金', '土', '日'];
-  final List<String> _englishWeekdays = [
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
-  ];
+  final List<String> _englishWeekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       body: Column(
         children: [
@@ -68,9 +62,9 @@ class _DatePageState extends State<DatePage> {
                       height: screenHeight * 0.2,
                       fit: BoxFit.contain,
                     ),
-                    const Text(
-                      '発症日(Date of onset)',
-                      style: TextStyle(color: Colors.black),
+                    Text(
+                      loc.dateOfOnset,
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ],
                 ),
@@ -182,6 +176,28 @@ class _DatePageState extends State<DatePage> {
                       color: Colors.white,
                     ),
                   ),
+              child: Center(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_downward,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (_selectedDay != null) {
+                      // 選択された日付と、このページが受け取った過去のデータをSufferLevelPageに渡す
+                      Navigator.push(
+                        context,
+                        VerticalSlideRoute(
+                          page: SufferLevelPage(
+                            selectedOnsetDay: _selectedDay, // このページで選択された日付
+                            symptom: widget.symptom, // 以前のページから受け取った症状
+                            affectedArea: widget.affectedArea, // 以前のページから受け取った患部
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ),

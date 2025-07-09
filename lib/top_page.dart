@@ -16,6 +16,7 @@ class RippledEffect extends StatefulWidget{
   const RippledEffect({super.key, this.size = 100,this.color = Colors.blue});
 
   @override
+  // ignore: library_private_types_in_public_api
   _RippleEffectState createState() => _RippleEffectState();
 } 
 

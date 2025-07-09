@@ -93,5 +93,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get partButtocks => 'Buttocks';
 
   @override
-  String get choosingTheLevelofPain => 'Choosing the level of pain';
+  String get dateOfOnset => 'Date of onset';
+
+  @override
+  String get choosingTheLevelOfPain => 'Choosing the level of pain';
 }

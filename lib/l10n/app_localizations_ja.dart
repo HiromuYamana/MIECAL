@@ -93,5 +93,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get partButtocks => '臀部';
 
   @override
-  String get choosingTheLevelofPain => '程度の選択';
+  String get dateOfOnset => '発症日';
+
+  @override
+  String get choosingTheLevelOfPain => '程度の選択';
 }
