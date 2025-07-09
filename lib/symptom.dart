@@ -184,22 +184,13 @@ class _SymptomPageState extends State<SymptomPage> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
+            child: Material(
               color: Colors.blueGrey,
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    final String selectedSymptom =
-                        _getSelectedSymptomSummary(); // 選択された症状を取得
-
-                    // Nextボタンが押されたら、このページで選択した症状を
-                    // AffectedAreaPageへ渡す
-                    Navigator.push(
+              child: InkWell(
+                onTap:(){
+                  final String selectedSymptom =
+                        _getSelectedSymptomSummary(); 
+                  Navigator.push(
                       context,
                       VerticalSlideRoute(
                         page: AffectedAreaPage(
@@ -207,7 +198,15 @@ class _SymptomPageState extends State<SymptomPage> {
                         ),
                       ),
                     );
-                  },
+                },
+                  child: SizedBox.expand(
+                    child: Center(
+                      child: const Icon(
+                      Icons.arrow_downward,
+                      size: 50,
+                      color: Colors.white,
+                    ),)
+                  
                 ),
               ),
             ),

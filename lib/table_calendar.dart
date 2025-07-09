@@ -154,17 +154,11 @@ class _DatePageState extends State<DatePage> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
+            child: Material(
               color: Colors.blueGrey,
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    if (_selectedDay != null) {
+              child: InkWell(
+                onTap:(){
+                   if (_selectedDay != null) {
                       // 選択された日付と、このページが受け取った過去のデータをSufferLevelPageに渡す
                       Navigator.push(
                         context,
@@ -177,12 +171,21 @@ class _DatePageState extends State<DatePage> {
                           ),
                         ),
                       );
-                    }
-                  },
+                   }
+                },
+                child: SizedBox(
+                  child:Center(
+                    child: const Icon(
+                    Icons.arrow_downward,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                  
                 ),
               ),
             ),
           ),
+         )
         ],
       ),
     );

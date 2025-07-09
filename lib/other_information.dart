@@ -175,37 +175,39 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
+            child: Material(
               color: Colors.blueGrey,
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    final String otherInformationSummary =
+              child: InkWell(
+                onTap:(){
+                  final String otherInformationSummary =
                         _getOtherInformationSummary();
 
                     // これまでのページから受け取ったデータと、このページで選択した情報をまとめて渡す
-                    Navigator.push(
-                      context,
-                      VerticalSlideRoute(
-                        page: QuestionnairePage(
-                          selectedOnsetDay:
-                              widget.selectedOnsetDay, // DatePageから
-                          symptom: widget.symptom, // SymptomPageから
-                          affectedArea:
-                              widget.affectedArea, // AffectedAreaPageから
-                          sufferLevel: widget.sufferLevel, // SufferLevelPageから
-                          cause: widget.cause, // CousePageから
-                          otherInformation:
-                              otherInformationSummary, // このOtherInformationPageから
-                        ),
+                  Navigator.push(
+                    context,
+                    VerticalSlideRoute(
+                      page: QuestionnairePage(
+                        selectedOnsetDay:
+                            widget.selectedOnsetDay, // DatePageから
+                        symptom: widget.symptom, // SymptomPageから
+                        affectedArea:
+                            widget.affectedArea, // AffectedAreaPageから
+                        sufferLevel: widget.sufferLevel, // SufferLevelPageから
+                        cause: widget.cause, // CousePageから
+                        otherInformation:
+                            otherInformationSummary, // このOtherInformationPageから
                       ),
-                    );
-                  },
+                    ),
+                  );
+                },
+                child: SizedBox(
+                  child:Center(
+                    child: const Icon(
+                    Icons.arrow_downward,
+                    size: 50,
+                    color: Colors.white,
+                  ),)
+                  
                 ),
               ),
             ),
