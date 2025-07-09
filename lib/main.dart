@@ -19,16 +19,12 @@ import 'package:miecal/registar_page.dart';
 import 'package:miecal/personal_information_page.dart';
 import 'package:miecal/menu_page.dart';
 // ignore: deprecated_member_use, unused_import, avoid_web_libraries_in_flutter
-import 'dart:html' as html;  // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
+import 'dart:html' as html; // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
 import 'package:miecal/l10n/app_localizations.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -37,7 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-//      locale: const Locale('en'),
+      //slocale: const Locale('en'),
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -48,9 +44,25 @@ class MyApp extends StatelessWidget {
         '/': (context) => const TopPage(),
         '/LoginPage': (context) => const LoginScreen(),
         '/RegisterPage': (context) => const RegisterPage(),
-         '/PersonalInformationPage': (context) => const PersonalInformationPage(),
+        '/PersonalInformationPage':
+            (context) => const PersonalInformationPage(),
         '/Menupage': (context) => const MenuPage(),
-        '/SymptomPage': (context) => const SymptomPage(),
+        '/SymptomPage': (context) {
+          // SymptomPage のルート定義を修正
+          final Map<String, dynamic>? args =
+              ModalRoute.of(context)?.settings.arguments
+                  as Map<String, dynamic>?;
+
+          return SymptomPage(
+            userName: args?['userName'] as String?,
+            selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?,
+            symptom: args?['symptom'] as String?,
+            affectedArea: args?['affectedArea'] as String?,
+            sufferLevel: args?['sufferLevel'] as String?,
+            cause: args?['cause'] as String?,
+            otherInformation: args?['otherInformation'] as String?,
+          );
+        },
         '/AffectedAreaPage': (context) => const AffectedAreaPage(),
         '/DatePage': (context) => const DatePage(),
         '/SufferLevelPage': (context) => const SufferLevelPage(),
@@ -64,6 +76,7 @@ class MyApp extends StatelessWidget {
                   as Map<String, dynamic>?;
 
           return QuestionnairePage(
+            userName: args?['userName'] as String?,
             selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?, // 発症日
             symptom: args?['symptom'] as String?, // 症状
             affectedArea: args?['affectedArea'] as String?, // 患部
@@ -72,15 +85,12 @@ class MyApp extends StatelessWidget {
             otherInformation: args?['otherInformation'] as String?, // その他情報
           );
         },
-        
       },
       // 必要に応じてテーマを設定
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         // その他のテーマ設定
       ),
-
-      
     );
   }
 }

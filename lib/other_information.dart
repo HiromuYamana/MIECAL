@@ -4,6 +4,7 @@ import 'package:miecal/vertical_slide_page.dart';
 
 class OtherInformationPage extends StatefulWidget {
   // これまでのページから受け取る問診票データを定義します
+  final String? userName;
   final DateTime? selectedOnsetDay;
   final String? symptom;
   final String? affectedArea;
@@ -12,6 +13,7 @@ class OtherInformationPage extends StatefulWidget {
 
   const OtherInformationPage({
     super.key,
+    this.userName,
     this.selectedOnsetDay,
     this.symptom,
     this.affectedArea,
@@ -78,18 +80,18 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
               padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               child: Center(
                 child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_upward,
-                      color: Colors.white,
-                      size: 36,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  icon: const Icon(
+                    Icons.arrow_upward,
+                    color: Colors.white,
+                    size: 36,
                   ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ),
+          ),
           Expanded(
             flex: 8,
             child: SingleChildScrollView(
@@ -120,10 +122,14 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                           child: Row(
                             children: List.generate(2, (colIndex) {
                               int index = rowIndex * 2 + colIndex;
-                              bool isSelected = selectedInRow[rowIndex] == colIndex;
-                              if (index >= imagePaths.length) return const SizedBox.shrink();
+                              bool isSelected =
+                                  selectedInRow[rowIndex] == colIndex;
+                              if (index >= imagePaths.length)
+                                return const SizedBox.shrink();
                               return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     fixedSize: const Size(
@@ -132,15 +138,23 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                                     ), // ボタンの固定サイズ
                                     backgroundColor:
                                         isSelected
-                                            ? const Color.fromARGB(255, 225, 171, 85,) // 選択時
+                                            ? const Color.fromARGB(
+                                              255,
+                                              225,
+                                              171,
+                                              85,
+                                            ) // 選択時
                                             : Colors.grey[300], // 未選択時
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16,), // ボタンの角丸
+                                      borderRadius: BorderRadius.circular(
+                                        16,
+                                      ), // ボタンの角丸
                                     ),
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      selectedInRow[rowIndex] = isSelected ? null : colIndex;
+                                      selectedInRow[rowIndex] =
+                                          isSelected ? null : colIndex;
                                     });
                                   },
                                   child: Column(
@@ -178,20 +192,19 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(
-                onTap:(){
+                onTap: () {
                   final String otherInformationSummary =
-                        _getOtherInformationSummary();
+                      _getOtherInformationSummary();
 
-                    // これまでのページから受け取ったデータと、このページで選択した情報をまとめて渡す
+                  // これまでのページから受け取ったデータと、このページで選択した情報をまとめて渡す
                   Navigator.push(
                     context,
                     VerticalSlideRoute(
                       page: QuestionnairePage(
-                        selectedOnsetDay:
-                            widget.selectedOnsetDay, // DatePageから
+                        userName: widget.userName,
+                        selectedOnsetDay: widget.selectedOnsetDay, // DatePageから
                         symptom: widget.symptom, // SymptomPageから
-                        affectedArea:
-                            widget.affectedArea, // AffectedAreaPageから
+                        affectedArea: widget.affectedArea, // AffectedAreaPageから
                         sufferLevel: widget.sufferLevel, // SufferLevelPageから
                         cause: widget.cause, // CousePageから
                         otherInformation:
@@ -201,13 +214,13 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                   );
                 },
                 child: SizedBox(
-                  child:Center(
+                  child: Center(
                     child: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
-                  ),)
-                  
+                      Icons.arrow_downward,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ),

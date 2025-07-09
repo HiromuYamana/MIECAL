@@ -7,9 +7,24 @@ import 'package:miecal/table_calendar.dart';
 import 'package:miecal/vertical_slide_page.dart';
 
 class AffectedAreaPage extends StatefulWidget {
-  final String? symptom;
+  final String? userName;
+  final DateTime? selectedOnsetDay;
+  final String? symptom; // 既に存在しますが、念のため再確認
+  final String? affectedArea; // AffectedAreaPageで選択されるので、初期はnull
+  final String? sufferLevel;
+  final String? cause;
+  final String? otherInformation;
 
-  const AffectedAreaPage({super.key, this.symptom});
+  const AffectedAreaPage({
+    super.key,
+    this.userName, // <-- 追加
+    this.selectedOnsetDay, // <-- 追加
+    this.symptom, // <-- 追加
+    this.affectedArea, // <-- 追加 (既存のaffectedAreaフィールド名と衝突しないように注意)
+    this.sufferLevel, // <-- 追加
+    this.cause, // <-- 追加
+    this.otherInformation,
+  });
 
   @override
   State<AffectedAreaPage> createState() => _AffectedAreaPageState();
@@ -232,28 +247,31 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(
-                onTap:(){
-                  final String selectedAffectedArea =
-                        getSelectedPartsSummary();
-                    Navigator.push(
-                      context,
-                      VerticalSlideRoute(
-                        page: DatePage(
-                          symptom: widget.symptom,
-                          affectedArea: selectedAffectedArea,
-                        ),
+                onTap: () {
+                  final String selectedAffectedArea = getSelectedPartsSummary();
+                  Navigator.push(
+                    context,
+                    VerticalSlideRoute(
+                      page: DatePage(
+                        userName: widget.userName,
+                        //selectedOnsetDay: widget.selectedOnsetDay,
+                        symptom: widget.symptom,
+                        affectedArea: selectedAffectedArea, // このページで選択した患部
+                        //sufferLevel: widget.sufferLevel,
+                        //cause: widget.cause,
+                        //otherInformation: widget.otherInformation,
                       ),
-                    );
+                    ),
+                  );
                 },
                 child: SizedBox(
-                  child:Center(
+                  child: Center(
                     child: const Icon(
                       Icons.arrow_downward,
                       size: 50,
                       color: Colors.white,
                     ),
-                  )
-                  
+                  ),
                 ),
               ),
             ),

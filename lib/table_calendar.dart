@@ -5,10 +5,11 @@ import 'package:miecal/vertical_slide_page.dart';
 
 class DatePage extends StatefulWidget {
   // DatePage が以前のページからデータを受け取る必要があればここに追加します
+  final String? userName;
   final String? symptom; // 例えば SymptomPage から症状を受け取る場合
   final String? affectedArea; // 例えば AffectedAreaPage から患部を受け取る場合
 
-  const DatePage({super.key, this.symptom, this.affectedArea});
+  const DatePage({super.key, this.userName, this.symptom, this.affectedArea});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -157,35 +158,34 @@ class _DatePageState extends State<DatePage> {
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(
-                onTap:(){
-                   if (_selectedDay != null) {
-                      // 選択された日付と、このページが受け取った過去のデータをSufferLevelPageに渡す
-                      Navigator.push(
-                        context,
-                        VerticalSlideRoute(
-                          page: SufferLevelPage(
-                            selectedOnsetDay: _selectedDay, // このページで選択された日付
-                            symptom: widget.symptom, // 以前のページから受け取った症状
-                            affectedArea:
-                                widget.affectedArea, // 以前のページから受け取った患部
-                          ),
+                onTap: () {
+                  if (_selectedDay != null) {
+                    // 選択された日付と、このページが受け取った過去のデータをSufferLevelPageに渡す
+                    Navigator.push(
+                      context,
+                      VerticalSlideRoute(
+                        page: SufferLevelPage(
+                          userName: widget.userName,
+                          selectedOnsetDay: _selectedDay, // このページで選択された日付
+                          symptom: widget.symptom, // 以前のページから受け取った症状
+                          affectedArea: widget.affectedArea, // 以前のページから受け取った患部
                         ),
-                      );
-                   }
+                      ),
+                    );
+                  }
                 },
                 child: SizedBox(
-                  child:Center(
+                  child: Center(
                     child: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
+                      Icons.arrow_downward,
+                      size: 50,
+                      color: Colors.white,
+                    ),
                   ),
-                  
                 ),
               ),
             ),
           ),
-         )
         ],
       ),
     );

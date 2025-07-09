@@ -4,6 +4,7 @@ import 'package:miecal/vertical_slide_page.dart';
 
 class CousePage extends StatefulWidget {
   // これまでのページから受け取る問診票データを定義します
+  final String? userName;
   final DateTime? selectedOnsetDay;
   final String? symptom;
   final String? affectedArea;
@@ -11,6 +12,7 @@ class CousePage extends StatefulWidget {
 
   const CousePage({
     super.key,
+    this.userName,
     this.selectedOnsetDay,
     this.symptom,
     this.affectedArea,
@@ -178,14 +180,15 @@ class _CousePageState extends State<CousePage> {
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(
-                onTap:(){
+                onTap: () {
                   final String selectedCause =
-                        _getSelectedCauseSummary(); // 日本語名で原因を取得
+                      _getSelectedCauseSummary(); // 日本語名で原因を取得
 
                   Navigator.push(
                     context,
                     VerticalSlideRoute(
                       page: OtherInformationPage(
+                        userName: widget.userName,
                         selectedOnsetDay: widget.selectedOnsetDay,
                         symptom: widget.symptom,
                         affectedArea: widget.affectedArea,
@@ -196,13 +199,13 @@ class _CousePageState extends State<CousePage> {
                   );
                 },
                 child: SizedBox(
-                  child:Center(
+                  child: Center(
                     child: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
-                  ),)
-                  
+                      Icons.arrow_downward,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ),

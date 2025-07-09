@@ -4,12 +4,14 @@ import 'package:miecal/vertical_slide_page.dart';
 
 class SufferLevelPage extends StatefulWidget {
   // これまでのページから受け取る問診票データを定義します
+  final String? userName;
   final DateTime? selectedOnsetDay; // DatePageから受け取る発症日
   final String? symptom; // SymptomPageから受け取る症状
   final String? affectedArea; // AffectedAreaPageから受け取る患部
 
   const SufferLevelPage({
     super.key,
+    this.userName,
     this.selectedOnsetDay,
     this.symptom,
     this.affectedArea,
@@ -147,36 +149,33 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
             child: Material(
               color: Colors.blueGrey, // 背景色
               child: InkWell(
-                onTap:(){
+                onTap: () {
                   final String sufferLevelSummary =
-                        _getSufferLevelSummary(); // 選択された程度を取得
+                      _getSufferLevelSummary(); // 選択された程度を取得
 
-                    // Nextボタンが押されたら、これまでのデータとこのページで選択したデータを
-                    // CousePageへ渡す
-                    Navigator.push(
-                      context,
-                      VerticalSlideRoute(
-                        page: CousePage(
-                          selectedOnsetDay:
-                              widget.selectedOnsetDay, // DatePageから
-                          symptom: widget.symptom, // SymptomPageから
-                          affectedArea:
-                              widget.affectedArea, // AffectedAreaPageから
-                          sufferLevel:
-                              sufferLevelSummary, // このSufferLevelPageから
-                        ),
+                  // Nextボタンが押されたら、これまでのデータとこのページで選択したデータを
+                  // CousePageへ渡す
+                  Navigator.push(
+                    context,
+                    VerticalSlideRoute(
+                      page: CousePage(
+                        userName: widget.userName,
+                        selectedOnsetDay: widget.selectedOnsetDay, // DatePageから
+                        symptom: widget.symptom, // SymptomPageから
+                        affectedArea: widget.affectedArea, // AffectedAreaPageから
+                        sufferLevel: sufferLevelSummary, // このSufferLevelPageから
                       ),
-                    );
+                    ),
+                  );
                 },
                 child: SizedBox(
-                  child:Center(
+                  child: Center(
                     child: const Icon(
                       Icons.arrow_downward,
                       size: 50,
                       color: Colors.white,
                     ),
-                  )
-                  
+                  ),
                 ),
               ),
             ),

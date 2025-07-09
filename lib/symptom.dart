@@ -4,9 +4,24 @@ import 'package:miecal/vertical_slide_page.dart'; // VerticalSlideRoute の定�
 
 // SymptomPage は StatefulWidget に変更済みのはずです
 class SymptomPage extends StatefulWidget {
-  // SymptomPage は問診票データの最初の方のページなので、
-  // 現時点では前のページから受け取るデータは特にないはずです。
-  const SymptomPage({super.key});
+  final String? userName;
+  final DateTime? selectedOnsetDay;
+  final String? symptom; // このSymptomPageで選択される症状なので、ここはnull許容型
+  final String? affectedArea;
+  final String? sufferLevel;
+  final String? cause;
+  final String? otherInformation;
+
+  const SymptomPage({
+    super.key,
+    this.userName,
+    this.selectedOnsetDay,
+    this.symptom,
+    this.affectedArea,
+    this.sufferLevel,
+    this.cause,
+    this.otherInformation,
+  });
 
   @override
   State<SymptomPage> createState() => _SymptomPageState();
@@ -122,7 +137,7 @@ class _SymptomPageState extends State<SymptomPage> {
                         Container(
                           margin: const EdgeInsets.all(8), // 画像コンテナの余白
                           // width, heightはGridViewが自動調整するため削除
-                          width: 1050,
+                          // width: 1050,
                           // height: 1050,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -190,26 +205,32 @@ class _SymptomPageState extends State<SymptomPage> {
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(
-                onTap:(){
-                  final String selectedSymptom =
-                        _getSelectedSymptomSummary(); 
+                onTap: () {
+                  final String selectedSymptom = _getSelectedSymptomSummary();
                   Navigator.push(
-                      context,
-                      VerticalSlideRoute(
-                        page: AffectedAreaPage(
-                          symptom: selectedSymptom, // このSymptomPageで選択した症状
-                        ),
+                    context,
+                    VerticalSlideRoute(
+                      page: AffectedAreaPage(
+                        userName: widget.userName,
+                        selectedOnsetDay: widget.selectedOnsetDay,
+                        symptom: selectedSymptom, // このページで選択した症状
+                        affectedArea: widget.affectedArea,
+                        sufferLevel: widget.sufferLevel,
+                        cause: widget.cause,
+                        otherInformation:
+                            widget.otherInformation, // このSymptomPageで選択した症状
                       ),
-                    );
+                    ),
+                  );
                 },
-                  child: SizedBox.expand(
-                    child: Center(
-                      child: const Icon(
+                child: SizedBox.expand(
+                  child: Center(
+                    child: const Icon(
                       Icons.arrow_downward,
                       size: 50,
                       color: Colors.white,
-                    ),)
-                  
+                    ),
+                  ),
                 ),
               ),
             ),

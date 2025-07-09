@@ -8,8 +8,10 @@ import 'dart:convert'; // jsonEncode を使うために追加
 
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/qr.dart';
+import 'package:miecal/main.dart';
 
 class QuestionnairePage extends StatelessWidget {
+  final String? userName;
   final DateTime? selectedOnsetDay;
   final String? symptom;
   final String? affectedArea;
@@ -19,6 +21,7 @@ class QuestionnairePage extends StatelessWidget {
 
   const QuestionnairePage({
     super.key,
+    this.userName,
     this.selectedOnsetDay,
     this.symptom,
     this.affectedArea,
@@ -48,6 +51,7 @@ class QuestionnairePage extends StatelessWidget {
   void _showQrCodePage(BuildContext context) {
     // 問診票データをMapとしてまとめる
     final Map<String, dynamic> questionnaireData = {
+      '氏名': userName ?? '未入力',
       '発症日': _formatDateForQr(selectedOnsetDay), // ここで整形された日付を使う
       '症状': symptom,
       '患部': affectedArea,
@@ -75,6 +79,7 @@ class QuestionnairePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String displayUserName = userName ?? '未入力';
     // 各データを表示用に整形
     String displayOnsetDay = _formatDateHumanReadable(
       selectedOnsetDay,
@@ -122,6 +127,17 @@ class QuestionnairePage extends StatelessWidget {
                       ),
                     ),
                     const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.person, color: Colors.blueGrey),
+                      title: const Text('氏名'),
+                      trailing: Text(
+                        displayUserName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                     ListTile(
                       leading: const Icon(
                         Icons.calendar_today,
