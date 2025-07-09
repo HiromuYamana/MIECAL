@@ -12,7 +12,6 @@ import 'package:miecal/other_information.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miecal/login_page.dart';
 import 'package:miecal/firebase_options.dart';
 import 'package:miecal/registar_page.dart';
@@ -21,8 +20,6 @@ import 'package:miecal/menu_page.dart';
 // ignore: deprecated_member_use, unused_import, avoid_web_libraries_in_flutter
 import 'dart:html' as html;  // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
 import 'package:miecal/l10n/app_localizations.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +34,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-//      locale: const Locale('en'),
+      locale: const Locale('en'),
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -79,8 +76,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         // その他のテーマ設定
       ),
-
-      
     );
   }
 }

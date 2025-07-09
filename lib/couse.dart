@@ -29,7 +29,7 @@ class _CousePageState extends State<CousePage> {
     {'path': 'assets/images/tennraku.png', 'name': '転落'},
     {'path': 'assets/images/fukutuu.png', 'name': '腹痛'},
     {'path': 'assets/images/kossetu.png', 'name': '骨折'},
-    {'path': 'assets/images/metabo.png', 'name': 'メタボ'}, // 例: 必要に応じて追加
+    {'path': 'assets/images/metabo.png', 'name': 'メタボ'}, 
     // 他の原因があればここに追加
   ];
 
@@ -139,7 +139,7 @@ class _CousePageState extends State<CousePage> {
                                 252,
                                 166,
                                 7,
-                              ).withOpacity(0.3),
+                              ).withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),

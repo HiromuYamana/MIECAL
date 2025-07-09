@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:miecal/main.dart';
-import 'package:miecal/login_page.dart';
-import 'package:miecal/menu_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

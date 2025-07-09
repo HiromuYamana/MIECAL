@@ -3,5 +3,32 @@
   "menuTitle": "メニュー",
   "symptomForm": "問診票",
   "profileEdit": "プロフィール",
-  "logout": "ログアウト"
+  
+  "logout": "ログアウト",
+  "notSelected": "未選択",
+  "partFace": "顔",
+  "partNeck": "首",
+  "partChest": "胸",
+  "partAbdomen": "腹",
+  "partGroin": "股",
+  "partRightThigh": "右腿",
+  "partRightCalf": "右ふくらはぎ",
+  "partRightFoot": "右足",
+  "partLeftThigh": "左腿",
+  "partLeftCalf": "左ふくらはぎ",
+  "partLeftFoot": "左足",
+  "partRightShoulder": "右肩",
+  "partRightUpperArm": "右上腕",
+  "partRightForearm": "右前腕",
+  "partRightHand": "右手",
+  "partLeftShoulder": "左肩",
+  "partLeftUpperArm": "左上腕",
+  "partLeftForearm": "左前腕",
+  "partLeftHand": "左手",
+  "partHead": "頭",
+  "partNape": "項",
+  "partBack": "背中",
+  "partButtocks": "臀部",
+
+  "choosingTheLevelofPain": "程度の選択"
 }

@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:miecal/affected_area.dart'; // AffectedAreaPage の定義があるファイル
 import 'package:miecal/vertical_slide_page.dart'; // VerticalSlideRoute の定義があるファイル
 
-// SymptomPage は StatefulWidget に変更済みのはずです
 class SymptomPage extends StatefulWidget {
-  // SymptomPage は問診票データの最初の方のページなので、
-  // 現時点では前のページから受け取るデータは特にないはずです。
   const SymptomPage({super.key});
 
   @override
@@ -151,7 +148,7 @@ class _SymptomPageState extends State<SymptomPage> {
                                 252,
                                 166,
                                 7,
-                              ).withOpacity(0.3), // 半透明のオーバーレイ
+                              ).withValues(alpha: 0.3), // 半透明のオーバーレイ
                               borderRadius: BorderRadius.circular(8), // 角丸
                             ),
                           ),

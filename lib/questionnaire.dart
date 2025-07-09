@@ -1,10 +1,7 @@
 // lib/questionnaire.dart
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 // ignore: avoid_web_libraries_in_flutter, deprecated_member_use, unused_import
 import 'dart:html' as html;
-import 'dart:convert'; // jsonEncode を使うために追加
 
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/qr.dart';
