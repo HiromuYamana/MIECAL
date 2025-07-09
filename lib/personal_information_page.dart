@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miecal/menu_page.dart';
-import 'dart:math';
 
 class PersonalInformationPage extends StatefulWidget {
   const PersonalInformationPage({super.key});

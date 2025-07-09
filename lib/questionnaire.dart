@@ -283,7 +283,7 @@ class QuestionnairePage extends StatelessWidget {
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                 );
-                              }).toList(),
+                              }),
                             ],
                           ),
                         ),

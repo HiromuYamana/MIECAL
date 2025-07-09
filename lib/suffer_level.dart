@@ -80,7 +80,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                       },
                     ),
                     Text(
-                      loc.choosingTheLevelofPain,
+                      loc.choosingTheLevelOfPain,
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 20,
