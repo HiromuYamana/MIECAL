@@ -9,7 +9,7 @@ class DatePage extends StatefulWidget {
   final String? userName;
   final String? symptom; // 例えば SymptomPage から症状を受け取る場合
   final String? affectedArea; // 例えば AffectedAreaPage から患部を受け取る場合
-
+  
   const DatePage({super.key, this.userName, this.symptom, this.affectedArea});
 
   @override
@@ -176,28 +176,6 @@ class _DatePageState extends State<DatePage> {
                       color: Colors.white,
                     ),
                   ),
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_downward,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    if (_selectedDay != null) {
-                      // 選択された日付と、このページが受け取った過去のデータをSufferLevelPageに渡す
-                      Navigator.push(
-                        context,
-                        VerticalSlideRoute(
-                          page: SufferLevelPage(
-                            selectedOnsetDay: _selectedDay, // このページで選択された日付
-                            symptom: widget.symptom, // 以前のページから受け取った症状
-                            affectedArea: widget.affectedArea, // 以前のページから受け取った患部
-                          ),
-                        ),
-                      );
-                    }
-                  },
                 ),
               ),
             ),
