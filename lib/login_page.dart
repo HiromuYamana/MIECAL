@@ -183,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: isLoading ? null : signIn,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF44336), // 赤系ボタン
+                      backgroundColor: const Color.fromARGB(255, 93, 99, 230), // Sign inボタン
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),

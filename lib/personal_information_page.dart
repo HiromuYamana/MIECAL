@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miecal/menu_page.dart';
+import 'package:miecal/vertical_slide_page.dart';
 import 'package:provider/provider.dart';
 import 'package:miecal/user_input_model.dart';
 
 class PersonalInformationPage extends StatefulWidget {
-  const PersonalInformationPage({super.key});
+  final String? userName;
+
+  const PersonalInformationPage({super.key, this.userName});
 
   @override
-  State<PersonalInformationPage> createState() => _PersonalInformationPageState();
+  State<PersonalInformationPage> createState() =>
+      _PersonalInformationPageState();
 }
 
 class _PersonalInformationPageState extends State<PersonalInformationPage> {
@@ -77,7 +81,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       final birthDate = DateTime.parse(dateString);
       final today = DateTime.now();
       int calculatedAge = today.year - birthDate.year;
-      if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
+      if (today.month < birthDate.month ||
+          (today.month == birthDate.month && today.day < birthDate.day)) {
         calculatedAge--;
       }
       return calculatedAge;
@@ -132,12 +137,20 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('保存しました')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('保存しました')));
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MenuPage()),
+      final String? currentUserName = _nameController.text.trim();
+
+      Navigator.pushReplacement(
+        context,
+        VerticalSlideRoute(
+          page: MenuPage(
+            userName: currentUserName, // このページで保存した氏名
+            // 修正点: LoginScreenから受け取った問診票データをMenuPageにリレー
+          ),
+        ),
       );
     } catch (e) {
       setState(() {
@@ -162,107 +175,133 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('プロフィール')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (errorMessage.isNotEmpty)
-                    Text(errorMessage, style: const TextStyle(color: Colors.red)),
+      body:
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (errorMessage.isNotEmpty)
+                      Text(
+                        errorMessage,
+                        style: const TextStyle(color: Colors.red),
+                      ),
 
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.grey[200],
-                    child: const Icon(Icons.person, size: 40),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  _buildIconTextField(Icons.person, _nameController),
-                  _buildIconTextField(Icons.home, _addressController),
-
-                  GestureDetector(
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime(2000),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime.now(),
-                      );
-                      if (pickedDate != null) {
-                        String dateStr =
-                            '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
-                        setState(() {
-                          _birthdayController.text = dateStr;
-                          age = _calculateAge(dateStr);
-                        });
-                      }
-                    },
-                    child: AbsorbPointer(
-                      child: _buildIconTextField(Icons.calendar_today, _birthdayController),
-                    ),
-                  ),
-
-                  if (age != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text('年齢: $age 歳', style: const TextStyle(color: Colors.grey)),
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundColor: Colors.grey[200],
+                      child: const Icon(Icons.person, size: 40),
                     ),
 
-                  const SizedBox(height: 12),
+                    const SizedBox(height: 16),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.male,
+                    _buildIconTextField(Icons.person, _nameController),
+                    _buildIconTextField(Icons.home, _addressController),
+
+                    GestureDetector(
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2000),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime.now(),
+                        );
+                        if (pickedDate != null) {
+                          String dateStr =
+                              '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
+                          setState(() {
+                            _birthdayController.text = dateStr;
+                            age = _calculateAge(dateStr);
+                          });
+                        }
+                      },
+                      child: AbsorbPointer(
+                        child: _buildIconTextField(
+                          Icons.calendar_today,
+                          _birthdayController,
+                        ),
+                      ),
+                    ),
+
+                    if (age != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          '年齢: $age 歳',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ),
+
+                    const SizedBox(height: 12),
+
+                    // 性別アイコン
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.male,
                             size: 40,
-                            color: gender == 'male' ? Colors.blue : Colors.grey),
-                        onPressed: () => setState(() => gender = 'male'),
-                      ),
-                      const SizedBox(width: 24),
-                      IconButton(
-                        icon: Icon(Icons.female,
+                            color: gender == 'male' ? Colors.blue : Colors.grey,
+                          ),
+                          onPressed: () => setState(() => gender = 'male'),
+                        ),
+                        const SizedBox(width: 24),
+                        IconButton(
+                          icon: Icon(
+                            Icons.female,
                             size: 40,
-                            color: gender == 'female' ? Colors.pink : Colors.grey),
-                        onPressed: () => setState(() => gender = 'female'),
-                      ),
-                    ],
-                  ),
+                            color:
+                                gender == 'female' ? Colors.pink : Colors.grey,
+                          ),
+                          onPressed: () => setState(() => gender = 'female'),
+                        ),
+                      ],
+                    ),
 
-                  _buildIconTextField(Icons.phone, _phoneController, keyboardType: TextInputType.phone),
-                  _buildIconTextField(Icons.warning, _allergyController),
+                    _buildIconTextField(
+                      Icons.phone,
+                      _phoneController,
+                      keyboardType: TextInputType.phone,
+                    ),
+                    _buildIconTextField(Icons.warning, _allergyController),
 
-                  Row(
-                    children: [
-                      const Icon(Icons.local_hospital),
-                      const SizedBox(width: 10),
-                      const Text('手術歴'),
-                      const Spacer(),
-                      Switch(
-                        value: hadSurgery,
-                        onChanged: (val) => setState(() => hadSurgery = val),
-                      ),
-                    ],
-                  ),
+                    Row(
+                      children: [
+                        const Icon(Icons.local_hospital),
+                        const SizedBox(width: 10),
+                        const Text('手術歴'),
+                        const Spacer(),
+                        Switch(
+                          value: hadSurgery,
+                          onChanged: (val) => setState(() => hadSurgery = val),
+                        ),
+                      ],
+                    ),
 
-                  const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    onPressed: saveUserData,
-                    icon: const Icon(Icons.save),
-                    label: const Text('保存'),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        await saveUserData();
+                      },
+                      icon: const Icon(Icons.save),
+                      label: const Text('保存'),
+                    ),
+                  ],
+                ),
               ),
-            ),
     );
   }
 
-  Widget _buildIconTextField(IconData icon, TextEditingController controller, {TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildIconTextField(
+    IconData icon,
+    TextEditingController controller, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
