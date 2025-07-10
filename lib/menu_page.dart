@@ -19,6 +19,7 @@ class MenuPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(local.menuTitle),
         backgroundColor: Colors.teal,
+        automaticallyImplyLeading: false, // <-- 修正点: 戻るボタンを非表示にする
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
