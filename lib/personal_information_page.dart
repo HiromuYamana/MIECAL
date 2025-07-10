@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miecal/menu_page.dart';
-import 'package:miecal/vertical_slide_page.dart';
+import 'package:provider/provider.dart';
+import 'package:miecal/user_input_model.dart';
 
 class PersonalInformationPage extends StatefulWidget {
   final String? userName;
@@ -25,7 +26,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   final _allergyController = TextEditingController();
   final _surgeryController = TextEditingController();
 
-  String? gender; // 'male' or 'female'
+  String? gender;
   int? age;
   bool hadSurgery = false;
 
@@ -61,7 +62,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         gender = data['gender'];
         hadSurgery = data['surgery'] ?? false;
 
-        // 年齢自動計算
         if (_birthdayController.text.isNotEmpty) {
           age = _calculateAge(_birthdayController.text);
         }
@@ -106,14 +106,27 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         return;
       }
 
+      final inputModel = Provider.of<UserInputModel>(context, listen: false);
+      inputModel.updatePersonal(
+        name: _nameController.text,
+        address: _addressController.text,
+        birthday: _birthdayController.text,
+        age: age?.toString() ?? '',
+        gender: gender ?? '',
+        phoneNumber: _phoneController.text,
+        allergy: _allergyController.text,
+        surgeryHistory: hadSurgery ? 'あり' : 'なし',
+      );
+
       await _firestore.collection('users').doc(user.uid).set({
-        'name': _nameController.text.trim(),
-        'address': _addressController.text.trim(),
-        'birthday': _birthdayController.text.trim(),
-        'phone': _phoneController.text.trim(),
-        'gender': gender,
-        'allergy': _allergyController.text.trim(),
-        'surgery': hadSurgery,
+        'name': inputModel.name,
+        'address': inputModel.address,
+        'birthday': inputModel.birthday,
+        'age': inputModel.age,
+        'gender': inputModel.gender,
+        'phone': inputModel.phoneNumber,
+        'allergy': inputModel.allergy,
+        'surgery': inputModel.surgeryHistory == 'あり',
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
@@ -134,7 +147,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         VerticalSlideRoute(
           page: MenuPage(
             userName: currentUserName, // このページで保存した氏名
-
             // 修正点: LoginScreenから受け取った問診票データをMenuPageにリレー
           ),
         ),

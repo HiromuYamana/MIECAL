@@ -20,11 +20,20 @@ import 'package:miecal/menu_page.dart';
 // ignore: deprecated_member_use, unused_import, avoid_web_libraries_in_flutter
 import 'dart:html' as html; // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
 import 'package:miecal/l10n/app_localizations.dart';
+import 'package:miecal/user_input_model.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => UserInputModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
