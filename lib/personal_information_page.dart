@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miecal/menu_page.dart';
+import 'package:miecal/vertical_slide_page.dart';
 import 'package:provider/provider.dart';
 import 'package:miecal/user_input_model.dart';
 
