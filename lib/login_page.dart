@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // ログイン成功時に問診票ページへ直接遷移し、データを渡す
           Navigator.pushReplacementNamed(
             context,
-            '/SymptomPage', // 問診票ページへのルート
+            '/Menupage', // 問診票ページへのルート
             arguments: initialQuestionnaireData, // 取得したデータを引数として渡す
           );
         } else {

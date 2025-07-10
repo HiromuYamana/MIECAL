@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:miecal/symptom.dart';
 import 'package:miecal/top_page.dart';
 import 'package:miecal/personal_information_page.dart';
-import 'package:miecal/l10n/app_localizations.dart'; 
+import 'package:miecal/l10n/app_localizations.dart';
+import 'package:miecal/vertical_slide_page.dart';
 
 class MenuPage extends StatelessWidget {
-  const MenuPage({super.key});
+  final String? userName;
+
+  const MenuPage({super.key, this.userName});
 
   @override
   Widget build(BuildContext context) {
-    final local = AppLocalizations.of(context)!; 
+    final local = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(local.menuTitle), 
+        title: Text(local.menuTitle),
         backgroundColor: Colors.teal,
       ),
       body: Column(
@@ -26,11 +29,11 @@ class MenuPage extends StatelessWidget {
             children: [
               _MenuIconButton(
                 imagePath: 'assets/icons/medical_form.png',
-                label: local.symptomForm, 
+                label: local.symptomForm,
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SymptomPage()),
+                    VerticalSlideRoute(page: SymptomPage(userName: userName)),
                   );
                 },
               ),
@@ -40,7 +43,7 @@ class MenuPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const PersonalInformationPage()),
+                    VerticalSlideRoute(page: PersonalInformationPage()),
                   );
                 },
               ),
@@ -52,11 +55,7 @@ class MenuPage extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 24.0),
             child: TextButton.icon(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TopPage()),
-                  (route) => false,
-                );
+                Navigator.push(context, VerticalSlideRoute(page: TopPage()));
               },
               icon: const Icon(Icons.logout, size: 18, color: Colors.grey),
               label: Text(
@@ -70,7 +69,6 @@ class MenuPage extends StatelessWidget {
     );
   }
 }
-
 
 class _MenuIconButton extends StatelessWidget {
   final String imagePath;

@@ -46,7 +46,13 @@ class MyApp extends StatelessWidget {
         '/RegisterPage': (context) => const RegisterPage(),
         '/PersonalInformationPage':
             (context) => const PersonalInformationPage(),
-        '/Menupage': (context) => const MenuPage(),
+        '/Menupage': (context) {
+          final Map<String, dynamic>? args =
+              ModalRoute.of(context)?.settings.arguments
+                  as Map<String, dynamic>?;
+
+          return MenuPage(userName: args?['userName'] as String?);
+        },
         '/SymptomPage': (context) {
           // SymptomPage のルート定義を修正
           final Map<String, dynamic>? args =
