@@ -72,8 +72,7 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
   }
 
   void _goToLoginPage() async {
-    final player = AudioPlayer();
-    await player.play(AssetSource('sounds/water-drops.mp3'));
+    
 
   // 振動する（デバイスが対応しているか確認）
   if (await Vibration.hasVibrator() ?? false) {
