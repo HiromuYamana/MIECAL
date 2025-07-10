@@ -65,29 +65,32 @@ class _CousePageState extends State<CousePage> {
         children: [
           Expanded(
             flex: 1,
-            child: Container(
+            child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: topPadding),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
+            child:InkWell(
+              onTap:(){
+                 Navigator.pop(context);
+              },
+              //padding: EdgeInsets.only(top: topPadding),
+              child: SizedBox(
+                child: Center(
+                  //mainAxisSize: MainAxisSize.min,
+                  child: 
+                    
+                      const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      
                     ),
-                    const Text('原因', style: TextStyle(color: Colors.black)),
-                  ],
+                    //const Text('原因', style: TextStyle(color: Colors.black)),
+                  
                 ),
               ),
             ),
-          ),
+            ),
+          
           Expanded(
             flex: 8,
             child: Container(
