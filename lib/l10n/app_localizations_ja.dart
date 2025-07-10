@@ -21,6 +21,36 @@ class AppLocalizationsJa extends AppLocalizations {
   String get logout => 'ログアウト';
 
   @override
+  String get eMail => 'Eメール';
+
+  @override
+  String get passWord => 'パスワード';
+
+  @override
+  String get authUserNotFound => 'ユーザーが見つかりませんでした。';
+
+  @override
+  String get authWrongPassword => 'パスワードが間違っています。';
+
+  @override
+  String get authInvalidEmail => 'メールアドレスの形式が正しくありません。';
+
+  @override
+  String get authUserDisabled => 'このアカウントは無効になっています。';
+
+  @override
+  String get authUnknownError => '不明なエラーが発生しました。';
+
+  @override
+  String get signIn => 'ログイン';
+
+  @override
+  String get createNewAccount => 'アカウント新規作成';
+
+  @override
+  String get dontHaveAccount => 'アカウントをお持ちでない方は';
+
+  @override
   String get notSelected => '未選択';
 
   @override

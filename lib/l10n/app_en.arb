@@ -4,6 +4,18 @@
   "symptomForm": "Medical Form",
   "profileEdit": "Profile",
   "logout": "Logout",
+
+  "eMail": "e-mail",
+  "passWord": "pass word",
+  "authUserNotFound": "User not found.",
+  "authWrongPassword": "Incorrect password.",
+  "authInvalidEmail": "Invalid email format.",
+  "authUserDisabled": "This account is disabled.",
+  "authUnknownError": "The email address to password is incorrect.",
+
+  "signIn": "Sign in",
+  "createNewAccount": "Create new account",
+  "dontHaveAccount": "Don't you have account?",
   
   "notSelected": "Not selected",
   "partFace": "Face",
