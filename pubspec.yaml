@@ -25,6 +25,7 @@ dependencies:
   provider: ^6.1.5
   vibration: ^1.7.4
   audioplayers: ^5.2.1
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
