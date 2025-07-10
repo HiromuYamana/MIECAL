@@ -3,6 +3,18 @@
   "menuTitle": "メニュー",
   "symptomForm": "問診票",
   "profileEdit": "プロフィール",
+
+  "eMail": "Eメール",
+  "passWord": "パスワード",
+  "authUserNotFound": "ユーザーが見つかりませんでした。",
+  "authWrongPassword": "パスワードが間違っています。",
+  "authInvalidEmail": "メールアドレスの形式が正しくありません。",
+  "authUserDisabled": "このアカウントは無効になっています。",
+  "authUnknownError": "メールアドレスかパスワードが間違っています。",
+
+  "signIn": "ログイン",
+  "createNewAccount": "アカウント新規作成",
+  "dontHaveAccount": "アカウントをお持ちでない方は",
   
   "logout": "ログアウト",
   "notSelected": "未選択",

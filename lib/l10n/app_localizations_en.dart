@@ -21,6 +21,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout => 'Logout';
 
   @override
+  String get eMail => 'e-mail';
+
+  @override
+  String get passWord => 'pass word';
+
+  @override
+  String get authUserNotFound => 'User not found.';
+
+  @override
+  String get authWrongPassword => 'Incorrect password.';
+
+  @override
+  String get authInvalidEmail => 'Invalid email format.';
+
+  @override
+  String get authUserDisabled => 'This account is disabled.';
+
+  @override
+  String get authUnknownError => 'An unknown error occurred.';
+
+  @override
+  String get signIn => 'Sign in';
+
+  @override
+  String get createNewAccount => 'Create new account';
+
+  @override
+  String get dontHaveAccount => 'Don\'t you have account?';
+
+  @override
   String get notSelected => 'Not selected';
 
   @override

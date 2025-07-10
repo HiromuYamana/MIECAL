@@ -31,91 +31,85 @@ class _LoginScreenState extends State<LoginScreen> {
       errorMessage = '';
     });
 
-    try {
-      final UserCredential userCredential = await _auth
-          .signInWithEmailAndPassword(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim(),
-          );
+  String getLocalizedAuthError(String code, AppLocalizations loc) {
+  switch (code) {
+    case 'user-not-found':
+      return loc.authUserNotFound;
+    case 'wrong-password':
+      return loc.authWrongPassword;
+    case 'invalid-email':
+      return loc.authInvalidEmail;
+    case 'user-disabled':
+      return loc.authUserDisabled;
+    default:
+      return loc.authUnknownError;
+  }
+}
 
-      final User? user = userCredential.user;
+  try {
+    final UserCredential userCredential = 
+    await _auth.signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
 
-      if (user != null) {
-        // 🔐 ログイン成功時
-        // Firestoreからユーザーに紐付く個人情報と問診票情報を取得
-        final DocumentSnapshot userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
+    final User? user = userCredential.user;
 
-        if (userDoc.exists) {
-          // ドキュメントが存在すればデータを取得
-          final Map<String, dynamic> userData =
-              userDoc.data() as Map<String, dynamic>;
+    if (user != null) {
+      // 🔐 ログイン成功時
+      // Firestoreからユーザーに紐付く個人情報と問診票情報を取得
+      final DocumentSnapshot userDoc = await _firestore.collection('users').doc(user.uid).get();
 
-          // 取得した個人情報と問診票情報をMapにまとめる
-          // QuestionnairePage のコンストラクタ引数に合わせてキーを調整
-          final Map<String, dynamic> initialQuestionnaireData = {
-            'userName':
-                userData['name']
-                    as String?, // 氏名 (PersonalInfoService.saveUserInfo で保存したキー名)
-            // 'userDateOfBirth': userData['dateOfBirth'] as String?, // 例: 生年月日
+      if (userDoc.exists) {
+        // ドキュメントが存在すればデータを取得
+        final Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
 
-            // 問診票データ（Firestoreに保存済みのものがあれば）
-            'selectedOnsetDay':
-                userData['onsetDay'] != null
-                    ? DateTime.tryParse(userData['onsetDay'])
-                    : null,
-            'symptom': userData['symptom'] as String?,
-            'affectedArea': userData['affectedArea'] as String?,
-            'sufferLevel': userData['sufferLevel'] as String?,
-            'cause': userData['cause'] as String?,
-            'otherInformation': userData['otherInformation'] as String?,
-            // ... 他の問診票項目もここに追加 ...
-          };
+        final Map<String, dynamic> initialQuestionnaireData = {
+          'userName':userData['name'] as String?, // 氏名 (PersonalInfoService.saveUserInfo で保存したキー名)
+          // 'userDateOfBirth': userData['dateOfBirth'] as String?, // 例: 生年月日
+          // 問診票データ（Firestoreに保存済みのものがあれば）
+          'selectedOnsetDay': userData['onsetDay'] != null ? DateTime.tryParse(userData['onsetDay']): null,
+          'symptom': userData['symptom'] as String?,
+          'affectedArea': userData['affectedArea'] as String?,
+          'sufferLevel': userData['sufferLevel'] as String?,
+          'cause': userData['cause'] as String?,
+          'otherInformation': userData['otherInformation'] as String?,
+          // ... 他の問診票項目もここに追加 ...
+        };
 
-          if (!mounted) return;
-          // ログイン成功時に問診票ページへ直接遷移し、データを渡す
-          Navigator.pushReplacementNamed(
-            context,
-            '/Menupage', // 問診票ページへのルート
-            arguments: initialQuestionnaireData, // 取得したデータを引数として渡す
-          );
-        } else {
-          // ドキュメントが存在しない場合（通常は新規登録後に個人情報が保存されるべき）
-          // 新規登録を促すか、個人情報入力ページに遷移させる
-          // ここでは、データがない場合は空の問診票ページに遷移する（または個人情報入力ページへ誘導）
-          if (!mounted) return;
-          // ユーザーデータが存在しない場合は、PersonalInformationPageに強制遷移する
-          // PersonalInformationPageで個人情報を入力・保存させる
-          Navigator.pushReplacementNamed(
-            context,
-            '/PersonalInformationPage',
-            arguments: {'isNewUser': true},
-          );
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('ユーザーデータがありません。個人情報を登録してください。')),
-          );
+        if (!mounted) return;
+        // ログイン成功時に問診票ページへ直接遷移し、データを渡す
+        Navigator.pushReplacementNamed(
+          context,
+          '/Menupage', // 問診票ページへのルート
+          arguments: initialQuestionnaireData, // 取得したデータを引数として渡す
+        );
         }
-      } else {
-        // userがnullの場合（通常は発生しないが念のため）
-        setState(() {
-          errorMessage = 'ユーザー情報が取得できませんでした';
-        });
+      else {
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(
+          context,
+          '/PersonalInformationPage',
+          arguments: {'isNewUser': true},
+        );
       }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message ?? 'ログインに失敗しました';
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = '予期せぬエラーが発生しました: ${e.toString()}';
-      });
-    } finally {
+    }
+  } 
+  on FirebaseAuthException catch (e) {
+    final loc = AppLocalizations.of(context)!;
+    setState(() {
+      errorMessage = getLocalizedAuthError(e.code, loc);
+    });
+  }
+  finally {
+    // 成功・失敗関係なくボタンを再び押せるようにする
+    if (mounted) {
       setState(() {
         isLoading = false;
       });
     }
   }
+}
 
   @override
   void dispose() {
@@ -126,6 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
     Widget build(BuildContext context) {
+      final loc = AppLocalizations.of(context)!;
       return Scaffold(
         backgroundColor: const Color.fromARGB(255, 218, 246, 250), // 薄いブルー系背景
         body: Center(
@@ -148,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextField(
                   controller: emailController,
                   decoration: InputDecoration(
-                    hintText: 'e-mail',
+                    hintText: loc.eMail,
                     prefixIcon: const Icon(Icons.email_outlined),
                     contentPadding: const EdgeInsets.symmetric(vertical: 18),
                     border: OutlineInputBorder(
@@ -163,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    hintText: 'password',
+                    hintText: loc.passWord,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -198,22 +193,32 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: const Text('Sign in'),
+                    child: Text(loc.signIn),
                   ),
                 ),
                 const SizedBox(height: 30),
 
-                // サインアップ誘導
+                // ここに追加 👇
+                if (errorMessage.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don’t have an account?"),
+                    Text(loc.dontHaveAccount),
                     TextButton.icon(
                       onPressed: () {
                         Navigator.pushNamed(context, '/RegisterPage');
                       },
                       icon: const Icon(Icons.person_add_alt_1_outlined),
-                      label: const Text('Sign up'),
+                      label: Text(loc.createNewAccount),
                     ),
                   ],
                 ),
@@ -224,42 +229,3 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
   }
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('ログイン')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           children: [
-//             TextField(
-//               controller: emailController,
-//               decoration: const InputDecoration(labelText: 'メールアドレス'),
-//               keyboardType: TextInputType.emailAddress,
-//             ),
-//             const SizedBox(height: 12),
-//             TextField(
-//               controller: passwordController,
-//               decoration: const InputDecoration(labelText: 'パスワード'),
-//               obscureText: true,
-//             ),
-//             const SizedBox(height: 20),
-//             if (errorMessage.isNotEmpty)
-//               Text(errorMessage, style: const TextStyle(color: Colors.red)),
-//             const SizedBox(height: 20),
-//             isLoading
-//                 ? const CircularProgressIndicator()
-//                 : ElevatedButton(onPressed: signIn, child: const Text('ログイン')),
-//             const SizedBox(height: 12),
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.pushNamed(context, '/RegisterPage'); // 新規登録ページへの遷移
-//               },
-//               child: const Text('新規登録はこちら'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

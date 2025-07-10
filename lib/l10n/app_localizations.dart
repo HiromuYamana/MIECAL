@@ -119,6 +119,66 @@ abstract class AppLocalizations {
   /// **'Logout'**
   String get logout;
 
+  /// No description provided for @eMail.
+  ///
+  /// In en, this message translates to:
+  /// **'e-mail'**
+  String get eMail;
+
+  /// No description provided for @passWord.
+  ///
+  /// In en, this message translates to:
+  /// **'pass word'**
+  String get passWord;
+
+  /// No description provided for @authUserNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found.'**
+  String get authUserNotFound;
+
+  /// No description provided for @authWrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password.'**
+  String get authWrongPassword;
+
+  /// No description provided for @authInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format.'**
+  String get authInvalidEmail;
+
+  /// No description provided for @authUserDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account is disabled.'**
+  String get authUserDisabled;
+
+  /// No description provided for @authUnknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error occurred.'**
+  String get authUnknownError;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signIn;
+
+  /// No description provided for @createNewAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new account'**
+  String get createNewAccount;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t you have account?'**
+  String get dontHaveAccount;
+
   /// No description provided for @notSelected.
   ///
   /// In en, this message translates to:
