@@ -74,6 +74,20 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
       const Color.fromARGB(255, 255, 64, 255): () => loc.partNape,
       const Color.fromARGB(255, 255, 255, 64): () => loc.partBack,
       const Color.fromARGB(255, 255, 64, 64): () => loc.partButtocks,
+      const Color.fromARGB(255, 64, 255, 64): () => loc.partRightThigh,
+      const Color.fromARGB(255, 64, 64, 255): () => loc.partRightCalf,
+      const Color.fromARGB(255, 255, 128, 64): () => loc.partRightFoot,
+      const Color.fromARGB(255, 255, 64, 128): () => loc.partLeftThigh,
+      const Color.fromARGB(255, 128, 255, 64): () => loc.partLeftCalf,
+      const Color.fromARGB(255, 128, 64, 255): () => loc.partLeftFoot,
+      const Color.fromARGB(255, 64, 255, 128): () => loc.partLeftShoulder,
+      const Color.fromARGB(255, 64, 128, 255): () => loc.partLeftUpperArm,
+      const Color.fromARGB(255, 255, 64, 0): () => loc.partLeftForearm,
+      const Color.fromARGB(255, 255, 0, 64): () => loc.partLeftHand,
+      const Color.fromARGB(255, 64, 255, 0): () => loc.partRightShoulder,
+      const Color.fromARGB(255, 64, 0, 255): () => loc.partRightUpperArm,
+      const Color.fromARGB(255, 0, 255, 64): () => loc.partRightForearm,
+      const Color.fromARGB(255, 0, 64, 255): () => loc.partRightHand,
     };
   }
 
