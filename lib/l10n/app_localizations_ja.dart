@@ -48,6 +48,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get dontHaveAccount => 'アカウントをお持ちでない方は';
 
   @override
+  String get forgetPassword => 'パスワードを忘れた場合';
+
+  @override
   String get logout => 'ログアウト';
 
   @override
