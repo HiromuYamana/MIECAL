@@ -88,37 +88,47 @@ class _SymptomPageState extends State<SymptomPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 3,
-            child: Container(
+            flex: 2,
+            child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: topPadding),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
+              //padding: EdgeInsets.only(top: topPadding),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                           
+                child: SizedBox(
+                  //mainAxisSize: MainAxisSize.min,
+                  //children: [
+                  child: Center(
+                    
+                      child: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
-                      },
-                    ),
-                    const Text(
+                    ),                 
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child:Container( 
+              color: const Color.fromARGB(255, 207, 227, 230),
+              child:Center(
+              //color: const Color.fromARGB(255, 207, 227, 230),
+              child:const Text(
                       '症状選択',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
-                    ), // タイトルを大きく
-                  ],
-                ),
-              ),
-            ),
+            ),)
           ),
+          ),
+
           Expanded(
             flex: 15,
             child: Container(
