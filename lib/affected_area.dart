@@ -208,31 +208,48 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 3,
-            child: Container(
+            flex: 2,
+            child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
+              //padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context); //前の画面に戻る
+                },
+                child: SizedBox(
+                  child: Center(
+                  //mainAxisSize: MainAxisSize.min,
+                  //children: [
+                    //IconButton(
+                      child: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
-                      },
-                    ),
-                    Text(
+                    )
+                      //onPressed: () {
+                        //Navigator.pop(context); // 前の画面に戻る
+                      //},
+                  ),
+                    //Text(
+                      //loc.affectedAreaSelection,
+                      //style: const TextStyle(color: Colors.black, fontSize: 20),
+                      
+                    //),
+                  //],
+                ),
+              ),
+            ),
+          Expanded(
+            flex:1,
+            child: Container(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              child: Center(
+                child:Text(
                       loc.affectedAreaSelection,
                       style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
-                  ],
-                ),
-              ),
+                  ),
             ),
           ),
           Expanded(

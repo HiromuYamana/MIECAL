@@ -76,35 +76,45 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 3, // 上部のヘッダー部分の割合
-            child: Container(
+            flex: 2, // 上部のヘッダー部分の割合
+            child: Material(
               color: const Color.fromARGB(255, 218, 246, 250), // 背景色
-              padding: EdgeInsets.only(top: topPadding), // 上部パディング
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min, // 子要素のサイズに合わせる
-                  children: [
-                    IconButton(
-                      icon: const Icon(
+              //padding: EdgeInsets.only(top: topPadding), // 上部パディング
+              child:InkWell(
+                onTap:() {
+                  Navigator.pop(context); // 前の画面に戻る
+                },
+              
+              child: SizedBox(
+                
+                  //mainAxisSize: MainAxisSize.min, // 子要素のサイズに合わせる
+                  //children: [
+                    child: Center(
+                      child: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
-                      },
-                    ),
-                    Text(
-                      loc.choosingTheLevelOfPain,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ), // タイトル追加
-                  ],
+                  ),
                 ),
               ),
+            ),
+          ),
+          Expanded(
+            flex:1,
+            child:Container(
+              color: const Color.fromARGB(255, 218, 246, 250), // 背景色
+              child:Center(
+
+              child: Text(
+                        loc.choosingTheLevelOfPain,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+              )
+              )
             ),
           ),
           Expanded(

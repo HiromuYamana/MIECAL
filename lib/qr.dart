@@ -15,19 +15,21 @@ class QrPage extends StatelessWidget {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: Container(
+              child: Material(
                 color: const Color.fromARGB(255, 207, 227, 230),
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                child: Center(
-                  child: IconButton(
-                      icon: const Icon(
+                //padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: InkWell(
+                  onTap:(){
+                    Navigator.pop(context);
+                  },
+                  child: SizedBox(
+                    child:Center(
+                      child: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                     ) 
                     ),
                   ),
                 ),
