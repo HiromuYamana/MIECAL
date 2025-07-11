@@ -136,7 +136,7 @@ class _SymptomPageState extends State<SymptomPage> {
                         Container(
                           margin: const EdgeInsets.all(8), // 画像コンテナの余白
                           // width, heightはGridViewが自動調整するため削除
-                          // width: 1050,
+                          width: 1050,
                           // height: 1050,
                           decoration: BoxDecoration(
                             border: Border.all(
