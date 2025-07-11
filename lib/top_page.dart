@@ -147,9 +147,7 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
                       height: _rippleAnimation.value,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(
-                          1.0 - _rippleAnimation.value / 100,
-                        ),
+                        color: Colors.white.withValues(alpha: 1.0 - _rippleAnimation.value / 100,),
                       ),
                     ),
                   );

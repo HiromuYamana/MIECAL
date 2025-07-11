@@ -15,9 +15,10 @@
   "signIn": "ログイン",
   "createNewAccount": "アカウント新規作成",
   "dontHaveAccount": "アカウントをお持ちでない方は",
-  
   "logout": "ログアウト",
+  
   "notSelected": "未選択",
+  "affectedAreaSelection":"患部選択",
   "partFace": "顔",
   "partNeck": "首",
   "partChest": "胸",

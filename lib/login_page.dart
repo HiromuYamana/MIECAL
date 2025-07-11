@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // <-- この行を追加
-import 'package:miecal/main.dart'; // main.dart にルーティングがある場合、必要
-import 'package:miecal/menu_page.dart'; // ログイン後の遷移先（今回は問診票に直接遷移）
-import 'package:miecal/personal_info_service.dart'; // <-- この行を追加 (PersonalInfoServiceがあるファイル)
+// main.dart にルーティングがある場合、必要
+// ログイン後の遷移先（今回は問診票に直接遷移）
+// <-- この行を追加 (PersonalInfoServiceがあるファイル)
 import 'package:google_fonts/google_fonts.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 

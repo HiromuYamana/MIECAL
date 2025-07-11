@@ -113,12 +113,6 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get profileEdit;
 
-  /// No description provided for @logout.
-  ///
-  /// In en, this message translates to:
-  /// **'Logout'**
-  String get logout;
-
   /// No description provided for @eMail.
   ///
   /// In en, this message translates to:
@@ -158,7 +152,7 @@ abstract class AppLocalizations {
   /// No description provided for @authUnknownError.
   ///
   /// In en, this message translates to:
-  /// **'An unknown error occurred.'**
+  /// **'The email address to password is incorrect.'**
   String get authUnknownError;
 
   /// No description provided for @signIn.
@@ -179,11 +173,23 @@ abstract class AppLocalizations {
   /// **'Don\'t you have account?'**
   String get dontHaveAccount;
 
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
   /// No description provided for @notSelected.
   ///
   /// In en, this message translates to:
   /// **'Not selected'**
   String get notSelected;
+
+  /// No description provided for @affectedAreaSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Affected Area Selection'**
+  String get affectedAreaSelection;
 
   /// No description provided for @partFace.
   ///

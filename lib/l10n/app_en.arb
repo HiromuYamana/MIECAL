@@ -3,7 +3,6 @@
   "menuTitle": "Menu",
   "symptomForm": "Medical Form",
   "profileEdit": "Profile",
-  "logout": "Logout",
 
   "eMail": "e-mail",
   "passWord": "pass word",
@@ -16,8 +15,10 @@
   "signIn": "Sign in",
   "createNewAccount": "Create new account",
   "dontHaveAccount": "Don't you have account?",
+  "logout": "Logout",
   
   "notSelected": "Not selected",
+  "affectedAreaSelection":"Affected Area Selection",
   "partFace": "Face",
   "partNeck": "Neck",
   "partChest": "Chest",
