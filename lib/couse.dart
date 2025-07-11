@@ -58,7 +58,6 @@ class _CousePageState extends State<CousePage> {
 
   @override
   Widget build(BuildContext context) {
-    final double topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
       body: Column(

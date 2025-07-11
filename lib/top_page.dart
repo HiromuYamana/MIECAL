@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/login_page.dart';
 import 'package:miecal/vertical_slide_page.dart';
-import 'package:audioplayers/audioplayers.dart'; // 音声再生用
 import 'package:vibration/vibration.dart';       // 振動用
 
 

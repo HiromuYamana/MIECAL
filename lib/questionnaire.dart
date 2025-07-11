@@ -5,7 +5,6 @@ import 'dart:html' as html;
 
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/qr.dart';
-import 'package:miecal/main.dart';
 
 class QuestionnairePage extends StatelessWidget {
   final String? userName;
