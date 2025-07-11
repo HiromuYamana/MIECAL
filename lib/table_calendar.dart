@@ -67,38 +67,45 @@ class _DatePageState extends State<DatePage> {
       body: Column(
         children: [
           Expanded(
-            flex: 3,
-            child: Container(
+            flex: 1,
+            child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
+              //padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: SizedBox(
+                  //mainAxisSize: MainAxisSize.min,
+                  //children: [
+                    child:Center(
+                      
+                      child: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
-                      },
+                      
                     ),
-                    Image.asset(
-                      'assets/onset_date.png',
-                      height: screenHeight * 0.16,
-                      fit: BoxFit.contain,
-                    ),
-                    Text(
-                      loc.dateOfOnset,
-                      style: const TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                  ],
+                ),
+
+               
                 ),
               ),
             ),
-          ),
+          Expanded(
+            flex:2,
+            child: Image.asset(
+                      'assets/onset_date.png',
+                      height: screenHeight * 0.16,
+                      fit: BoxFit.contain,
+                    ), ),
+          Expanded(
+            flex: 1,
+            child:Text(
+                      loc.dateOfOnset,
+                      style: const TextStyle(color: Colors.black, fontSize: 20),
+                    ), ),
           Expanded(
             flex: 6,
             child: Container(
