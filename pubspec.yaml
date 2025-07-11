@@ -48,5 +48,7 @@ flutter:
     - assets/
     - assets/human_outline.png
     - assets/body_mask.png
+    - assets/ios_light_google.png
+    - assets/google_light_new.png
   uses-material-design: true
   generate: true

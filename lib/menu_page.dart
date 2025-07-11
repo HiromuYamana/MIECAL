@@ -64,6 +64,13 @@ class MenuPage extends StatelessWidget {
               ),
             ),
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/TermsOfServicePage');
+            },
+            child: const Text('利用規約を見る'),
+          ),
+
         ],
       ),
     );
