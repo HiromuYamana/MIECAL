@@ -311,7 +311,7 @@ Future<void> signInWithGoogle() async {
                 child: ElevatedButton(
                   onPressed: isLoading ? null : signIn,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF44336),
+                    backgroundColor: const Color.fromARGB(255, 18, 81, 241),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -350,7 +350,7 @@ Future<void> signInWithGoogle() async {
                       Navigator.pushNamed(context, '/RegisterPage');
                     },
                     icon: const Icon(Icons.person_add_alt_1_outlined),
-                    label: const Text('Sign up'),
+                    label: const Text('Create new account'),
                   ),
                 ],
               ),

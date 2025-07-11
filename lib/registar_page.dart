@@ -177,7 +177,7 @@ class _RegisterPageState extends State<RegisterPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
           children: [
               Text(
-                'Sign up',
+                'New account',
                 style: GoogleFonts.poppins(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -241,6 +241,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: const TextStyle(color: Colors.red),
                 ),
               const SizedBox(height: 20),
+            
+            // Google登録ボタン（画像そのままのサイズで）
+            GestureDetector(
+              onTap: isLoading ? null : signInWithGoogle,
+              child: Image.asset(
+                'assets/google_light_new.png',
+                fit: BoxFit.contain,
+              ),
+            ),
 
               // 登録（矢印）ボタン
               isLoading
@@ -255,14 +264,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
             const SizedBox(height: 24),
 
-            // Google登録ボタン（画像そのままのサイズで）
-            GestureDetector(
-              onTap: isLoading ? null : signInWithGoogle,
-              child: Image.asset(
-                'assets/google_light_new.png',
-                fit: BoxFit.contain,
-              ),
-            ),
+            // // Google登録ボタン（画像そのままのサイズで）
+            // GestureDetector(
+            //   onTap: isLoading ? null : signInWithGoogle,
+            //   child: Image.asset(
+            //     'assets/google_light_new.png',
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
             ],
           ),
         ),
