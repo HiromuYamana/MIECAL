@@ -369,7 +369,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pushNamed(context, '/RegisterPage');
                     },
                     icon: const Icon(Icons.person_add_alt_1_outlined),
-                    label: const Text('Create new account'),
+                    label: Text(loc.createNewAccount),
                   ),
                 ],
               ),
