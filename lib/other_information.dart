@@ -3,22 +3,31 @@ import 'package:miecal/questionnaire.dart';
 import 'package:miecal/vertical_slide_page.dart';
 
 class OtherInformationPage extends StatefulWidget {
-  // これまでのページから受け取る問診票データを定義します
   final String? userName;
+  final DateTime? userDateOfBirth;
+  final String? userHome;
+  final String? userGender;
+  final String? userTelNum;
   final DateTime? selectedOnsetDay;
   final String? symptom;
   final String? affectedArea;
   final String? sufferLevel;
   final String? cause;
+  final String? otherInformation;
 
   const OtherInformationPage({
     super.key,
     this.userName,
+    this.userDateOfBirth,
+    this.userHome,
+    this.userGender,
+    this.userTelNum,
     this.selectedOnsetDay,
     this.symptom,
     this.affectedArea,
     this.sufferLevel,
     this.cause,
+    this.otherInformation,
   });
 
   @override
@@ -202,13 +211,16 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                     VerticalSlideRoute(
                       page: QuestionnairePage(
                         userName: widget.userName,
-                        selectedOnsetDay: widget.selectedOnsetDay, // DatePageから
-                        symptom: widget.symptom, // SymptomPageから
-                        affectedArea: widget.affectedArea, // AffectedAreaPageから
-                        sufferLevel: widget.sufferLevel, // SufferLevelPageから
-                        cause: widget.cause, // CousePageから
-                        otherInformation:
-                            otherInformationSummary, // このOtherInformationPageから
+                        userDateOfBirth: widget.userDateOfBirth,
+                        userHome: widget.userHome,
+                        userGender: widget.userGender,
+                        userTelNum: widget.userTelNum,
+                        selectedOnsetDay: widget.selectedOnsetDay,
+                        symptom: widget.symptom,
+                        affectedArea: widget.affectedArea,
+                        sufferLevel: widget.sufferLevel,
+                        cause: widget.cause,
+                        otherInformation: otherInformationSummary,
                       ),
                     ),
                   );

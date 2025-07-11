@@ -5,12 +5,32 @@ import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 
 class DatePage extends StatefulWidget {
-  // DatePage が以前のページからデータを受け取る必要があればここに追加します
   final String? userName;
-  final String? symptom; // 例えば SymptomPage から症状を受け取る場合
-  final String? affectedArea; // 例えば AffectedAreaPage から患部を受け取る場合
-  
-  const DatePage({super.key, this.userName, this.symptom, this.affectedArea});
+  final DateTime? userDateOfBirth;
+  final String? userHome;
+  final String? userGender;
+  final String? userTelNum;
+  final DateTime? selectedOnsetDay;
+  final String? symptom;
+  final String? affectedArea;
+  final String? sufferLevel;
+  final String? cause;
+  final String? otherInformation;
+
+  const DatePage({
+    super.key,
+    this.userName,
+    this.userDateOfBirth,
+    this.userHome,
+    this.userGender,
+    this.userTelNum,
+    this.selectedOnsetDay,
+    this.symptom,
+    this.affectedArea,
+    this.sufferLevel,
+    this.cause,
+    this.otherInformation,
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -29,7 +49,15 @@ class _DatePageState extends State<DatePage> {
   late final DateTime _lastDay = DateTime(_now.year, _now.month + 1, 0);
 
   final List<String> _japaneseWeekdays = ['月', '火', '水', '木', '金', '土', '日'];
-  final List<String> _englishWeekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  final List<String> _englishWeekdays = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -160,9 +188,16 @@ class _DatePageState extends State<DatePage> {
                       VerticalSlideRoute(
                         page: SufferLevelPage(
                           userName: widget.userName,
-                          selectedOnsetDay: _selectedDay, // このページで選択された日付
-                          symptom: widget.symptom, // 以前のページから受け取った症状
-                          affectedArea: widget.affectedArea, // 以前のページから受け取った患部
+                          userDateOfBirth: widget.userDateOfBirth,
+                          userHome: widget.userHome,
+                          userGender: widget.userGender,
+                          userTelNum: widget.userTelNum,
+                          selectedOnsetDay: _selectedDay,
+                          symptom: widget.symptom,
+                          affectedArea: widget.affectedArea,
+                          sufferLevel: widget.sufferLevel,
+                          cause: widget.cause,
+                          otherInformation: widget.otherInformation,
                         ),
                       ),
                     );
