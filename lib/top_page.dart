@@ -117,23 +117,9 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
               ),
             ),
 
-            // 手のアニメーション
-            AnimatedBuilder(
-              animation: _handAnimation,
-              builder: (context, child) {
-                return Positioned(
-                  bottom: 30 + _handAnimation.value, // 手を少し下へ
-                  left: MediaQuery.of(context).size.width / 2 - 50,
-                  child: child!,
-                );
-              },
-              child: Image.asset(
-                'assets/タッチアイコン.png',
-                width: 100,
-              ),
-            ),
+           
 
-            // 波紋（手の上に移動）
+            // 波紋
             if (showRipple)
               AnimatedBuilder(
                 animation: _rippleAnimation,
@@ -152,6 +138,22 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
                   );
                 },
               ),
+            
+            // 手のアニメーション
+            AnimatedBuilder(
+              animation: _handAnimation,
+              builder: (context, child) {
+                return Positioned(
+                  bottom: 35 + _handAnimation.value, // 手を少し下へ
+                  left: MediaQuery.of(context).size.width / 2 - 50,
+                  child: child!,
+                );
+              },
+              child: Image.asset(
+                'assets/タッチアイコン.png',
+                width: 100,
+              ),
+            ),
           ],
         ),
       ),

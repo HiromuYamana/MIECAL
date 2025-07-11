@@ -83,26 +83,45 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 1,
-            child: Container(
+            flex: 2,
+            child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
+              //padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: SizedBox(
+                  child:Center(
+                  child: const Icon(
                     Icons.arrow_upward,
                     color: Colors.white,
                     size: 36,
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  )
                 ),
               ),
             ),
           ),
           Expanded(
-            flex: 8,
+            flex:1,
+            child:Container(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              child: Center(
+                child:Text(
+                  'その他情報',
+                  style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ) 
+          ),
+          ),
+
+          Expanded(
+            flex: 15,
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
@@ -197,7 +216,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(

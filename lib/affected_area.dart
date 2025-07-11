@@ -74,6 +74,20 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
       const Color.fromARGB(255, 255, 64, 255): () => loc.partNape,
       const Color.fromARGB(255, 255, 255, 64): () => loc.partBack,
       const Color.fromARGB(255, 255, 64, 64): () => loc.partButtocks,
+      const Color.fromARGB(255, 64, 255, 64): () => loc.partRightThigh,
+      const Color.fromARGB(255, 64, 64, 255): () => loc.partRightCalf,
+      const Color.fromARGB(255, 255, 128, 64): () => loc.partRightFoot,
+      const Color.fromARGB(255, 255, 64, 128): () => loc.partLeftThigh,
+      const Color.fromARGB(255, 128, 255, 64): () => loc.partLeftCalf,
+      const Color.fromARGB(255, 128, 64, 255): () => loc.partLeftFoot,
+      const Color.fromARGB(255, 64, 255, 128): () => loc.partLeftShoulder,
+      const Color.fromARGB(255, 64, 128, 255): () => loc.partLeftUpperArm,
+      const Color.fromARGB(255, 255, 64, 0): () => loc.partLeftForearm,
+      const Color.fromARGB(255, 255, 0, 64): () => loc.partLeftHand,
+      const Color.fromARGB(255, 64, 255, 0): () => loc.partRightShoulder,
+      const Color.fromARGB(255, 64, 0, 255): () => loc.partRightUpperArm,
+      const Color.fromARGB(255, 0, 255, 64): () => loc.partRightForearm,
+      const Color.fromARGB(255, 0, 64, 255): () => loc.partRightHand,
     };
   }
 
@@ -194,31 +208,48 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 3,
-            child: Container(
+            flex: 2,
+            child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
+              //padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context); //前の画面に戻る
+                },
+                child: SizedBox(
+                  child: Center(
+                  //mainAxisSize: MainAxisSize.min,
+                  //children: [
+                    //IconButton(
+                      child: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
-                      },
-                    ),
-                    Text(
+                    )
+                      //onPressed: () {
+                        //Navigator.pop(context); // 前の画面に戻る
+                      //},
+                  ),
+                    //Text(
+                      //loc.affectedAreaSelection,
+                      //style: const TextStyle(color: Colors.black, fontSize: 20),
+                      
+                    //),
+                  //],
+                ),
+              ),
+            ),
+          Expanded(
+            flex:1,
+            child: Container(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              child: Center(
+                child:Text(
                       loc.affectedAreaSelection,
                       style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
-                  ],
-                ),
-              ),
+                  ),
             ),
           ),
           Expanded(
