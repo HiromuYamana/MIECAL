@@ -4,8 +4,12 @@ import 'package:miecal/vertical_slide_page.dart'; // VerticalSlideRoute の定�
 
 class SymptomPage extends StatefulWidget {
   final String? userName;
+  final DateTime? userDateOfBirth;
+  final String? userHome;
+  final String? userGender;
+  final String? userTelNum;
   final DateTime? selectedOnsetDay;
-  final String? symptom; // このSymptomPageで選択される症状なので、ここはnull許容型
+  final String? symptom;
   final String? affectedArea;
   final String? sufferLevel;
   final String? cause;
@@ -14,6 +18,10 @@ class SymptomPage extends StatefulWidget {
   const SymptomPage({
     super.key,
     this.userName,
+    this.userDateOfBirth,
+    this.userHome,
+    this.userGender,
+    this.userTelNum,
     this.selectedOnsetDay,
     this.symptom,
     this.affectedArea,
@@ -211,13 +219,16 @@ class _SymptomPageState extends State<SymptomPage> {
                     VerticalSlideRoute(
                       page: AffectedAreaPage(
                         userName: widget.userName,
+                        userDateOfBirth: widget.userDateOfBirth,
+                        userHome: widget.userHome,
+                        userGender: widget.userGender,
+                        userTelNum: widget.userTelNum,
                         selectedOnsetDay: widget.selectedOnsetDay,
-                        symptom: selectedSymptom, // このページで選択した症状
+                        symptom: selectedSymptom,
                         affectedArea: widget.affectedArea,
                         sufferLevel: widget.sufferLevel,
                         cause: widget.cause,
-                        otherInformation:
-                            widget.otherInformation, // このSymptomPageで選択した症状
+                        otherInformation: widget.otherInformation,
                       ),
                     ),
                   );

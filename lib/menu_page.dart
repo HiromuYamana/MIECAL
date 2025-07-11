@@ -4,11 +4,35 @@ import 'package:miecal/top_page.dart';
 import 'package:miecal/personal_information_page.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:miecal/vertical_slide_page.dart';
+import 'package:miecal/qr_scanner_page.dart';
 
 class MenuPage extends StatelessWidget {
   final String? userName;
+  final DateTime? userDateOfBirth;
+  final String? userHome;
+  final String? userGender;
+  final String? userTelNum;
+  final DateTime? selectedOnsetDay;
+  final String? symptom;
+  final String? affectedArea;
+  final String? sufferLevel;
+  final String? cause;
+  final String? otherInformation;
 
-  const MenuPage({super.key, this.userName});
+  const MenuPage({
+    super.key,
+    this.userName,
+    this.userDateOfBirth,
+    this.userHome,
+    this.userGender,
+    this.userTelNum,
+    this.selectedOnsetDay,
+    this.symptom,
+    this.affectedArea,
+    this.sufferLevel,
+    this.cause,
+    this.otherInformation,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +58,21 @@ class MenuPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    VerticalSlideRoute(page: SymptomPage(userName: userName)),
+                    VerticalSlideRoute(
+                      page: SymptomPage(
+                        userName: userName,
+                        userDateOfBirth: userDateOfBirth,
+                        userHome: userHome,
+                        userGender: userGender,
+                        userTelNum: userTelNum,
+                        selectedOnsetDay: selectedOnsetDay,
+                        symptom: symptom,
+                        affectedArea: affectedArea,
+                        sufferLevel: sufferLevel,
+                        cause: cause,
+                        otherInformation: otherInformation,
+                      ),
+                    ),
                   );
                 },
               ),
@@ -49,6 +87,19 @@ class MenuPage extends StatelessWidget {
                 },
               ),
             ],
+          ),
+
+          _MenuIconButton(
+            imagePath: 'assets/icons/qr_scan.png', // <-- 適切なアイコン画像パスに変更
+            label: 'QRを読み込む', // local.qrScan などに多言語化可能
+            onTap: () {
+              Navigator.push(
+                context,
+                VerticalSlideRoute(
+                  page: const QrScannerPage(),
+                ), // QrScannerPageへ遷移
+              );
+            },
           ),
 
           // ログアウト

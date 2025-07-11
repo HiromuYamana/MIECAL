@@ -8,21 +8,29 @@ import 'package:miecal/l10n/app_localizations.dart';
 
 class AffectedAreaPage extends StatefulWidget {
   final String? userName;
+  final DateTime? userDateOfBirth;
+  final String? userHome;
+  final String? userGender;
+  final String? userTelNum;
   final DateTime? selectedOnsetDay;
-  final String? symptom; // 既に存在しますが、念のため再確認
-  final String? affectedArea; // AffectedAreaPageで選択されるので、初期はnull
+  final String? symptom;
+  final String? affectedArea;
   final String? sufferLevel;
   final String? cause;
   final String? otherInformation;
 
   const AffectedAreaPage({
     super.key,
-    this.userName, // <-- 追加
-    this.selectedOnsetDay, // <-- 追加
-    this.symptom, // <-- 追加
-    this.affectedArea, // <-- 追加 (既存のaffectedAreaフィールド名と衝突しないように注意)
-    this.sufferLevel, // <-- 追加
-    this.cause, // <-- 追加
+    this.userName,
+    this.userDateOfBirth,
+    this.userHome,
+    this.userGender,
+    this.userTelNum,
+    this.selectedOnsetDay,
+    this.symptom,
+    this.affectedArea,
+    this.sufferLevel,
+    this.cause,
     this.otherInformation,
   });
 
@@ -94,9 +102,16 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     for (int y = 0; y < _rawMaskImage!.height; y++) {
       for (int x = 0; x < _rawMaskImage!.width; x++) {
         final pixel = _rawMaskImage!.getPixel(x, y);
-        final color = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+        final color = Color.fromARGB(
+          pixel.a.toInt(),
+          pixel.r.toInt(),
+          pixel.g.toInt(),
+          pixel.b.toInt(),
+        );
         if (localizedColorToPart.containsKey(color)) {
-          _colorPixelCache.putIfAbsent(color, () => []).add(Offset(x.toDouble(), y.toDouble()));
+          _colorPixelCache
+              .putIfAbsent(color, () => [])
+              .add(Offset(x.toDouble(), y.toDouble()));
         }
       }
     }
@@ -105,7 +120,8 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
   void _onTap(TapUpDetails details) {
     if (_maskImage == null || _rawMaskImage == null) return;
 
-    final RenderBox box = _imageKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox box =
+        _imageKey.currentContext!.findRenderObject() as RenderBox;
     final Size widgetSize = box.size;
     final Offset localPos = box.globalToLocal(details.globalPosition);
 
@@ -124,16 +140,27 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     final dx = (widgetSize.width - displayWidth) / 2;
     final dy = (widgetSize.height - displayHeight) / 2;
 
-    final double xInImage = ((localPos.dx - dx) / displayWidth) * _rawMaskImage!.width;
-    final double yInImage = ((localPos.dy - dy) / displayHeight) * _rawMaskImage!.height;
+    final double xInImage =
+        ((localPos.dx - dx) / displayWidth) * _rawMaskImage!.width;
+    final double yInImage =
+        ((localPos.dy - dy) / displayHeight) * _rawMaskImage!.height;
 
     final int x = xInImage.toInt();
     final int y = yInImage.toInt();
 
-    if (x < 0 || y < 0 || x >= _rawMaskImage!.width || y >= _rawMaskImage!.height) return;
+    if (x < 0 ||
+        y < 0 ||
+        x >= _rawMaskImage!.width ||
+        y >= _rawMaskImage!.height)
+      return;
 
     final pixel = _rawMaskImage!.getPixel(x, y);
-    final pixelColor = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+    final pixelColor = Color.fromARGB(
+      pixel.a.toInt(),
+      pixel.r.toInt(),
+      pixel.g.toInt(),
+      pixel.b.toInt(),
+    );
 
     if (localizedColorToPart.containsKey(pixelColor)) {
       setState(() {
@@ -172,7 +199,11 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
               padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               child: Center(
                 child: IconButton(
-                  icon: const Icon(Icons.arrow_upward, color: Colors.white, size: 36),
+                  icon: const Icon(
+                    Icons.arrow_upward,
+                    color: Colors.white,
+                    size: 36,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -180,37 +211,38 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
           ),
           Expanded(
             flex: 8,
-            child: _maskImage == null
-                ? const Center(child: CircularProgressIndicator())
-                : LayoutBuilder(
-                    builder: (context, constraints) {
-                      return GestureDetector(
-                        onTapUp: _onTap,
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: Image.asset(
-                                'assets/human_outline.png',
-                                key: _imageKey,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: CustomPaint(
-                                painter: MaskOverlayPainter(
-                                  selectedColors: _selectedColors,
-                                  colorPixelCache: _colorPixelCache,
-                                  referenceImage: _maskImage!,
-                                  imageWidth: _rawMaskImage!.width,
-                                  imageHeight: _rawMaskImage!.height,
+            child:
+                _maskImage == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : LayoutBuilder(
+                      builder: (context, constraints) {
+                        return GestureDetector(
+                          onTapUp: _onTap,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: Image.asset(
+                                  'assets/human_outline.png',
+                                  key: _imageKey,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                              Positioned.fill(
+                                child: CustomPaint(
+                                  painter: MaskOverlayPainter(
+                                    selectedColors: _selectedColors,
+                                    colorPixelCache: _colorPixelCache,
+                                    referenceImage: _maskImage!,
+                                    imageWidth: _rawMaskImage!.width,
+                                    imageHeight: _rawMaskImage!.height,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
           ),
           Expanded(
             flex: 1,
@@ -224,12 +256,16 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                     VerticalSlideRoute(
                       page: DatePage(
                         userName: widget.userName,
-                        //selectedOnsetDay: widget.selectedOnsetDay,
+                        userDateOfBirth: widget.userDateOfBirth,
+                        userHome: widget.userHome,
+                        userGender: widget.userGender,
+                        userTelNum: widget.userTelNum,
+                        selectedOnsetDay: widget.selectedOnsetDay,
                         symptom: widget.symptom,
-                        affectedArea: selectedAffectedArea, // このページで選択した患部
-                        //sufferLevel: widget.sufferLevel,
-                        //cause: widget.cause,
-                        //otherInformation: widget.otherInformation,
+                        affectedArea: selectedAffectedArea,
+                        sufferLevel: widget.sufferLevel,
+                        cause: widget.cause,
+                        otherInformation: widget.otherInformation,
                       ),
                     ),
                   );
@@ -287,9 +323,10 @@ class MaskOverlayPainter extends CustomPainter {
     final scaleX = displayWidth / imageWidth;
     final scaleY = displayHeight / imageHeight;
 
-    final paint = Paint()
-      ..color = Colors.red.withValues(alpha: 0.5)
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..color = Colors.red.withValues(alpha: 0.5)
+          ..style = PaintingStyle.fill;
 
     for (final color in selectedColors) {
       final pixels = colorPixelCache[color];
@@ -312,4 +349,3 @@ class MaskOverlayPainter extends CustomPainter {
     return oldDelegate.selectedColors != selectedColors;
   }
 }
-

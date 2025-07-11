@@ -23,11 +23,11 @@ import 'package:miecal/l10n/app_localizations.dart';
 import 'package:miecal/user_input_model.dart';
 import 'package:provider/provider.dart';
 
+import 'package:miecal/qr_scanner_page.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     ChangeNotifierProvider(
       create: (_) => UserInputModel(),
@@ -60,16 +60,31 @@ class MyApp extends StatelessWidget {
               ModalRoute.of(context)?.settings.arguments
                   as Map<String, dynamic>?;
 
-          return MenuPage(userName: args?['userName'] as String?);
+          return MenuPage(
+            userName: args?['userName'] as String?,
+            userDateOfBirth: args?['userDateOfBirth'] as DateTime?, // 例: 生年月日
+            userHome: args?['userHome'] as String?,
+            userGender: args?['userGender'] as String?,
+            userTelNum: args?['userTelNum'] as String?,
+            selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?, // 発症日
+            symptom: args?['symptom'] as String?, // 症状
+            affectedArea: args?['affectedArea'] as String?, // 患部
+            sufferLevel: args?['sufferLevel'] as String?, // 程度
+            cause: args?['cause'] as String?, // 原因
+            otherInformation: args?['otherInformation'] as String?, // その他情報
+          );
         },
         '/SymptomPage': (context) {
-          // SymptomPage のルート定義を修正
           final Map<String, dynamic>? args =
               ModalRoute.of(context)?.settings.arguments
                   as Map<String, dynamic>?;
 
           return SymptomPage(
             userName: args?['userName'] as String?,
+            userDateOfBirth: args?['userDateOfBirth'] as DateTime?,
+            userHome: args?['userHome'] as String?,
+            userGender: args?['userGender'] as String?,
+            userTelNum: args?['userTelNum'] as String?,
             selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?,
             symptom: args?['symptom'] as String?,
             affectedArea: args?['affectedArea'] as String?,
@@ -84,14 +99,16 @@ class MyApp extends StatelessWidget {
         '/CousePage': (context) => const CousePage(),
         '/OtherInformationPage': (context) => const OtherInformationPage(),
         '/QuestionnairePage': (context) {
-          // Navigator.push で渡された arguments を取得
-          // 想定される引数は Map<String, dynamic> です
           final Map<String, dynamic>? args =
               ModalRoute.of(context)?.settings.arguments
                   as Map<String, dynamic>?;
 
           return QuestionnairePage(
             userName: args?['userName'] as String?,
+            userDateOfBirth: args?['userDateOfBirth'] as DateTime?, // 例: 生年月日
+            userHome: args?['userHome'] as String?,
+            userGender: args?['userGender'] as String?,
+            userTelNum: args?['userTelNum'] as String?,
             selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?, // 発症日
             symptom: args?['symptom'] as String?, // 症状
             affectedArea: args?['affectedArea'] as String?, // 患部
@@ -100,6 +117,7 @@ class MyApp extends StatelessWidget {
             otherInformation: args?['otherInformation'] as String?, // その他情報
           );
         },
+        '/QrScannerPage': (context) => const QrScannerPage(),
       },
       // 必要に応じてテーマを設定
       theme: ThemeData(

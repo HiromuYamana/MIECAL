@@ -4,18 +4,31 @@ import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 
 class SufferLevelPage extends StatefulWidget {
-  // これまでのページから受け取る問診票データを定義します
   final String? userName;
-  final DateTime? selectedOnsetDay; // DatePageから受け取る発症日
-  final String? symptom; // SymptomPageから受け取る症状
-  final String? affectedArea; // AffectedAreaPageから受け取る患部
+  final DateTime? userDateOfBirth;
+  final String? userHome;
+  final String? userGender;
+  final String? userTelNum;
+  final DateTime? selectedOnsetDay;
+  final String? symptom;
+  final String? affectedArea;
+  final String? sufferLevel;
+  final String? cause;
+  final String? otherInformation;
 
   const SufferLevelPage({
     super.key,
     this.userName,
+    this.userDateOfBirth,
+    this.userHome,
+    this.userGender,
+    this.userTelNum,
     this.selectedOnsetDay,
     this.symptom,
     this.affectedArea,
+    this.sufferLevel,
+    this.cause,
+    this.otherInformation,
   });
 
   @override
@@ -57,7 +70,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
 
     // 画面の安全な領域の上部パディングを取得 (ノッチなど)
     final double topPadding = MediaQuery.of(context).padding.top;
-        final loc = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Column(
@@ -153,10 +166,16 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                     VerticalSlideRoute(
                       page: CousePage(
                         userName: widget.userName,
-                        selectedOnsetDay: widget.selectedOnsetDay, // DatePageから
-                        symptom: widget.symptom, // SymptomPageから
-                        affectedArea: widget.affectedArea, // AffectedAreaPageから
-                        sufferLevel: sufferLevelSummary, // このSufferLevelPageから
+                        userDateOfBirth: widget.userDateOfBirth,
+                        userHome: widget.userHome,
+                        userGender: widget.userGender,
+                        userTelNum: widget.userTelNum,
+                        selectedOnsetDay: widget.selectedOnsetDay,
+                        symptom: widget.symptom,
+                        affectedArea: widget.affectedArea,
+                        sufferLevel: sufferLevelSummary,
+                        cause: widget.cause,
+                        otherInformation: widget.otherInformation,
                       ),
                     ),
                   );
@@ -180,8 +199,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
 }
 
 // LinearGradient を BoxDecoration に直接渡せるようにする拡張機能 (Option)
-extension _LinearGradientAsBoxDecoration on LinearGradient {
-}
+extension _LinearGradientAsBoxDecoration on LinearGradient {}
 
 // GradientSliderTrackShape は変更なし (以前のコードからそのまま)
 class GradientSliderTrackShape extends SliderTrackShape {

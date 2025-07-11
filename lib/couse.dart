@@ -3,20 +3,31 @@ import 'package:miecal/other_information.dart';
 import 'package:miecal/vertical_slide_page.dart';
 
 class CousePage extends StatefulWidget {
-  // これまでのページから受け取る問診票データを定義します
   final String? userName;
+  final DateTime? userDateOfBirth;
+  final String? userHome;
+  final String? userGender;
+  final String? userTelNum;
   final DateTime? selectedOnsetDay;
   final String? symptom;
   final String? affectedArea;
   final String? sufferLevel;
+  final String? cause;
+  final String? otherInformation;
 
   const CousePage({
     super.key,
     this.userName,
+    this.userDateOfBirth,
+    this.userHome,
+    this.userGender,
+    this.userTelNum,
     this.selectedOnsetDay,
     this.symptom,
     this.affectedArea,
     this.sufferLevel,
+    this.cause,
+    this.otherInformation,
   });
 
   @override
@@ -31,7 +42,7 @@ class _CousePageState extends State<CousePage> {
     {'path': 'assets/images/tennraku.png', 'name': '転落'},
     {'path': 'assets/images/fukutuu.png', 'name': '腹痛'},
     {'path': 'assets/images/kossetu.png', 'name': '骨折'},
-    {'path': 'assets/images/metabo.png', 'name': 'メタボ'}, 
+    {'path': 'assets/images/metabo.png', 'name': 'メタボ'},
     // 他の原因があればここに追加
   ];
 
@@ -67,30 +78,27 @@ class _CousePageState extends State<CousePage> {
             flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-            child:InkWell(
-              onTap:(){
-                 Navigator.pop(context);
-              },
-              //padding: EdgeInsets.only(top: topPadding),
-              child: SizedBox(
-                child: Center(
-                  //mainAxisSize: MainAxisSize.min,
-                  child: 
-                    
-                      const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 36,
-                      ),
-                      
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                //padding: EdgeInsets.only(top: topPadding),
+                child: SizedBox(
+                  child: Center(
+                    //mainAxisSize: MainAxisSize.min,
+                    child: const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                      size: 36,
                     ),
-                    //const Text('原因', style: TextStyle(color: Colors.black)),
-                  
+                  ),
+
+                  //const Text('原因', style: TextStyle(color: Colors.black)),
                 ),
               ),
             ),
-            ),
-          
+          ),
+
           Expanded(
             flex: 8,
             child: Container(
@@ -192,11 +200,16 @@ class _CousePageState extends State<CousePage> {
                     VerticalSlideRoute(
                       page: OtherInformationPage(
                         userName: widget.userName,
+                        userDateOfBirth: widget.userDateOfBirth,
+                        userHome: widget.userHome,
+                        userGender: widget.userGender,
+                        userTelNum: widget.userTelNum,
                         selectedOnsetDay: widget.selectedOnsetDay,
                         symptom: widget.symptom,
                         affectedArea: widget.affectedArea,
                         sufferLevel: widget.sufferLevel,
-                        cause: selectedCause, // ここで日本語名を渡す
+                        cause: selectedCause,
+                        otherInformation: widget.otherInformation,
                       ),
                     ),
                   );
