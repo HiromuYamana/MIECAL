@@ -22,6 +22,8 @@ import 'dart:html' as html; // Web向けの場合。モバイル向けなら削�
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:miecal/user_input_model.dart';
 import 'package:provider/provider.dart';
+import 'package:miecal/password_reset_page.dart';
+import 'package:miecal/terms_of_service_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,8 +43,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: const Locale('en'),
-      //slocale: const Locale('en'),
+      //locale: const Locale('en'),
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -83,6 +84,8 @@ class MyApp extends StatelessWidget {
         '/SufferLevelPage': (context) => const SufferLevelPage(),
         '/CousePage': (context) => const CousePage(),
         '/OtherInformationPage': (context) => const OtherInformationPage(),
+        '/PasswordResetPage': (context) => const PasswordResetPage(),
+        '/TermsOfServicePage': (context) => const TermsOfServicePage(),
         '/QuestionnairePage': (context) {
           // Navigator.push で渡された arguments を取得
           // 想定される引数は Map<String, dynamic> です

@@ -162,24 +162,41 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       body: Column(
         children: [
           Expanded(
-            flex: 1,
+            flex: 3,
             child: Container(
               color: const Color.fromARGB(255, 207, 227, 230),
               padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               child: Center(
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_upward, color: Colors.white, size: 36),
-                  onPressed: () => Navigator.pop(context),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_upward,
+                        color: Colors.white,
+                        size: 36,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context); // 前の画面に戻る
+                      },
+                    ),
+                    Text(
+                      loc.affectedAreaSelection,
+                      style: const TextStyle(color: Colors.black, fontSize: 20),
+                      
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
           Expanded(
-            flex: 8,
+            flex: 15,
             child: _maskImage == null
                 ? const Center(child: CircularProgressIndicator())
                 : LayoutBuilder(
@@ -213,7 +230,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                   ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(

@@ -160,12 +160,7 @@ class _SymptomPageState extends State<SymptomPage> {
                         if (isSelected[index])
                           Container(
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(
-                                255,
-                                252,
-                                166,
-                                7,
-                              ).withValues(alpha: 0.3), // 半透明のオーバーレイ
+                              color: const Color.fromARGB(255, 252, 166, 7,).withValues(alpha: 0.3), 
                               borderRadius: BorderRadius.circular(8), // 角丸
                             ),
                           ),

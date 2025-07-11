@@ -63,7 +63,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 1, // 上部のヘッダー部分の割合
+            flex: 3, // 上部のヘッダー部分の割合
             child: Container(
               color: const Color.fromARGB(255, 218, 246, 250), // 背景色
               padding: EdgeInsets.only(top: topPadding), // 上部パディング
@@ -95,50 +95,46 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
             ),
           ),
           Expanded(
-            flex: 7, // スライダーと表情画像の領域の割合
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    faceImages[selectedIndex], // スライダー値に応じて表情画像を表示
-                    width: 100,
-                    height: 100,
-                  ),
-                  const SizedBox(height: 30), // 画像とスライダーの間のスペース
-                  SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      trackHeight: 8.0, // トラックの高さ
-                      thumbShape: const RoundSliderThumbShape(
-                        enabledThumbRadius: 14.0, // 親指の半径
-                      ),
-                      trackShape: GradientSliderTrackShape(
-                        // カスタムトラックシェイプ
-                        gradient: const LinearGradient(
-                          colors: [Colors.green, Colors.yellow, Colors.red],
-                        ),
+            flex: 15,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  faceImages[selectedIndex], // スライダー値に応じて表情画像を表示
+                  width: 200,
+                  height: 200,
+                ),
+                const SizedBox(height: 30), // 画像とスライダーの間のスペース
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    trackHeight: 8.0, // トラックの高さ
+                    thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 14.0, // 親指の半径
+                    ),
+                    trackShape: GradientSliderTrackShape(
+                      gradient: const LinearGradient(
+                        colors: [Colors.green, Colors.yellow, Colors.red],
                       ),
                     ),
-                    child: Slider(
-                      value: severity, // スライダーの現在値
-                      min: 0, // 最小値
-                      max: 10, // 最大値
-                      divisions: 10, // 分割数 (0から10まで11段階)
-                      label: severity.toStringAsFixed(0), // スライダーの上に表示されるラベル
-                      onChanged: (value) {
-                        setState(() {
-                          severity = value; // スライダー値が変更されたら状態を更新
-                        });
-                      },
-                    ),
                   ),
-                ],
-              ),
+                  child: Slider(
+                    value: severity,
+                    min: 0,
+                    max: 10,
+                    divisions: 10,
+                    label: severity.toStringAsFixed(0),
+                    onChanged: (value) {
+                      setState(() {
+                        severity = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
-            flex: 1, // 下部のナビゲーションボタン部分の割合
+            flex: 2, // 下部のナビゲーションボタン部分の割合
             child: Material(
               color: Colors.blueGrey, // 背景色
               child: InkWell(

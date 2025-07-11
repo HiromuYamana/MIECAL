@@ -18,9 +18,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get profileEdit => 'プロフィール';
 
   @override
-  String get logout => 'ログアウト';
-
-  @override
   String get eMail => 'Eメール';
 
   @override
@@ -39,7 +36,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get authUserDisabled => 'このアカウントは無効になっています。';
 
   @override
-  String get authUnknownError => '不明なエラーが発生しました。';
+  String get authUnknownError => 'メールアドレスかパスワードが間違っています。';
 
   @override
   String get signIn => 'ログイン';
@@ -51,7 +48,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get dontHaveAccount => 'アカウントをお持ちでない方は';
 
   @override
+  String get logout => 'ログアウト';
+
+  @override
   String get notSelected => '未選択';
+
+  @override
+  String get affectedAreaSelection => '患部選択';
 
   @override
   String get partFace => '顔';

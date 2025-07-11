@@ -76,13 +76,11 @@ class _CousePageState extends State<CousePage> {
                 child: Center(
                   //mainAxisSize: MainAxisSize.min,
                   child: 
-                    
                       const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      
                     ),
                     //const Text('原因', style: TextStyle(color: Colors.black)),
                   
