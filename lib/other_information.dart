@@ -117,7 +117,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: const Color.fromARGB(255, 120, 120, 120),
                             border: Border.all(color: Colors.blueAccent),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: const [
@@ -153,7 +153,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                                               171,
                                               85,
                                             ) // 選択時
-                                            : Colors.grey[300], // 未選択時
+                                            : const Color.fromARGB(255, 255, 255, 255), // 未選択時
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                         16,
