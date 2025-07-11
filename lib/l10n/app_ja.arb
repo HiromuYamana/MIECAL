@@ -15,6 +15,7 @@
   "signIn": "ログイン",
   "createNewAccount": "アカウント新規作成",
   "dontHaveAccount": "アカウントをお持ちでない方は",
+  "forgetPassword": "パスワードを忘れた場合",
   "logout": "ログアウト",
   
   "notSelected": "未選択",

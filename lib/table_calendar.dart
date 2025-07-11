@@ -59,12 +59,12 @@ class _DatePageState extends State<DatePage> {
                     ),
                     Image.asset(
                       'assets/onset_date.png',
-                      height: screenHeight * 0.2,
+                      height: screenHeight * 0.16,
                       fit: BoxFit.contain,
                     ),
                     Text(
                       loc.dateOfOnset,
-                      style: const TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ],
                 ),

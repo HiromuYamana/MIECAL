@@ -58,13 +58,12 @@ class _CousePageState extends State<CousePage> {
 
   @override
   Widget build(BuildContext context) {
-    final double topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
       body: Column(
         children: [
           Expanded(
-            flex: 1,
+            flex: 3,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
             child:InkWell(
@@ -90,7 +89,7 @@ class _CousePageState extends State<CousePage> {
             ),
           
           Expanded(
-            flex: 8,
+            flex: 15,
             child: Container(
               color: const Color.fromARGB(255, 218, 246, 250),
               child: GridView.builder(
@@ -177,7 +176,7 @@ class _CousePageState extends State<CousePage> {
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(

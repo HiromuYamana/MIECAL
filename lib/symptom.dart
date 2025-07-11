@@ -80,7 +80,7 @@ class _SymptomPageState extends State<SymptomPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 1,
+            flex: 3,
             child: Container(
               color: const Color.fromARGB(255, 207, 227, 230),
               padding: EdgeInsets.only(top: topPadding),
@@ -112,7 +112,7 @@ class _SymptomPageState extends State<SymptomPage> {
             ),
           ),
           Expanded(
-            flex: 8,
+            flex: 15,
             child: Container(
               color: const Color.fromARGB(255, 218, 246, 250), // グリッドの背景色
               child: GridView.builder(
@@ -136,7 +136,7 @@ class _SymptomPageState extends State<SymptomPage> {
                         Container(
                           margin: const EdgeInsets.all(8), // 画像コンテナの余白
                           // width, heightはGridViewが自動調整するため削除
-                          // width: 1050,
+                          width: 1050,
                           // height: 1050,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -195,7 +195,7 @@ class _SymptomPageState extends State<SymptomPage> {
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(

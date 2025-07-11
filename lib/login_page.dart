@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // <-- この行を追加
-// main.dart にルーティングがある場合、必要
-// ログイン後の遷移先（今回は問診票に直接遷移）
-// <-- この行を追加 (PersonalInfoServiceがあるファイル)
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -210,10 +207,6 @@ Future<void> signInWithGoogle() async {
             '/PersonalInformationPage',
             arguments: {'isNewUser': true},
           );
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('ユーザーデータがありません。個人情報を登録してください。')),
-          );
         }
       } else {
         setState(() {
@@ -245,7 +238,7 @@ Future<void> signInWithGoogle() async {
 
   @override
   Widget build(BuildContext context) {
-      final loc = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 218, 246, 250),
       body: Center(
@@ -255,7 +248,7 @@ Future<void> signInWithGoogle() async {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'MIECAL',
+                'LOGIN',
                 style: GoogleFonts.montserrat(
                   fontSize: 64,
                   fontWeight: FontWeight.bold,
@@ -318,7 +311,7 @@ Future<void> signInWithGoogle() async {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text('Sign in'),
+                  child: Text(loc.signIn),
                 ),
               ),
               const SizedBox(height: 16),
@@ -327,7 +320,7 @@ Future<void> signInWithGoogle() async {
                 onPressed: () {
                   Navigator.pushNamed(context, '/PasswordResetPage');
                 },
-                child: const Text('パスワードを忘れた場合'),
+                child: Text(loc.forgetPassword),
               ),
 
 
@@ -344,7 +337,7 @@ Future<void> signInWithGoogle() async {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don’t have an account?"),
+                  Text(loc.dontHaveAccount),
                   TextButton.icon(
                     onPressed: () {
                       Navigator.pushNamed(context, '/RegisterPage');
