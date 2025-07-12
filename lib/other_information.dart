@@ -152,8 +152,9 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                               int index = rowIndex * 2 + colIndex;
                               bool isSelected =
                                   selectedInRow[rowIndex] == colIndex;
-                              if (index >= imagePaths.length)
+                              if (index >= imagePaths.length) {
                                 return const SizedBox.shrink();
+                              }
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 8,

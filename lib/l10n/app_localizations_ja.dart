@@ -18,10 +18,31 @@ class AppLocalizationsJa extends AppLocalizations {
   String get profileEdit => 'プロフィール';
 
   @override
-  String get eMail => 'Eメール';
+  String get email => 'Eメール';
 
   @override
-  String get passWord => 'パスワード';
+  String get password => 'パスワード';
+
+  @override
+  String get addPassword => 'パスワードを追加しますか？';
+
+  @override
+  String get addEmailAndPassword => 'Eメールとパスワードを追加しました。';
+
+  @override
+  String get googleLoginFailed => 'Googleログインに失敗しました';
+
+  @override
+  String get add => '追加';
+
+  @override
+  String get later => '後で';
+
+  @override
+  String get linkFailed => 'リンク失敗';
+
+  @override
+  String get userDataNotFound => 'ユーザーデータが見つかりませんでした。個人情報を登録してください。';
 
   @override
   String get authUserNotFound => 'ユーザーが見つかりませんでした。';

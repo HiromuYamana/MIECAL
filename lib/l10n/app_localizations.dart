@@ -113,17 +113,59 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get profileEdit;
 
-  /// No description provided for @eMail.
+  /// No description provided for @email.
   ///
   /// In en, this message translates to:
-  /// **'e-mail'**
-  String get eMail;
+  /// **'Email'**
+  String get email;
 
-  /// No description provided for @passWord.
+  /// No description provided for @password.
   ///
   /// In en, this message translates to:
-  /// **'pass word'**
-  String get passWord;
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @addPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Add password?'**
+  String get addPassword;
+
+  /// No description provided for @addEmailAndPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email and password have been successfully added.'**
+  String get addEmailAndPassword;
+
+  /// No description provided for @googleLoginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed. '**
+  String get googleLoginFailed;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @linkFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Link failed'**
+  String get linkFailed;
+
+  /// No description provided for @userDataNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'User data not found. Please register your personal infomartion.'**
+  String get userDataNotFound;
 
   /// No description provided for @authUserNotFound.
   ///

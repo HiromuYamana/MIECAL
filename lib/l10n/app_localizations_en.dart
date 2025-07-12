@@ -18,10 +18,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileEdit => 'Profile';
 
   @override
-  String get eMail => 'e-mail';
+  String get email => 'Email';
 
   @override
-  String get passWord => 'pass word';
+  String get password => 'Password';
+
+  @override
+  String get addPassword => 'Add password?';
+
+  @override
+  String get addEmailAndPassword => 'Your email and password have been successfully added.';
+
+  @override
+  String get googleLoginFailed => 'Google sign-in failed. ';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get linkFailed => 'Link failed';
+
+  @override
+  String get userDataNotFound => 'User data not found. Please register your personal infomartion.';
 
   @override
   String get authUserNotFound => 'User not found.';

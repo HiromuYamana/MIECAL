@@ -165,8 +165,9 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     if (x < 0 ||
         y < 0 ||
         x >= _rawMaskImage!.width ||
-        y >= _rawMaskImage!.height)
+        y >= _rawMaskImage!.height) {
       return;
+    }
 
     final pixel = _rawMaskImage!.getPixel(x, y);
     final pixelColor = Color.fromARGB(

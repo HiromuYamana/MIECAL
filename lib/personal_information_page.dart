@@ -224,11 +224,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       });
 
       // MenuPageへ縦スライドで遷移し、問診票データもリレー
-      final String? currentUserName = _nameController.text.trim();
+      final String currentUserName = _nameController.text.trim();
       final DateTime? currentUserDateOfBirth = parsedBirthday;
-      final String? currentUserHome = _addressController.text.trim();
+      final String currentUserHome = _addressController.text.trim();
       final String? currentUserGender = gender;
-      final String? currentUserTelNum = _phoneController.text.trim();
+      final String currentUserTelNum = _phoneController.text.trim();
 
       Navigator.pushReplacement(
         context,
