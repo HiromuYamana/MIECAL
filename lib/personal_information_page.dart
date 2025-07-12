@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:miecal/user_input_model.dart';
 import 'package:numberpicker/numberpicker.dart';
 
+/// 画像のパス
 const String _malePictPath   = 'assets/man_image.png';
 const String _femalePictPath = 'assets/woman_image.png';
 
@@ -57,11 +58,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   bool   isLoading   = true;
   String errorMessage = '';
 
-  /* ──────────── ★ 性別オプションボタン ──────────── */
+  /* ──────────── 性別オプションボタン ──────────── */
 
   Widget _genderOption({required bool isMale}) {
-    final bool selected = gender == (isMale ? '男性' : '女性');
-    final Color accent  = isMale ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 0, 0, 0);
+    final bool  selected = gender == (isMale ? '男性' : '女性');
+    const Color accent   = Colors.black;   // 黒で統一
 
     return InkWell(
       onTap: () => setState(() => gender = isMale ? '男性' : '女性'),
@@ -105,11 +106,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         ],
       );
 
-  /* ──────────── ★ CircleAvatar 表示 ──────────── */
+  /* ──────────── CircleAvatar 表示 ──────────── */
 
   Widget _buildAvatar() {
     if (gender == null) {
-      return Icon(Icons.person, size: 40, color: Colors.grey);
+      return const Icon(Icons.person, size: 40, color: Colors.grey);
     }
 
     final bool isMale = gender == '男性';
@@ -130,11 +131,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     );
   }
 
-  /* ──────────── 年齢計算など（変更なし） ──────────── */
+  /* ──────────── 年齢計算 ──────────── */
 
   int? _calculateAge(String d) {
     try {
-      final bd = DateTime.parse(d);
+      final bd  = DateTime.parse(d);
       final now = DateTime.now();
       int y = now.year - bd.year;
       if (now.month < bd.month || (now.month == bd.month && now.day < bd.day)) {
@@ -154,6 +155,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     });
   }
 
+  /* ──────────── 初期化 ──────────── */
+
   @override
   void initState() {
     super.initState();
@@ -161,16 +164,16 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       if (_birthdayController.text.isNotEmpty) {
         final p = DateTime.tryParse(_birthdayController.text);
         if (p != null) {
-          _selectedYear = p.year;
+          _selectedYear  = p.year;
           _selectedMonth = p.month;
-          _selectedDay = p.day;
+          _selectedDay   = p.day;
         }
       }
       _updateAgeFromSelectors();
     });
   }
 
-  /* ──────────── Firestore 入出力（大枠は前回と同じ） ──────────── */
+  /* ──────────── Firestore から読み込み ──────────── */
 
   Future<void> loadUserData() async {
     try {
@@ -178,7 +181,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       if (user == null) {
         setState(() {
           errorMessage = 'ログインしてください';
-          isLoading = false;
+          isLoading    = false;
         });
         return;
       }
@@ -201,9 +204,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     }
   }
 
+  /* ──────────── Firestore へ保存 ──────────── */
+
   Future<void> saveUserData() async {
     setState(() {
-      isLoading = true;
+      isLoading   = true;
       errorMessage = '';
     });
 
@@ -212,58 +217,49 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       if (user == null) {
         setState(() {
           errorMessage = 'ログインしてください';
-          isLoading = false;
+          isLoading    = false;
         });
         return;
       }
 
       final birthday =
           '${_selectedYear.toString().padLeft(4, '0')}-${_selectedMonth.toString().padLeft(2, '0')}-${_selectedDay.toString().padLeft(2, '0')}';
+      final DateTime? parsedBirthday = DateTime.tryParse(birthday);
       age = _calculateAge(birthday);
 
       final input = Provider.of<UserInputModel>(context, listen: false);
       input.updatePersonal(
-        name: _nameController.text.trim(),
-        address: _addressController.text.trim(),
-        birthday: birthday,
-        age: age?.toString() ?? '',
-        gender: gender ?? '',
-        phoneNumber: _phoneController.text.trim(),
-        allergy: _allergyController.text.trim(),
-        surgeryHistory: hadSurgery ? 'あり' : 'なし',
+        name           : _nameController.text.trim(),
+        address        : _addressController.text.trim(),
+        birthday       : birthday,
+        age            : age?.toString() ?? '',
+        gender         : gender ?? '',
+        phoneNumber    : _phoneController.text.trim(),
+        allergy        : _allergyController.text.trim(),
+        surgeryHistory : hadSurgery ? 'あり' : 'なし',
       );
 
       await _firestore.collection('users').doc(user.uid).set({
-        'name'    : input.name,
-        'address' : input.address,
-        'birthday': input.birthday,
-        'age'     : input.age,
-        'gender'  : input.gender,
-        'phone'   : input.phoneNumber,
-        'allergy' : input.allergy,
-        'surgery' : input.surgeryHistory == 'あり',
+        'name'     : input.name,
+        'address'  : input.address,
+        'birthday' : input.birthday,
+        'age'      : input.age,
+        'gender'   : input.gender,
+        'phone'    : input.phoneNumber,
+        'allergy'  : input.allergy,
+        'surgery'  : input.surgeryHistory == 'あり',
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
       if (!mounted) return;
-
-      setState(() {
-        isLoading = false;
-      });
-
-      // MenuPageへ縦スライドで遷移し、問診票データもリレー
-      final String currentUserName = _nameController.text.trim();
-      final DateTime? currentUserDateOfBirth = parsedBirthday;
-      final String currentUserHome = _addressController.text.trim();
-      final String? currentUserGender = gender;
-      final String currentUserTelNum = _phoneController.text.trim();
+      setState(() => isLoading = false);
 
       Navigator.pushReplacement(
         context,
         VerticalSlideRoute(
           page: MenuPage(
             userName        : _nameController.text.trim(),
-            userDateOfBirth : DateTime.tryParse(birthday),
+            userDateOfBirth : parsedBirthday,
             userHome        : _addressController.text.trim(),
             userGender      : gender,
             userTelNum      : _phoneController.text.trim(),
@@ -279,7 +275,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     } catch (e) {
       setState(() {
         errorMessage = '保存に失敗しました: $e';
-        isLoading = false;
+        isLoading    = false;
       });
     }
   }
@@ -316,7 +312,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                   CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.grey[200],
-                    child: _buildAvatar(),           // ★ 変更
+                    child: _buildAvatar(),
                   ),
 
                   const SizedBox(height: 16),
@@ -335,7 +331,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
                   const SizedBox(height: 12),
 
-                  _buildGenderSelector(),           // ★ 変更
+                  _buildGenderSelector(),
 
                   _buildIconTextField(Icons.phone, _phoneController,
                       keyboardType: TextInputType.phone, labelText: '電話番号'),
@@ -387,10 +383,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     maxValue: DateTime.now().year,
                     itemHeight: 30,
                     axis: Axis.vertical,
-                    onChanged: (v) => setState(() {
-                      _selectedYear = v;
-                      _updateAgeFromSelectors();
-                    }),
+                    onChanged: (v) {
+                      setState(() {
+                        _selectedYear = v;
+                        _updateAgeFromSelectors();
+                      });
+                    },
                   ),
                 ],
               ),
@@ -407,10 +405,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     maxValue: 12,
                     itemHeight: 30,
                     axis: Axis.vertical,
-                    onChanged: (v) => setState(() {
-                      _selectedMonth = v;
-                      _updateAgeFromSelectors();
-                    }),
+                    onChanged: (v) {
+                      setState(() {
+                        _selectedMonth = v;
+                        _updateAgeFromSelectors();
+                      });
+                    },
                   ),
                 ],
               ),
@@ -427,10 +427,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     maxValue: 31,
                     itemHeight: 30,
                     axis: Axis.vertical,
-                    onChanged: (v) => setState(() {
-                      _selectedDay = v;
-                      _updateAgeFromSelectors();
-                    }),
+                    onChanged: (v) {
+                      setState(() {
+                        _selectedDay = v;
+                        _updateAgeFromSelectors();
+                      });
+                    },
                   ),
                 ],
               ),
