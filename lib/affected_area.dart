@@ -228,16 +228,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                         size: 36,
                       ),
                     )
-                      //onPressed: () {
-                        //Navigator.pop(context); // 前の画面に戻る
-                      //},
                   ),
-                    //Text(
-                      //loc.affectedAreaSelection,
-                      //style: const TextStyle(color: Colors.black, fontSize: 20),
-                      
-                    //),
-                  //],
                 ),
               ),
             ),

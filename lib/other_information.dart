@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/questionnaire.dart';
 import 'package:miecal/vertical_slide_page.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 
 class OtherInformationPage extends StatefulWidget {
   final String? userName;
@@ -61,6 +62,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
   // 選択された情報を文字列としてまとめるヘルパー関数
   String _getOtherInformationSummary() {
     List<String> selectedSummaryParts = [];
+    final loc = AppLocalizations.of(context)!;
     for (int i = 0; i < selectedInRow.length; i++) {
       if (selectedInRow[i] != null) {
         // 選択された場合
@@ -69,7 +71,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
         selectedSummaryParts.add('${labels[i]}: $selectedOptionName');
       } else {
         // 未選択の場合も情報として含める
-        selectedSummaryParts.add('${labels[i]}: 未選択');
+        selectedSummaryParts.add('${labels[i]}:${loc.notSelected}');
       }
     }
     // 全ての行の情報を含めて結合
