@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/other_information.dart';
 import 'package:miecal/vertical_slide_page.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 
 class CousePage extends StatefulWidget {
   final String? userName;
@@ -58,13 +59,14 @@ class _CousePageState extends State<CousePage> {
 
   // 選択された原因を日本語名でまとめるヘルパー関数
   String _getSelectedCauseSummary() {
+    final loc = AppLocalizations.of(context)!;
     List<String> selectedCauseNames = [];
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
         selectedCauseNames.add(couseItems[i]['name']!); // 日本語名を取得
       }
     }
-    return selectedCauseNames.isEmpty ? '未選択' : selectedCauseNames.join(', ');
+    return selectedCauseNames.isEmpty ? loc.notSelected: selectedCauseNames.join(', ');
   }
 
   @override
@@ -73,7 +75,7 @@ class _CousePageState extends State<CousePage> {
       appBar: AppBar(
         title: Text("MIECAL"),
         backgroundColor: const Color.fromARGB(255, 75, 170, 248),
-        automaticallyImplyLeading: false, // <-- 修正点: 戻るボタンを非表示にする
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
