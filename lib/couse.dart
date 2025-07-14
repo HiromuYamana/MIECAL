@@ -70,6 +70,11 @@ class _CousePageState extends State<CousePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("MIECAL"),
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false, // <-- 修正点: 戻るボタンを非表示にする
+      ),
       body: Column(
         children: [
           Expanded(
