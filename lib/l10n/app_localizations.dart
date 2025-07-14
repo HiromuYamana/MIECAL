@@ -113,17 +113,83 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get profileEdit;
 
-  /// No description provided for @eMail.
+  /// No description provided for @email.
   ///
   /// In en, this message translates to:
-  /// **'e-mail'**
-  String get eMail;
+  /// **'Email'**
+  String get email;
 
-  /// No description provided for @passWord.
+  /// No description provided for @password.
   ///
   /// In en, this message translates to:
-  /// **'pass word'**
-  String get passWord;
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password(confirm)'**
+  String get confirmPassword;
+
+  /// No description provided for @addPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Add password?'**
+  String get addPassword;
+
+  /// No description provided for @addEmailAndPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email and password have been successfully added.'**
+  String get addEmailAndPassword;
+
+  /// No description provided for @googleLoginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed. '**
+  String get googleLoginFailed;
+
+  /// No description provided for @registerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed'**
+  String get registerFailed;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An expexted error has occurred.'**
+  String get unknownError;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @linkFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Link failed'**
+  String get linkFailed;
+
+  /// No description provided for @accountExistsWithMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered with: {methods}. Please log in using one of them.'**
+  String accountExistsWithMethods(Object methods);
+
+  /// No description provided for @userDataNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'User data not found. Please register your personal infomartion.'**
+  String get userDataNotFound;
 
   /// No description provided for @authUserNotFound.
   ///
@@ -136,6 +202,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incorrect password.'**
   String get authWrongPassword;
+
+  /// No description provided for @authShortPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Prease enter a password of six characters or more.'**
+  String get authShortPassword;
 
   /// No description provided for @authInvalidEmail.
   ///
@@ -152,7 +224,7 @@ abstract class AppLocalizations {
   /// No description provided for @authUnknownError.
   ///
   /// In en, this message translates to:
-  /// **'The email address to password is incorrect.'**
+  /// **'The email address or password is incorrect.'**
   String get authUnknownError;
 
   /// No description provided for @signIn.

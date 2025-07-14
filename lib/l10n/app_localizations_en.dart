@@ -18,10 +18,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileEdit => 'Profile';
 
   @override
-  String get eMail => 'e-mail';
+  String get email => 'Email';
 
   @override
-  String get passWord => 'pass word';
+  String get password => 'Password';
+
+  @override
+  String get confirmPassword => 'Password(confirm)';
+
+  @override
+  String get addPassword => 'Add password?';
+
+  @override
+  String get addEmailAndPassword => 'Your email and password have been successfully added.';
+
+  @override
+  String get googleLoginFailed => 'Google sign-in failed. ';
+
+  @override
+  String get registerFailed => 'Registration failed';
+
+  @override
+  String get unknownError => 'An expexted error has occurred.';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get linkFailed => 'Link failed';
+
+  @override
+  String accountExistsWithMethods(Object methods) {
+    return 'This email is already registered with: $methods. Please log in using one of them.';
+  }
+
+  @override
+  String get userDataNotFound => 'User data not found. Please register your personal infomartion.';
 
   @override
   String get authUserNotFound => 'User not found.';
@@ -30,13 +65,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authWrongPassword => 'Incorrect password.';
 
   @override
+  String get authShortPassword => 'Prease enter a password of six characters or more.';
+
+  @override
   String get authInvalidEmail => 'Invalid email format.';
 
   @override
   String get authUserDisabled => 'This account is disabled.';
 
   @override
-  String get authUnknownError => 'The email address to password is incorrect.';
+  String get authUnknownError => 'The email address or password is incorrect.';
 
   @override
   String get signIn => 'Sign in';

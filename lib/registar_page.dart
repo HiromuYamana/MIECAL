@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -33,10 +34,11 @@ class _RegisterPageState extends State<RegisterPage> {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirm = confirmPasswordController.text.trim();
+    final loc = AppLocalizations.of(context)!;
 
     if (password != confirm) {
       setState(() {
-        errorMessage = 'パスワードが一致しません';
+        errorMessage = loc.authWrongPassword;
         isLoading = false;
       });
       return;
@@ -44,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (password.length < 6) {
       setState(() {
-        errorMessage = 'パスワードは6文字以上で入力してください';
+        errorMessage = loc.authShortPassword;
         isLoading = false;
       });
       return;
@@ -62,11 +64,11 @@ class _RegisterPageState extends State<RegisterPage> {
       Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
     } on FirebaseAuthException catch (e) {
       setState(() {
-        errorMessage = e.message ?? '登録に失敗しました';
+        errorMessage = e.message ?? loc.registerFailed;
       });
     } catch (e) {
       setState(() {
-        errorMessage = '予期せぬエラーが発生しました';
+        errorMessage = loc.unknownError;
       });
     } finally {
       setState(() {
@@ -92,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Googleアカウントで新規登録 or ログイン
   Future<void> signInWithGoogle() async {
+    final loc = AppLocalizations.of(context)!;
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return;
@@ -139,7 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  'このメールアドレスは${signInMethods.join(', ')}で登録済みです。別の方法でログインしてください。',
+                  loc.accountExistsWithMethods(signInMethods.join(', ')),
                 ),
                 duration: const Duration(seconds: 5),
               ),
@@ -147,14 +150,14 @@ class _RegisterPageState extends State<RegisterPage> {
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Googleログインに失敗しました: ${e.message}')),
+            SnackBar(content: Text('${loc.googleLoginFailed}: ${e.message}')),
           );
         }
       }
     } catch (e) {
-      debugPrint('Google登録失敗: $e');
+      debugPrint('${loc.registerFailed}$e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Googleログインに失敗しました: $e')),
+        SnackBar(content: Text('${loc.googleLoginFailed}: $e')),
       );
     }
   }
@@ -168,6 +171,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 218, 246, 250),
       body: Center(
@@ -177,7 +181,7 @@ class _RegisterPageState extends State<RegisterPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
           children: [
               Text(
-                'New account',
+                loc.createNewAccount,
                 style: GoogleFonts.poppins(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -190,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  hintText: 'e-mail',
+                  hintText: loc.email,
                   prefixIcon: const Icon(Icons.email_outlined),
                   contentPadding: const EdgeInsets.symmetric(vertical: 18),
                   border: OutlineInputBorder(
@@ -205,7 +209,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: passwordController,
                 obscureText: obscurePassword,
                 decoration: buildInputDecoration(
-                  'password',
+                  loc.password,
                   const Icon(Icons.lock_outline),
                   obscurePassword,
                   () {
@@ -222,7 +226,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: confirmPasswordController,
                 obscureText: obscureConfirmPassword,
                 decoration: buildInputDecoration(
-                  'password(確認用)',
+                  loc.confirmPassword,
                   const Icon(Icons.lock_outline),
                   obscureConfirmPassword,
                   () {
@@ -263,15 +267,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
             const SizedBox(height: 24),
-
-            // // Google登録ボタン（画像そのままのサイズで）
-            // GestureDetector(
-            //   onTap: isLoading ? null : signInWithGoogle,
-            //   child: Image.asset(
-            //     'assets/google_light_new.png',
-            //     fit: BoxFit.contain,
-            //   ),
-            // ),
             ],
           ),
         ),

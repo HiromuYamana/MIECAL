@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:miecal/l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,14 +23,35 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool _obscurePassword = true;
 
-  // 🔵 Googleログイン処理
+  // ローカライズされたエラーを取得
+  String getLocalizedAuthError(String code, AppLocalizations loc) {
+    switch (code) {
+      case 'user-not-found':
+        return loc.authUserNotFound;
+      case 'wrong-password':
+        return loc.authWrongPassword;
+      case 'invalid-email':
+        return loc.authInvalidEmail;
+      case 'user-disabled':
+        return loc.authUserDisabled;
+      default:
+        return loc.authUnknownError;
+    }
+  }
+
+  // Googleログイン
   Future<void> signInWithGoogle() async {
+    final loc = AppLocalizations.of(context)!;
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -40,224 +61,150 @@ class _LoginScreenState extends State<LoginScreen> {
       final userCredential = await _auth.signInWithCredential(credential);
       final user = userCredential.user;
 
-      if (user != null) {
-        // 🔵 まだパスワードプロバイダとリンクされていなければ追加
-        if (user.providerData.every((p) => p.providerId != 'password')) {
-          await showDialog(
-            context: context,
-            builder: (context) {
-              final emailCtrl = TextEditingController(text: user.email ?? '');
-              final passCtrl = TextEditingController();
+      if (user == null) return;
 
-              return AlertDialog(
-                title: const Text('パスワードを追加しますか？'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: emailCtrl,
-                      decoration: const InputDecoration(labelText: 'メールアドレス'),
-                    ),
-                    TextField(
-                      controller: passCtrl,
-                      decoration: const InputDecoration(labelText: 'パスワード'),
-                      obscureText: true,
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () async {
-                      try {
-                        final email = emailCtrl.text.trim();
-                        final password = passCtrl.text.trim();
-
-                        final emailCred = EmailAuthProvider.credential(
-                          email: email,
-                          password: password,
-                        );
-                        await user.linkWithCredential(emailCred);
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('メール+パスワードを追加しました')),
-                        );
-                      } on FirebaseAuthException catch (e) {
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('リンク失敗: ${e.message}')),
-                        );
-                      }
-                    },
-                    child: const Text('追加'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('後で'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-
-        // 🔵 Firestore のデータ確認
-        final userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
-
-        if (userDoc.exists) {
-          final userData = userDoc.data() as Map<String, dynamic>;
-          final initialQuestionnaireData = {
-            'userName': userData['name'] as String?,
-            'selectedOnsetDay':
-                userData['onsetDay'] != null
-                    ? DateTime.tryParse(userData['onsetDay'])
-                    : null,
-            'symptom': userData['symptom'] as String?,
-            'affectedArea': userData['affectedArea'] as String?,
-            'sufferLevel': userData['sufferLevel'] as String?,
-            'cause': userData['cause'] as String?,
-            'otherInformation': userData['otherInformation'] as String?,
-          };
-
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            '/Menupage',
-            arguments: initialQuestionnaireData,
-          );
-        } else {
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            '/PersonalInformationPage',
-            arguments: {'isNewUser': true},
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('ユーザーデータがありません。個人情報を登録してください。')),
-          );
-        }
+      // パスワード追加ダイアログ
+      if (user.providerData.every((p) => p.providerId != 'password')) {
+        await _showAddPasswordDialog(user, loc);
       }
+
+      await _handleUserLogin(user, loc);
     } catch (e) {
-      print('Googleログイン失敗: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Googleログインに失敗しました: $e')));
-    }
-  }
-
-  Future<void> signIn() async {
-    setState(() {
-      isLoading = true; // ローディング開始
-      errorMessage = ''; // エラーメッセージをクリア
-    });
-
-    String getLocalizedAuthError(String code, AppLocalizations loc) {
-      switch (code) {
-        case 'user-not-found':
-          return loc.authUserNotFound;
-        case 'wrong-password':
-          return loc.authWrongPassword;
-        case 'invalid-email':
-          return loc.authInvalidEmail;
-        case 'user-disabled':
-          return loc.authUserDisabled;
-        default:
-          return loc.authUnknownError;
-      }
-    }
-
-    try {
-      final UserCredential userCredential = await _auth
-          .signInWithEmailAndPassword(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim(),
-          );
-
-      final User? user = userCredential.user;
-
-      if (user != null) {
-        // 🔐 ログイン成功時
-        // Firestoreからユーザーに紐付く個人情報と問診票情報を取得
-        final DocumentSnapshot userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
-
-        if (userDoc.exists) {
-          // ドキュメントが存在すればデータを取得
-          final Map<String, dynamic> userData =
-              userDoc.data() as Map<String, dynamic>;
-
-          // 取得した個人情報と問診票情報をMapにまとめる
-          // MenuPageのコンストラクタ引数に合わせてキーと型を調整
-          final Map<String, dynamic> initialQuestionnaireData = {
-            'userName': userData['name'] as String?, // 氏名
-            // 修正点: 'birthday'はFirestoreにStringで保存されているため、DateTime.tryParseで変換
-            'userDateOfBirth':
-                userData['birthday'] != null
-                    ? DateTime.tryParse(userData['birthday'] as String)
-                    : null, // 生年月日
-            'userHome': userData['address'] as String?, // 住所
-            'userGender': userData['gender'] as String?, // 性別
-            'userTelNum': userData['phone'] as String?, // 電話番号
-            // 問診票データ（Firestoreに保存済みのものがあれば）
-            'selectedOnsetDay':
-                userData['onsetDay'] != null
-                    ? DateTime.tryParse(userData['onsetDay'] as String)
-                    : null, // 発症日
-            'symptom': userData['symptom'] as String?, // 症状
-            'affectedArea': userData['affectedArea'] as String?, // 患部
-            'sufferLevel': userData['sufferLevel'] as String?, // 程度
-            'cause': userData['cause'] as String?, // 原因
-            'otherInformation':
-                userData['otherInformation'] as String?, // その他情報
-            // ... 他の問診票項目もここに追加 ...
-          };
-
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            '/Menupage',
-            arguments: initialQuestionnaireData,
-          );
-        } else {
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            '/PersonalInformationPage',
-            arguments: {
-              'isNewUser': true,
-            }, // PersonalInformationPageで新規ユーザーであることを示す
-          );
-
-          // ユーザーにデータがないことをSnackBarで通知
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('ユーザーデータがありません。個人情報を登録してください。')),
-          );
-        }
-      } else {
-        setState(() {
-          errorMessage = 'ユーザー情報が取得できませんでした';
-        });
-      }
-    } on FirebaseAuthException catch (e) {
-      // Firebase認証に関するエラーをキャッチ
       setState(() {
-        errorMessage = e.message ?? 'ログインに失敗しました'; // エラーメッセージを表示
-      });
-    } catch (e) {
-      // その他の予期せぬエラーをキャッチ
-      setState(() {
-        errorMessage = '予期せぬエラーが発生しました: ${e.toString()}'; // エラーメッセージを表示
+        errorMessage = '${loc.googleLoginFailed}: $e';
       });
     } finally {
       setState(() {
-        isLoading = false; // ローディング終了
+        isLoading = false;
       });
     }
+  }
+
+  // メールログイン
+  Future<void> signIn() async {
+    final loc = AppLocalizations.of(context)!;
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
+    try {
+      final userCredential = await _auth.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      final user = userCredential.user;
+      if (user != null) {
+        await _handleUserLogin(user, loc);
+      } else {
+        setState(() {
+          errorMessage = loc.authUnknownError;
+        });
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = getLocalizedAuthError(e.code, loc);
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // Firestore情報取得
+  Future<void> _handleUserLogin(User user, AppLocalizations loc) async {
+    final userDoc = await _firestore.collection('users').doc(user.uid).get();
+
+    if (userDoc.exists) {
+      final data = userDoc.data()!;
+      final args = {
+        'userName': data['name'],
+        'userDateOfBirth': DateTime.tryParse(data['birthday'] ?? ''),
+        'userHome': data['address'],
+        'userGender': data['gender'],
+        'userTelNum': data['phone'],
+        'selectedOnsetDay': DateTime.tryParse(data['onsetDay'] ?? ''),
+        'symptom': data['symptom'],
+        'affectedArea': data['affectedArea'],
+        'sufferLevel': data['sufferLevel'],
+        'cause': data['cause'],
+        'otherInformation': data['otherInformation'],
+      };
+
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/Menupage', arguments: args);
+    } else {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(
+        context,
+        '/PersonalInformationPage',
+        arguments: {'isNewUser': true},
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.userDataNotFound)),
+      );
+    }
+  }
+
+  // パスワード追加ダイアログ
+  Future<void> _showAddPasswordDialog(User user, AppLocalizations loc) async {
+    final emailCtrl = TextEditingController(text: user.email ?? '');
+    final passCtrl = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.addPassword),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: emailCtrl,
+              decoration: InputDecoration(labelText: loc.email),
+            ),
+            TextField(
+              controller: passCtrl,
+              decoration: InputDecoration(labelText: loc.password),
+              obscureText: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              try {
+                final email = emailCtrl.text.trim();
+                final password = passCtrl.text.trim();
+                final cred = EmailAuthProvider.credential(
+                  email: email,
+                  password: password,
+                );
+                await user.linkWithCredential(cred);
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(loc.addEmailAndPassword)),
+                );
+              } catch (e) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${loc.linkFailed}: $e')),
+                );
+              }
+            },
+            child: Text(loc.add),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(loc.later),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void dispose() {
-    // TextEditingControllerを破棄してリソースを解放
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -277,55 +224,16 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 'LOGIN',
                 style: GoogleFonts.montserrat(
-                  fontSize: 64,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1565C0),
+                  color: const Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
               const SizedBox(height: 40),
-
-              // メール入力
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: loc.eMail,
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
+              _buildTextField(emailController, loc.email, Icons.email_outlined),
               const SizedBox(height: 20),
-
-              // パスワード入力
-              TextField(
-                controller: passwordController,
-                obscureText: _obscurePassword,
-                decoration: InputDecoration(
-                  hintText: loc.passWord,
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
+              _buildPasswordField(loc),
               const SizedBox(height: 30),
-
-              // 通常ログインボタン
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -338,19 +246,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: Text(loc.signIn),
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(loc.signIn),
                 ),
               ),
               const SizedBox(height: 16),
-
               TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/PasswordResetPage');
-                },
+                onPressed: () => Navigator.pushNamed(context, '/PasswordResetPage'),
                 child: Text(loc.forgetPassword),
               ),
-
-              // Googleログイン画像ボタン
+              const SizedBox(height: 8),
               GestureDetector(
                 onTap: isLoading ? null : signInWithGoogle,
                 child: Image.asset(
@@ -358,16 +264,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   fit: BoxFit.contain,
                 ),
               ),
-
-              // 新規登録案内
+              const SizedBox(height: 16),
+              if (errorMessage.isNotEmpty)
+                Text(
+                  errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(loc.dontHaveAccount),
                   TextButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/RegisterPage');
-                    },
+                    onPressed: () => Navigator.pushNamed(context, '/RegisterPage'),
                     icon: const Icon(Icons.person_add_alt_1_outlined),
                     label: Text(loc.createNewAccount),
                   ),
@@ -375,6 +283,43 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hint, IconData icon) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hint,
+        prefixIcon: Icon(icon),
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(AppLocalizations loc) {
+    return TextField(
+      controller: passwordController,
+      obscureText: _obscurePassword,
+      decoration: InputDecoration(
+        hintText: loc.password,
+        prefixIcon: const Icon(Icons.lock_outline),
+        suffixIcon: IconButton(
+          icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+          onPressed: () {
+            setState(() {
+              _obscurePassword = !_obscurePassword;
+            });
+          },
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
         ),
       ),
     );

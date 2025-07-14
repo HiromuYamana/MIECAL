@@ -7,6 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:miecal/user_input_model.dart';
 import 'package:numberpicker/numberpicker.dart';
 
+/// 画像のパス
+const String _malePictPath   = 'assets/man_image.png';
+const String _femalePictPath = 'assets/woman_image.png';
+
 class PersonalInformationPage extends StatefulWidget {
   final String? userName;
   final DateTime? selectedOnsetDay;
@@ -36,36 +40,108 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final _nameController = TextEditingController();
-  final _addressController = TextEditingController();
-  // 修正点: _birthdayController を一つに戻す
-  final _birthdayController = TextEditingController(); // YYYY-MM-DD 形式の文字列を保持
-  final _phoneController = TextEditingController();
-  final _allergyController = TextEditingController();
-  final _surgeryController = TextEditingController();
+  final _nameController     = TextEditingController();
+  final _addressController  = TextEditingController();
+  final _birthdayController = TextEditingController();
+  final _phoneController    = TextEditingController();
+  final _allergyController  = TextEditingController();
+  final _surgeryController  = TextEditingController();
 
-  int _selectedYear = DateTime.now().year;
+  int _selectedYear  = DateTime.now().year;
   int _selectedMonth = DateTime.now().month;
-  int _selectedDay = DateTime.now().day;
+  int _selectedDay   = DateTime.now().day;
 
-  String? gender;
-  int? age;
-  bool hadSurgery = false;
+  String? gender;          // '男性' または '女性'
+  int?    age;
+  bool    hadSurgery = false;
 
-  bool isLoading = true;
+  bool   isLoading   = true;
   String errorMessage = '';
-  String? profileImageUrl;
 
-  int? _calculateAge(String dateString) {
+  /* ──────────── 性別オプションボタン ──────────── */
+
+  Widget _genderOption({required bool isMale}) {
+    final bool  selected = gender == (isMale ? '男性' : '女性');
+    const Color accent   = Colors.black;   // 黒で統一
+
+    return InkWell(
+      onTap: () => setState(() => gender = isMale ? '男性' : '女性'),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 80,
+        height: 80,
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: selected ? accent : Colors.grey.shade400,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(isMale ? _malePictPath : _femalePictPath),
+            Positioned(
+              bottom: 4,
+              right: 4,
+              child: Icon(
+                isMale ? Icons.male : Icons.female,
+                size: 22,
+                color: selected ? accent : Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenderSelector() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _genderOption(isMale: true),
+          const SizedBox(width: 24),
+          _genderOption(isMale: false),
+        ],
+      );
+
+  /* ──────────── CircleAvatar 表示 ──────────── */
+
+  Widget _buildAvatar() {
+    if (gender == null) {
+      return const Icon(Icons.person, size: 40, color: Colors.grey);
+    }
+
+    final bool isMale = gender == '男性';
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Image.asset(isMale ? _malePictPath : _femalePictPath, width: 40),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Icon(
+            isMale ? Icons.male : Icons.female,
+            size: 16,
+            color: isMale ? Colors.blue : Colors.pink,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /* ──────────── 年齢計算 ──────────── */
+
+  int? _calculateAge(String d) {
     try {
-      final birthDate = DateTime.parse(dateString); // 文字列からDateTimeに変換
-      final today = DateTime.now();
-      int calculatedAge = today.year - birthDate.year;
-      if (today.month < birthDate.month ||
-          (today.month == birthDate.month && today.day < birthDate.day)) {
-        calculatedAge--;
+      final bd  = DateTime.parse(d);
+      final now = DateTime.now();
+      int y = now.year - bd.year;
+      if (now.month < bd.month || (now.month == bd.month && now.day < bd.day)) {
+        y--;
       }
-      return calculatedAge;
+      return y;
     } catch (_) {
       return null;
     }
@@ -73,40 +149,31 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
   void _updateAgeFromSelectors() {
     setState(() {
-      try {
-        if (_selectedYear != 0 && _selectedMonth != 0 && _selectedDay != 0) {
-          String fullDate =
-              '$_selectedYear-${_selectedMonth.toString().padLeft(2, '0')}-'
-              '${_selectedDay.toString().padLeft(2, '0')}';
-          age = _calculateAge(fullDate);
-        } else {
-          age = null;
-        }
-      } catch (_) {
-        age = null; // 無効な日付の場合は年齢をクリア
-      }
+      final d =
+          '$_selectedYear-${_selectedMonth.toString().padLeft(2, '0')}-${_selectedDay.toString().padLeft(2, '0')}';
+      age = _calculateAge(d);
     });
   }
+
+  /* ──────────── 初期化 ──────────── */
 
   @override
   void initState() {
     super.initState();
     loadUserData().then((_) {
-      // ユーザーデータ読み込み後、生年月日が設定されていれば各セレクターの初期値を更新
       if (_birthdayController.text.isNotEmpty) {
-        try {
-          final parsedDate = DateTime.parse(_birthdayController.text);
-          _selectedYear = parsedDate.year;
-          _selectedMonth = parsedDate.month;
-          _selectedDay = parsedDate.day;
-        } catch (_) {
-          // パース失敗時は現在の年月日を使用
+        final p = DateTime.tryParse(_birthdayController.text);
+        if (p != null) {
+          _selectedYear  = p.year;
+          _selectedMonth = p.month;
+          _selectedDay   = p.day;
         }
       }
-      // 初期年齢の計算
       _updateAgeFromSelectors();
     });
   }
+
+  /* ──────────── Firestore から読み込み ──────────── */
 
   Future<void> loadUserData() async {
     try {
@@ -114,48 +181,34 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       if (user == null) {
         setState(() {
           errorMessage = 'ログインしてください';
-          isLoading = false;
+          isLoading    = false;
         });
         return;
       }
 
       final doc = await _firestore.collection('users').doc(user.uid).get();
       if (doc.exists && doc.data() != null) {
-        final data = doc.data()!;
-        _nameController.text = data['name'] ?? '';
-        _addressController.text = data['address'] ?? '';
-        _birthdayController.text = data['birthday'] ?? ''; // Firestoreから直接読み込み
-        _phoneController.text = data['phone'] ?? '';
-        _allergyController.text = data['allergy'] ?? '';
-        gender = data['gender'];
-        hadSurgery = data['surgery'] ?? false;
-
-        // 年齢自動計算
-        String? birthdayString = data['birthday'];
-        if (birthdayString != null && birthdayString.isNotEmpty) {
-          try {
-            final parsedDate = DateTime.parse(birthdayString);
-            _selectedYear = parsedDate.year;
-            _selectedMonth = parsedDate.month;
-            _selectedDay = parsedDate.day;
-            age = _calculateAge(birthdayString); // 新しい年齢計算ロジックを呼び出し
-          } catch (_) {
-            //errorMessage = '読み込みエラー: $e';
-          }
-        }
+        final d = doc.data()!;
+        _nameController.text     = d['name']     ?? '';
+        _addressController.text  = d['address']  ?? '';
+        _birthdayController.text = d['birthday'] ?? '';
+        _phoneController.text    = d['phone']    ?? '';
+        _allergyController.text  = d['allergy']  ?? '';
+        gender                   = d['gender'];
+        hadSurgery               = d['surgery'] ?? false;
       }
     } catch (e) {
       errorMessage = '読み込みエラー: $e';
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     }
   }
 
+  /* ──────────── Firestore へ保存 ──────────── */
+
   Future<void> saveUserData() async {
     setState(() {
-      isLoading = true;
+      isLoading   = true;
       errorMessage = '';
     });
 
@@ -164,332 +217,246 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       if (user == null) {
         setState(() {
           errorMessage = 'ログインしてください';
-          isLoading = false;
+          isLoading    = false;
         });
         return;
       }
 
-      String birthdayString = '';
-      DateTime? parsedBirthday;
+      final birthday =
+          '${_selectedYear.toString().padLeft(4, '0')}-${_selectedMonth.toString().padLeft(2, '0')}-${_selectedDay.toString().padLeft(2, '0')}';
+      final DateTime? parsedBirthday = DateTime.tryParse(birthday);
+      age = _calculateAge(birthday);
 
-      if (_selectedYear != 0 && _selectedMonth != 0 && _selectedDay != 0) {
-        try {
-          birthdayString =
-              '${_selectedYear.toString().padLeft(4, '0')}-'
-              '${_selectedMonth.toString().padLeft(2, '0')}-'
-              '${_selectedDay.toString().padLeft(2, '0')}';
-          parsedBirthday = DateTime.tryParse(birthdayString);
-        } catch (e) {
-          errorMessage = '生年月日が不正です: ${e.toString()}';
-          isLoading = false;
-          return;
-        }
-      }
-
-      // 年齢の再計算 (保存時)
-      if (parsedBirthday != null) {
-        age = _calculateAge(birthdayString);
-      } else {
-        age = null;
-      }
-
-      final inputModel = Provider.of<UserInputModel>(context, listen: false);
-      inputModel.updatePersonal(
-        name: _nameController.text.trim(),
-        address: _addressController.text.trim(),
-        birthday: birthdayString, // 結合した日付文字列を渡す
-        age: age?.toString() ?? '',
-        gender: gender ?? '',
-        phoneNumber: _phoneController.text.trim(),
-        allergy: _allergyController.text.trim(),
-        surgeryHistory: hadSurgery ? 'あり' : 'なし',
+      final input = Provider.of<UserInputModel>(context, listen: false);
+      input.updatePersonal(
+        name           : _nameController.text.trim(),
+        address        : _addressController.text.trim(),
+        birthday       : birthday,
+        age            : age?.toString() ?? '',
+        gender         : gender ?? '',
+        phoneNumber    : _phoneController.text.trim(),
+        allergy        : _allergyController.text.trim(),
+        surgeryHistory : hadSurgery ? 'あり' : 'なし',
       );
 
       await _firestore.collection('users').doc(user.uid).set({
-        'name': inputModel.name,
-        'address': inputModel.address,
-        'birthday': inputModel.birthday, // 結合した日付文字列をFirestoreに保存
-        'age': inputModel.age,
-        'gender': inputModel.gender,
-        'phone': inputModel.phoneNumber,
-        'allergy': inputModel.allergy,
-        'surgery': inputModel.surgeryHistory == 'あり',
+        'name'     : input.name,
+        'address'  : input.address,
+        'birthday' : input.birthday,
+        'age'      : input.age,
+        'gender'   : input.gender,
+        'phone'    : input.phoneNumber,
+        'allergy'  : input.allergy,
+        'surgery'  : input.surgeryHistory == 'あり',
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
       if (!mounted) return;
-
-      setState(() {
-        isLoading = false;
-      });
-
-      // MenuPageへ縦スライドで遷移し、問診票データもリレー
-      final String? currentUserName = _nameController.text.trim();
-      final DateTime? currentUserDateOfBirth = parsedBirthday;
-      final String? currentUserHome = _addressController.text.trim();
-      final String? currentUserGender = gender;
-      final String? currentUserTelNum = _phoneController.text.trim();
+      setState(() => isLoading = false);
 
       Navigator.pushReplacement(
         context,
         VerticalSlideRoute(
           page: MenuPage(
-            userName: currentUserName,
-            userDateOfBirth: currentUserDateOfBirth,
-            userHome: currentUserHome,
-            userGender: currentUserGender,
-            userTelNum: currentUserTelNum,
-
+            userName        : _nameController.text.trim(),
+            userDateOfBirth : parsedBirthday,
+            userHome        : _addressController.text.trim(),
+            userGender      : gender,
+            userTelNum      : _phoneController.text.trim(),
             selectedOnsetDay: widget.selectedOnsetDay,
-            symptom: widget.symptom,
-            affectedArea: widget.affectedArea,
-            sufferLevel: widget.sufferLevel,
-            cause: widget.cause,
+            symptom         : widget.symptom,
+            affectedArea    : widget.affectedArea,
+            sufferLevel     : widget.sufferLevel,
+            cause           : widget.cause,
             otherInformation: widget.otherInformation,
           ),
         ),
       );
     } catch (e) {
       setState(() {
-        errorMessage = '保存に失敗しました: ${e.toString()}';
-        isLoading = false;
+        errorMessage = '保存に失敗しました: $e';
+        isLoading    = false;
       });
     }
   }
+
+  /* ──────────── dispose ──────────── */
 
   @override
   void dispose() {
     _nameController.dispose();
     _addressController.dispose();
-    //_birthdayController.dispose(); // 修正点: 破棄するコントローラを一つに戻す
     _phoneController.dispose();
     _allergyController.dispose();
     _surgeryController.dispose();
     super.dispose();
   }
 
+  /* ──────────── UI ──────────── */
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('プロフィール')),
-      body:
-          isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (errorMessage.isNotEmpty)
-                      Text(
-                        errorMessage,
-                        style: const TextStyle(color: Colors.red),
-                      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (errorMessage.isNotEmpty)
+                    Text(errorMessage, style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 16),
 
-                    const SizedBox(height: 16),
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.grey[200],
+                    child: _buildAvatar(),
+                  ),
 
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.grey[200],
-                      child: const Icon(Icons.person, size: 40),
-                    ),
+                  const SizedBox(height: 16),
 
-                    const SizedBox(height: 16),
+                  _buildIconTextField(Icons.person, _nameController, labelText: '氏名'),
+                  _buildIconTextField(Icons.home, _addressController, labelText: '住所'),
 
-                    _buildIconTextField(
-                      Icons.person,
-                      _nameController,
-                      labelText: '氏名',
-                    ),
-                    _buildIconTextField(
-                      Icons.home,
-                      _addressController,
-                      labelText: '住所',
-                    ),
+                  _buildBirthdayPickers(),
 
+                  if (age != null)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.calendar_today),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                const Text(
-                                  '年',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                NumberPicker(
-                                  value: _selectedYear,
-                                  minValue: DateTime.now().year - 120, // 過去120年
-                                  maxValue: DateTime.now().year,
-                                  step: 1,
-                                  itemHeight: 30,
-                                  axis: Axis.vertical,
-                                  onChanged:
-                                      (value) => setState(() {
-                                        _selectedYear = value;
-                                        _updateAgeFromSelectors(); // 年齢を更新
-                                      }),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                const Text(
-                                  '月',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                NumberPicker(
-                                  value: _selectedMonth,
-                                  minValue: 1,
-                                  maxValue: 12,
-                                  step: 1,
-                                  itemHeight: 30,
-                                  axis: Axis.vertical,
-                                  onChanged:
-                                      (value) => setState(() {
-                                        _selectedMonth = value;
-                                        _updateAgeFromSelectors(); // 年齢を更新
-                                      }),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                const Text(
-                                  '日',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                NumberPicker(
-                                  value: _selectedDay,
-                                  minValue: 1,
-                                  maxValue: 31, // 月による日数の自動調整は後ほど
-                                  step: 1,
-                                  itemHeight: 30,
-                                  axis: Axis.vertical,
-                                  onChanged:
-                                      (value) => setState(() {
-                                        _selectedDay = value;
-                                        _updateAgeFromSelectors(); // 年齢を更新
-                                      }),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text('年齢: $age 歳',
+                          style: const TextStyle(color: Colors.grey)),
+                    ),
+
+                  const SizedBox(height: 12),
+
+                  _buildGenderSelector(),
+
+                  _buildIconTextField(Icons.phone, _phoneController,
+                      keyboardType: TextInputType.phone, labelText: '電話番号'),
+                  _buildIconTextField(Icons.warning, _allergyController,
+                      labelText: 'アレルギー'),
+
+                  Row(
+                    children: [
+                      const Icon(Icons.local_hospital),
+                      const SizedBox(width: 10),
+                      const Text('手術歴'),
+                      const Spacer(),
+                      Switch(
+                        value: hadSurgery,
+                        onChanged: (v) => setState(() => hadSurgery = v),
                       ),
-                    ),
+                    ],
+                  ),
 
-                    // 年齢表示 (変更なし)
-                    if (age != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(
-                          '年齢: $age 歳',
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ),
-
-                    const SizedBox(height: 12),
-
-                    // 性別アイコン (変更なし)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.male,
-                            size: 40,
-                            color: gender == '男性' ? Colors.blue : Colors.grey,
-                          ),
-                          onPressed: () => setState(() => gender = '男性'),
-                        ),
-                        const SizedBox(width: 24),
-                        IconButton(
-                          icon: Icon(
-                            Icons.female,
-                            size: 40,
-                            color: gender == '女性' ? Colors.pink : Colors.grey,
-                          ),
-                          onPressed: () => setState(() => gender = '女性'),
-                        ),
-                      ],
-                    ),
-
-                    _buildIconTextField(
-                      Icons.phone,
-                      _phoneController,
-                      keyboardType: TextInputType.phone,
-                      labelText: '電話番号',
-                    ),
-                    _buildIconTextField(
-                      Icons.warning,
-                      _allergyController,
-                      labelText: 'アレルギー',
-                    ),
-
-                    Row(
-                      children: [
-                        const Icon(Icons.local_hospital),
-                        const SizedBox(width: 10),
-                        const Text('手術歴'),
-                        const Spacer(),
-                        Switch(
-                          value: hadSurgery,
-                          onChanged: (val) => setState(() => hadSurgery = val),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        await saveUserData();
-                      },
-                      icon: const Icon(Icons.save),
-                      label: const Text('保存'),
-                    ),
-                  ],
-                ),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: saveUserData,
+                    icon: const Icon(Icons.save),
+                    label: const Text('保存'),
+                  ),
+                ],
               ),
+            ),
     );
   }
+
+  /* ──────────── 補助 Widget ──────────── */
+
+  Widget _buildBirthdayPickers() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.calendar_today),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                children: [
+                  const Text('年',
+                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  NumberPicker(
+                    value: _selectedYear,
+                    minValue: DateTime.now().year - 120,
+                    maxValue: DateTime.now().year,
+                    itemHeight: 30,
+                    axis: Axis.vertical,
+                    onChanged: (v) {
+                      setState(() {
+                        _selectedYear = v;
+                        _updateAgeFromSelectors();
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                children: [
+                  const Text('月',
+                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  NumberPicker(
+                    value: _selectedMonth,
+                    minValue: 1,
+                    maxValue: 12,
+                    itemHeight: 30,
+                    axis: Axis.vertical,
+                    onChanged: (v) {
+                      setState(() {
+                        _selectedMonth = v;
+                        _updateAgeFromSelectors();
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                children: [
+                  const Text('日',
+                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  NumberPicker(
+                    value: _selectedDay,
+                    minValue: 1,
+                    maxValue: 31,
+                    itemHeight: 30,
+                    axis: Axis.vertical,
+                    onChanged: (v) {
+                      setState(() {
+                        _selectedDay = v;
+                        _updateAgeFromSelectors();
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildIconTextField(
     IconData icon,
-    TextEditingController controller, {
+    TextEditingController ctrl, {
     TextInputType keyboardType = TextInputType.text,
     String? labelText,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          prefixIcon: Icon(icon),
-          labelText: labelText,
-          border: const OutlineInputBorder(),
+  }) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: TextField(
+          controller: ctrl,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon),
+            labelText: labelText,
+            border: const OutlineInputBorder(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
