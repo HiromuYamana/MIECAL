@@ -46,8 +46,8 @@ class _SymptomPageState extends State<SymptomPage> {
     {'path': 'assets/images/youtuu.png', 'name': '腰痛'},
 
     // 以下はダミー画像と仮定し、対応する日本語名を追加
-    {'path': 'assets/images/metabo.png', 'name': 'だるさ'},
-    {'path': 'assets/images/metabo.png', 'name': '熱'},
+    {'path': 'assets/images/darusa.png', 'name': 'だるさ'},
+    {'path': 'assets/images/netu.png', 'name': '熱'},
     {'path': 'assets/images/metabo.png', 'name': 'のどの痛み'},
     {'path': 'assets/images/metabo.png', 'name': '吐き気'},
 
