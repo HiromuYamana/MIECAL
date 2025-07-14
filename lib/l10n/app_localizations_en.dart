@@ -92,7 +92,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout => 'Logout';
 
   @override
+  String get questionnaireConfirmTitle => 'Confirm Questionnaire Details';
+
+  @override
+  String get basicInformation => 'Basic information';
+
+  @override
+  String get symptomsCauseDetails => 'Symptom / Cause Details';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get birthdate => 'Date of Birth';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get phone => 'Phone Number';
+
+  @override
+  String get onsetDate => 'Onset Date';
+
+  @override
+  String get symptom => 'Symptom';
+
+  @override
+  String get affectedArea => 'Affected Area';
+
+  @override
+  String get severity => 'Severity';
+
+  @override
+  String get cause => 'Cause';
+
+  @override
+  String get otherInfo => 'Other Information';
+
+  @override
+  String get notEntered => 'Not Entered';
+
+  @override
   String get notSelected => 'Not selected';
+
+  @override
+  String get createQrCode => 'Create QR Code';
+
+  @override
+  String get qrSaveSuccess => 'Questionnaire data saved successfully!';
+
+  @override
+  String get qrSaveFailed => 'Failed to save questionnaire data';
+
+  @override
+  String get notLoggedIn => 'Not logged in. Cannot save data.';
+
+  @override
+  String get detailsNotEntered => 'Details: Not entered';
 
   @override
   String get affectedAreaSelection => 'Affected Area Selection';
