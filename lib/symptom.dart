@@ -85,10 +85,23 @@ class _SymptomPageState extends State<SymptomPage> {
     final double topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,        // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 22,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
               //padding: EdgeInsets.only(top: topPadding),
@@ -96,12 +109,8 @@ class _SymptomPageState extends State<SymptomPage> {
                 onTap:(){
                   Navigator.pop(context);
                 },
-                           
                 child: SizedBox(
-                  //mainAxisSize: MainAxisSize.min,
-                  //children: [
                   child: Center(
-                    
                       child: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
@@ -115,24 +124,23 @@ class _SymptomPageState extends State<SymptomPage> {
           Expanded(
             flex: 1,
             child:Container( 
-              color: const Color.fromARGB(255, 207, 227, 230),
-              child:Center(
-              //color: const Color.fromARGB(255, 207, 227, 230),
-              child:const Text(
-                      '症状選択',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-            ),)
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Center(
+                child: const Text(
+                        '症状選択',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                ),
+              )
+            ),
           ),
-          ),
-
           Expanded(
             flex: 15,
             child: Container(
-              color: const Color.fromARGB(255, 218, 246, 250), // グリッドの背景色
+              color: const Color.fromARGB(255, 255, 255, 255), // グリッドの背景色
               child: GridView.builder(
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -213,7 +221,7 @@ class _SymptomPageState extends State<SymptomPage> {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(

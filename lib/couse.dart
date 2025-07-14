@@ -73,12 +73,12 @@ class _CousePageState extends State<CousePage> {
       appBar: AppBar(
         title: Text("MIECAL"),
         backgroundColor: const Color.fromARGB(255, 75, 170, 248),
-        automaticallyImplyLeading: false, // <-- 修正点: 戻るボタンを非表示にする
+        automaticallyImplyLeading: false, 
       ),
       body: Column(
         children: [
           Expanded(
-            flex: 3,
+            flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
               child: InkWell(

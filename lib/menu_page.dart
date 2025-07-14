@@ -41,88 +41,130 @@ class MenuPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(local.menuTitle),
-        backgroundColor: Colors.teal,
-        automaticallyImplyLeading: false, // <-- 修正点: 戻るボタンを非表示にする
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,        // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 22,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // メイン操作ボタンエリア
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _MenuIconButton(
-                imagePath: 'assets/icons/medical_form.png',
-                label: local.symptomForm,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    VerticalSlideRoute(
-                      page: SymptomPage(
-                        userName: userName,
-                        userDateOfBirth: userDateOfBirth,
-                        userHome: userHome,
-                        userGender: userGender,
-                        userTelNum: userTelNum,
-                        selectedOnsetDay: selectedOnsetDay,
-                        symptom: symptom,
-                        affectedArea: affectedArea,
-                        sufferLevel: sufferLevel,
-                        cause: cause,
-                        otherInformation: otherInformation,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              _MenuIconButton(
-                imagePath: 'assets/icons/profile_edit.png',
-                label: local.profileEdit,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    VerticalSlideRoute(page: PersonalInformationPage()),
-                  );
-                },
-              ),
-            ],
-          ),
-
-          _MenuIconButton(
-            imagePath: 'assets/icons/qr_scan.png', // <-- 適切なアイコン画像パスに変更
-            label: 'QRを読み込む', // local.qrScan などに多言語化可能
-            onTap: () {
-              Navigator.push(
-                context,
-                VerticalSlideRoute(
-                  page: const QrScannerPage(),
-                ), // QrScannerPageへ遷移
-              );
-            },
-          ),
-
-          // ログアウト
-          Padding(
-            padding: const EdgeInsets.only(bottom: 24.0),
-            child: TextButton.icon(
-              onPressed: () {
-                Navigator.push(context, VerticalSlideRoute(page: TopPage()));
-              },
-              icon: const Icon(Icons.logout, size: 18, color: Colors.grey),
-              label: Text(
-                local.logout,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+          Expanded(
+            child: Text(''),
+            ),
+          Expanded(
+            flex: 1,
+            child: const Text(
+              'メニュー',
+              style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/TermsOfServicePage');
-            },
-            child: const Text('利用規約を見る'),
+          Expanded(
+            flex: 17,
+            child: Center(
+              child: Container(
+                height: 650,
+                padding: const EdgeInsets.all(24), // 内側の余白
+                margin: const EdgeInsets.symmetric(horizontal: 20), // 外側の余白
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 255, 255), // 背景色（好みで）
+                  borderRadius: BorderRadius.circular(24),           // 角丸
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      offset: const Offset(0, 4),
+                      blurRadius: 12,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _MenuIconButton(
+                          imagePath: 'assets/icons/monnsinnhyo.png',
+                          label: local.symptomForm,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              VerticalSlideRoute(
+                                page: SymptomPage(
+                                  userName: userName,
+                                  userDateOfBirth: userDateOfBirth,
+                                  userHome: userHome,
+                                  userGender: userGender,
+                                  userTelNum: userTelNum,
+                                  selectedOnsetDay: selectedOnsetDay,
+                                  symptom: symptom,
+                                  affectedArea: affectedArea,
+                                  sufferLevel: sufferLevel,
+                                  cause: cause,
+                                  otherInformation: otherInformation,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        _MenuIconButton(
+                          imagePath: 'assets/icons/profile_edit.png',
+                          label: local.profileEdit,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              VerticalSlideRoute(page: PersonalInformationPage()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    _MenuIconButton(
+                      imagePath: 'assets/icons/qr_scan.png',
+                      label: 'QRを読み込む',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          VerticalSlideRoute(page: const QrScannerPage()),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.push(context, VerticalSlideRoute(page: TopPage()));
+                      },
+                      icon: const Icon(Icons.logout, size: 18, color: Colors.grey),
+                      label: Text(
+                        local.logout,
+                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/TermsOfServicePage');
+                      },
+                      child: const Text('利用規約を見る'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-
         ],
       ),
     );
