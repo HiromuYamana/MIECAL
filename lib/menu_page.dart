@@ -121,7 +121,7 @@ class MenuPage extends StatelessWidget {
                           },
                         ),
                         _MenuIconButton(
-                          imagePath: 'assets/icons/profile_edit.png',
+                          imagePath: 'assets/icons/profile.png',
                           label: local.profileEdit,
                           onTap: () {
                             Navigator.push(
