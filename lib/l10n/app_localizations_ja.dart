@@ -24,6 +24,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get password => 'パスワード';
 
   @override
+  String get confirmPassword => 'パスワード(確認用)';
+
+  @override
   String get addPassword => 'パスワードを追加しますか？';
 
   @override
@@ -31,6 +34,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get googleLoginFailed => 'Googleログインに失敗しました';
+
+  @override
+  String get registerFailed => '登録に失敗しました';
+
+  @override
+  String get unknownError => '予期せぬエラーが発生しました。';
 
   @override
   String get add => '追加';
@@ -42,6 +51,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get linkFailed => 'リンク失敗';
 
   @override
+  String accountExistsWithMethods(Object methods) {
+    return 'このメールアドレスは $methods で登録済みです。別の方法でログインしてください。';
+  }
+
+  @override
   String get userDataNotFound => 'ユーザーデータが見つかりませんでした。個人情報を登録してください。';
 
   @override
@@ -49,6 +63,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get authWrongPassword => 'パスワードが間違っています。';
+
+  @override
+  String get authShortPassword => 'パスワードは6文字以上で入力してください';
 
   @override
   String get authInvalidEmail => 'メールアドレスの形式が正しくありません。';

@@ -125,6 +125,12 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get password;
 
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password(confirm)'**
+  String get confirmPassword;
+
   /// No description provided for @addPassword.
   ///
   /// In en, this message translates to:
@@ -142,6 +148,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Google sign-in failed. '**
   String get googleLoginFailed;
+
+  /// No description provided for @registerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed'**
+  String get registerFailed;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An expexted error has occurred.'**
+  String get unknownError;
 
   /// No description provided for @add.
   ///
@@ -161,6 +179,12 @@ abstract class AppLocalizations {
   /// **'Link failed'**
   String get linkFailed;
 
+  /// No description provided for @accountExistsWithMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered with: {methods}. Please log in using one of them.'**
+  String accountExistsWithMethods(Object methods);
+
   /// No description provided for @userDataNotFound.
   ///
   /// In en, this message translates to:
@@ -179,6 +203,12 @@ abstract class AppLocalizations {
   /// **'Incorrect password.'**
   String get authWrongPassword;
 
+  /// No description provided for @authShortPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Prease enter a password of six characters or more.'**
+  String get authShortPassword;
+
   /// No description provided for @authInvalidEmail.
   ///
   /// In en, this message translates to:
@@ -194,7 +224,7 @@ abstract class AppLocalizations {
   /// No description provided for @authUnknownError.
   ///
   /// In en, this message translates to:
-  /// **'The email address to password is incorrect.'**
+  /// **'The email address or password is incorrect.'**
   String get authUnknownError;
 
   /// No description provided for @signIn.

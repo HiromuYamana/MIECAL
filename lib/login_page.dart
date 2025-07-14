@@ -224,9 +224,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 'LOGIN',
                 style: GoogleFonts.montserrat(
-                  fontSize: 64,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1565C0),
+                  color: const Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
               const SizedBox(height: 40),
