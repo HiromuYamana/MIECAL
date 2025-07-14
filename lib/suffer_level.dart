@@ -73,6 +73,11 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text("MIECAL"),
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false, 
+      ),
       body: Column(
         children: [
           Expanded(

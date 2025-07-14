@@ -50,6 +50,7 @@ flutter:
     - assets/show_screen.png
     - assets/images/
     - assets/
+    - assets/icons/
     - assets/human_outline.png
     - assets/body_mask.png
     - assets/ios_light_google.png
