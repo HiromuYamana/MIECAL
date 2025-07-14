@@ -17,7 +17,7 @@
   "authWrongPassword": "Incorrect password.",
   "authInvalidEmail": "Invalid email format.",
   "authUserDisabled": "This account is disabled.",
-  "authUnknownError": "The email address to password is incorrect.",
+  "authUnknownError": "The email address or password is incorrect.",
 
   "signIn": "Sign in",
   "createNewAccount": "Create new account",
