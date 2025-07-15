@@ -1,13 +1,10 @@
-// lib/questionnaire.dart
 import 'package:flutter/material.dart';
-// ignore: avoid_web_libraries_in_flutter, deprecated_member_use, unused_import
-// import 'dart:html' as html;
-// jsonEncode を使うために追加
 import 'package:firebase_auth/firebase_auth.dart'; // FirebaseAuth を使うために追加
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore を使うために追加
-
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/qr.dart';
+import 'package:miecal/l10n/app_localizations.dart'; 
+import 'package:intl/intl.dart'; // 多言語日付フォーマット用
 
 class QuestionnairePage extends StatelessWidget {
   // 修正点: isFromQrScanner フラグを追加
@@ -44,29 +41,34 @@ class QuestionnairePage extends StatelessWidget {
     this.otherInformation,
   });
 
-  // 日付を「YYYY年MM月DD日」形式に整形するヘルパー関数 (画面表示用)
-  String _formatDateHumanReadable(DateTime? date) {
-    if (date == null) {
-      return '未選択';
-    }
-    return '${date.year}年${date.month}月${date.day}日';
+  // 画面表示用：人間が読む日付フォーマット
+String _formatDateHumanReadable(BuildContext context, DateTime? date) {
+  final loc = AppLocalizations.of(context)!;
+  if (date == null) {
+    return loc.notSelected; // ← l10n 対応
   }
 
-  // QRコードのテキストデータ用に日付を整形するヘルパー関数
-  String _formatDateForQr(DateTime? date) {
-    if (date == null) {
-      return '未選択'; // QRコード内で未選択と表示
-    }
-    return '${date.year}年${date.month}月${date.day}日';
+  // ローカライズされた日付フォーマット（例: ja -> "2025年7月5日", en -> "July 5, 2025"）
+  return DateFormat.yMMMMd(loc.localeName).format(date);
+}
+
+// QRコード用：固定フォーマットだけど「未選択」は翻訳される
+String _formatDateForQr(BuildContext context, DateTime? date) {
+  final loc = AppLocalizations.of(context)!;
+  if (date == null) {
+    return loc.notSelected; // ← QRでも多言語化された "未選択" を使う
   }
+
+  // 固定フォーマットでシンプルに（例: "2025-07-05"）
+  return DateFormat('yyyy-MM-dd').format(date);
+}
 
   // 修正点: 問診票データをFirestoreに保存するメソッドを追加
   Future<void> _saveQuestionnaireDataToFirestore(BuildContext context) async {
+    final loc = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('ログインしていません。データを保存できません。')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.notLoggedIn)));
       return;
     }
 
@@ -85,10 +87,10 @@ class QuestionnairePage extends StatelessWidget {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('問診票データを保存しました！')));
+      ).showSnackBar(SnackBar(content: Text(loc.qrSaveSuccess)));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('問診票データの保存に失敗しました: ${e.toString()}')),
+        SnackBar(content: Text('${loc.qrSaveFailed} ${e.toString()}')),
       );
       print('Firestore save error: $e');
     }
@@ -96,27 +98,27 @@ class QuestionnairePage extends StatelessWidget {
 
   void _showQrCodePage(BuildContext context) async {
     await _saveQuestionnaireDataToFirestore(context);
-
+    final loc = AppLocalizations.of(context)!;
     final Map<String, dynamic> questionnaireData = {
-      '氏名': userName ?? '未入力',
-      '住所': userHome ?? '未入力',
-      '生年月日': _formatDateForQr(userDateOfBirth),
-      '性別': userGender ?? '未入力',
-      '電話番号': userTelNum ?? '未入力',
-      '発症日': _formatDateForQr(selectedOnsetDay),
-      '症状': symptom ?? '未入力',
-      '患部': affectedArea ?? '未入力',
-      '程度': sufferLevel ?? '未入力',
-      '原因': cause ?? '未入力',
-      'その他': otherInformation ?? '未入力',
+      loc.name: userName ?? loc.notEntered,
+      loc.address: userHome ?? loc.notEntered,
+      loc.birthdate: _formatDateForQr(context, userDateOfBirth),
+      loc.gender: userGender ?? loc.notEntered,
+      loc.phone: userTelNum ?? loc.notEntered,
+      loc.onsetDate: _formatDateForQr(context, selectedOnsetDay),
+      loc.symptom: symptom ?? loc.notEntered,
+      loc.affectedArea: affectedArea ?? loc.notEntered,
+      loc.severity: sufferLevel ?? loc.notEntered,
+      loc.cause: cause ?? loc.notEntered,
+      loc.otherInfo: otherInformation ?? loc.notEntered,
     };
 
     List<String> qrDataLines = [];
     questionnaireData.forEach((key, value) {
       if (value != null &&
           value.toString().isNotEmpty &&
-          value.toString() != '未入力' &&
-          value.toString() != '未選択') {
+          value.toString() != loc.notEntered &&
+          value.toString() != loc.notSelected) {
         qrDataLines.add('$key: $value');
       }
     });
@@ -128,24 +130,23 @@ class QuestionnairePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 各データを表示用に整形
-    String displayUserName = userName ?? '未入力';
-    String displayUserHome = userHome ?? '未入力';
-    String displayUserGender = userGender ?? '未入力';
-    String displayUserTelNum = userTelNum ?? '未入力';
-    String displayUserDateOfBirth = _formatDateHumanReadable(userDateOfBirth);
-    String displayOnsetDay = _formatDateHumanReadable(selectedOnsetDay);
+    final loc = AppLocalizations.of(context)!;
+    String displayUserName = userName ?? loc.notSelected;
+    String displayUserHome = userHome ?? loc.notSelected;
+    String displayUserGender = userGender ?? loc.notSelected;
+    String displayUserTelNum = userTelNum ?? loc.notSelected;
+    String displayUserDateOfBirth = _formatDateHumanReadable(context, userDateOfBirth);
+    String displayOnsetDay = _formatDateHumanReadable(context, selectedOnsetDay);
 
-    String displaySymptom = symptom ?? '未入力';
-    String displayAffectedArea = affectedArea ?? '未入力';
-    String displaySufferLevel = sufferLevel ?? '未入力';
-    String displayCause = cause ?? '未入力';
+    String displaySymptom = symptom ?? loc.notSelected;
+    String displayAffectedArea = affectedArea ?? loc.notSelected;
+    String displaySufferLevel = sufferLevel ?? loc.notSelected;
+    String displayCause = cause ?? loc.notSelected;
 
     List<String> displayOtherInfoItems = otherInformation?.split('; ') ?? [];
 
     return Scaffold(
       appBar: AppBar(
-        
         leading: IconButton(
           icon: const Icon(Icons.arrow_upward),
           onPressed: () {
@@ -161,8 +162,8 @@ class QuestionnairePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                '問診票の内容確認',
+              Text(
+                loc.questionnaireConfirmTitle,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
@@ -180,8 +181,8 @@ class QuestionnairePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        '基本情報',
+                      Text(
+                        loc.basicInformation,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -194,7 +195,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.person,
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('氏名'),
+                        title: Text(loc.name),
                         trailing: Text(
                           displayUserName,
                           style: const TextStyle(
@@ -208,7 +209,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.cake, // 誕生日アイコン
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('生年月日'),
+                        title: Text(loc.birthdate),
                         trailing: Text(
                           displayUserDateOfBirth,
                           style: const TextStyle(
@@ -222,7 +223,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.home, // 住所アイコン
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('住所'),
+                        title: Text(loc.address),
                         trailing: Text(
                           displayUserHome,
                           style: const TextStyle(
@@ -236,7 +237,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.wc, // 性別アイコン
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('性別'),
+                        title: Text(loc.gender),
                         trailing: Text(
                           displayUserGender,
                           style: const TextStyle(
@@ -250,7 +251,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.phone, // 電話アイコン
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('電話番号'),
+                        title: Text(loc.phone),
                         trailing: Text(
                           displayUserTelNum,
                           style: const TextStyle(
@@ -264,7 +265,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.event, // イベントアイコンなど
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('発症日'),
+                        title: Text(loc.onsetDate),
                         trailing: Text(
                           displayOnsetDay,
                           style: const TextStyle(
@@ -291,8 +292,8 @@ class QuestionnairePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        '症状・原因詳細',
+                      Text(
+                        loc.symptomsCauseDetails,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -302,7 +303,7 @@ class QuestionnairePage extends StatelessWidget {
                       const Divider(),
                       ListTile(
                         leading: const Icon(Icons.sick, color: Colors.blueGrey),
-                        title: const Text('症状'),
+                        title: Text(loc.symptom),
                         trailing: Expanded(
                           child: Text(
                             displaySymptom,
@@ -316,7 +317,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.healing,
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('患部'),
+                        title: Text(loc.affectedArea),
                         trailing: Expanded(
                           child: Text(
                             displayAffectedArea,
@@ -330,7 +331,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.sentiment_neutral,
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('程度'),
+                        title: Text(loc.severity),
                         trailing: Text(
                           displaySufferLevel,
                           style: const TextStyle(fontSize: 16),
@@ -341,7 +342,7 @@ class QuestionnairePage extends StatelessWidget {
                           Icons.info_outline,
                           color: Colors.blueGrey,
                         ),
-                        title: const Text('原因'),
+                        title: Text(loc.cause),
                         trailing: Expanded(
                           child: Text(
                             displayCause,
@@ -368,8 +369,8 @@ class QuestionnairePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'その他の情報',
+                      Text(
+                        loc.otherInfo,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -378,11 +379,11 @@ class QuestionnairePage extends StatelessWidget {
                       ),
                       const Divider(),
                       if (displayOtherInfoItems.isEmpty)
-                        const Row(
+                        Row(
                           children: [
-                            Icon(Icons.notes, color: Colors.blueGrey),
-                            SizedBox(width: 16),
-                            Text('詳細: 未入力', style: TextStyle(fontSize: 16)),
+                            const Icon(Icons.notes, color: Colors.blueGrey),
+                            const SizedBox(width: 16),
+                            Text(loc.detailsNotEntered, style: const TextStyle(fontSize: 16)),
                           ],
                         )
                       else // 項目がある場合
@@ -391,9 +392,7 @@ class QuestionnairePage extends StatelessWidget {
                           children:
                               displayOtherInfoItems.map((item) {
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 2.0,
-                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 2.0),
                                   child: Row(
                                     children: [
                                       const Icon(
@@ -424,7 +423,7 @@ class QuestionnairePage extends StatelessWidget {
                 Center(
                   child: ElevatedButton(
                     onPressed: () => _showQrCodePage(context),
-                    child: const Text('QRコード作成 Create QRcode'),
+                    child: Text(loc.createQrCode),
                   ),
                 ),
             ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/login_page.dart';
 import 'package:miecal/vertical_slide_page.dart';
-import 'package:vibration/vibration.dart';       // 振動用
+import 'package:vibration/vibration.dart';
 
 
 class TopPage extends StatefulWidget {
@@ -116,8 +116,6 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
                 height: 280,
               ),
             ),
-
-           
 
             // 波紋
             if (showRipple)

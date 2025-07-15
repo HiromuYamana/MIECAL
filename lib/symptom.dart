@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/affected_area.dart'; // AffectedAreaPage の定義があるファイル
 import 'package:miecal/vertical_slide_page.dart'; // VerticalSlideRoute の定義があるファイル
+import 'package:miecal/l10n/app_localizations.dart';
 
 class SymptomPage extends StatefulWidget {
   final String? userName;

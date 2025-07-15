@@ -257,11 +257,131 @@ abstract class AppLocalizations {
   /// **'Logout'**
   String get logout;
 
+  /// No description provided for @questionnaireConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Questionnaire Details'**
+  String get questionnaireConfirmTitle;
+
+  /// No description provided for @basicInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic information'**
+  String get basicInformation;
+
+  /// No description provided for @symptomsCauseDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom / Cause Details'**
+  String get symptomsCauseDetails;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @birthdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get birthdate;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phone;
+
+  /// No description provided for @onsetDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Onset Date'**
+  String get onsetDate;
+
+  /// No description provided for @symptom.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom'**
+  String get symptom;
+
+  /// No description provided for @affectedArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Affected Area'**
+  String get affectedArea;
+
+  /// No description provided for @severity.
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get severity;
+
+  /// No description provided for @cause.
+  ///
+  /// In en, this message translates to:
+  /// **'Cause'**
+  String get cause;
+
+  /// No description provided for @otherInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Information'**
+  String get otherInfo;
+
+  /// No description provided for @notEntered.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Entered'**
+  String get notEntered;
+
   /// No description provided for @notSelected.
   ///
   /// In en, this message translates to:
   /// **'Not selected'**
   String get notSelected;
+
+  /// No description provided for @createQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Create QR Code'**
+  String get createQrCode;
+
+  /// No description provided for @qrSaveSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Questionnaire data saved successfully!'**
+  String get qrSaveSuccess;
+
+  /// No description provided for @qrSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save questionnaire data'**
+  String get qrSaveFailed;
+
+  /// No description provided for @notLoggedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Not logged in. Cannot save data.'**
+  String get notLoggedIn;
+
+  /// No description provided for @detailsNotEntered.
+  ///
+  /// In en, this message translates to:
+  /// **'Details: Not entered'**
+  String get detailsNotEntered;
 
   /// No description provided for @affectedAreaSelection.
   ///
@@ -418,6 +538,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choosing the level of pain'**
   String get choosingTheLevelOfPain;
+
+  /// No description provided for @showQrcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please show doctor or nurse this screen.'**
+  String get showQrcode;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

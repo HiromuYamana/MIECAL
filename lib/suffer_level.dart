@@ -91,15 +91,12 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                 },
               
               child: SizedBox(
-                
-                  //mainAxisSize: MainAxisSize.min, // 子要素のサイズに合わせる
-                  //children: [
-                    child: Center(
-                      child: const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 36,
-                      ),
+                  child: Center(
+                    child: const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                      size: 36,
+                    ),
                   ),
                 ),
               ),
@@ -110,15 +107,14 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
             child:Container(
               color: const Color.fromARGB(255, 218, 246, 250), // 背景色
               child:Center(
-
-              child: Text(
-                        loc.choosingTheLevelOfPain,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-              )
+                child: Text(
+                  loc.choosingTheLevelOfPain,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
               )
             ),
           ),
@@ -135,9 +131,9 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                 const SizedBox(height: 30), // 画像とスライダーの間のスペース
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
-                    trackHeight: 8.0, // トラックの高さ
+                    trackHeight: 12.0, // トラックの高さ
                     thumbShape: const RoundSliderThumbShape(
-                      enabledThumbRadius: 14.0, // 親指の半径
+                      enabledThumbRadius: 15.0, // 親指の半径
                     ),
                     trackShape: GradientSliderTrackShape(
                       gradient: const LinearGradient(

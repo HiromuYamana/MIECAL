@@ -8,8 +8,6 @@ import 'package:miecal/top_page.dart';
 import 'affected_area.dart';
 import 'package:miecal/table_calendar.dart';
 import 'package:miecal/other_information.dart';
-
-// ignore: avoid_web_libraries_in_flutter
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:miecal/login_page.dart';
@@ -17,14 +15,11 @@ import 'package:miecal/firebase_options.dart';
 import 'package:miecal/registar_page.dart';
 import 'package:miecal/personal_information_page.dart';
 import 'package:miecal/menu_page.dart';
-// ignore: deprecated_member_use, unused_import, avoid_web_libraries_in_flutter
-// import 'dart:html' as html;       // Web向けの場合。モバイル向けなら削除またはPlatform.isWebで分岐
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:miecal/user_input_model.dart';
 import 'package:provider/provider.dart';
 import 'package:miecal/password_reset_page.dart';
 import 'package:miecal/terms_of_service_page.dart';
-
 import 'package:miecal/qr_scanner_page.dart';
 
 void main() async {
@@ -43,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: const Locale('en'),
+      //locale: const Locale('en'),
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -57,10 +52,7 @@ class MyApp extends StatelessWidget {
         '/PersonalInformationPage':
             (context) => const PersonalInformationPage(),
         '/Menupage': (context) {
-          final Map<String, dynamic>? args =
-              ModalRoute.of(context)?.settings.arguments
-                  as Map<String, dynamic>?;
-
+          final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
           return MenuPage(
             userName: args?['userName'] as String?,
             userDateOfBirth: args?['userDateOfBirth'] as DateTime?, // 例: 生年月日
@@ -76,9 +68,7 @@ class MyApp extends StatelessWidget {
           );
         },
         '/SymptomPage': (context) {
-          final Map<String, dynamic>? args =
-              ModalRoute.of(context)?.settings.arguments
-                  as Map<String, dynamic>?;
+          final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
           return SymptomPage(
             userName: args?['userName'] as String?,
@@ -102,9 +92,7 @@ class MyApp extends StatelessWidget {
         '/PasswordResetPage': (context) => const PasswordResetPage(),
         '/TermsOfServicePage': (context) => const TermsOfServicePage(),
         '/QuestionnairePage': (context) {
-          final Map<String, dynamic>? args =
-              ModalRoute.of(context)?.settings.arguments
-                  as Map<String, dynamic>?;
+          final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
           return QuestionnairePage(
             userName: args?['userName'] as String?,

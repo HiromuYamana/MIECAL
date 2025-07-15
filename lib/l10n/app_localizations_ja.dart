@@ -92,7 +92,67 @@ class AppLocalizationsJa extends AppLocalizations {
   String get logout => 'ログアウト';
 
   @override
+  String get questionnaireConfirmTitle => '問診票の内容確認';
+
+  @override
+  String get basicInformation => '基本情報';
+
+  @override
+  String get symptomsCauseDetails => '症状・原因選択';
+
+  @override
+  String get name => '氏名';
+
+  @override
+  String get birthdate => '生年月日';
+
+  @override
+  String get address => '住所';
+
+  @override
+  String get gender => '性別';
+
+  @override
+  String get phone => '電話番号';
+
+  @override
+  String get onsetDate => '発症日';
+
+  @override
+  String get symptom => '症状';
+
+  @override
+  String get affectedArea => '患部';
+
+  @override
+  String get severity => '程度';
+
+  @override
+  String get cause => '原因';
+
+  @override
+  String get otherInfo => 'その他の情報';
+
+  @override
+  String get notEntered => '未入力';
+
+  @override
   String get notSelected => '未選択';
+
+  @override
+  String get createQrCode => 'QRコード作成';
+
+  @override
+  String get qrSaveSuccess => '問診票データを保存しました！';
+
+  @override
+  String get qrSaveFailed => '問診票データの保存に失敗しました';
+
+  @override
+  String get notLoggedIn => 'ログインしていません。データを保存できません。';
+
+  @override
+  String get detailsNotEntered => '詳細：未入力';
 
   @override
   String get affectedAreaSelection => '患部選択';
@@ -171,4 +231,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get choosingTheLevelOfPain => '程度の選択';
+
+  @override
+  String get showQrcode => 'この画面を提示してください。';
 }
