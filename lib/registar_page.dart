@@ -25,55 +25,68 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isLoading = false;
 
   Future<void> register() async {
+  setState(() {
+    isLoading = true;
+    errorMessage = '';
+  });
+
+  final email = emailController.text.trim();
+  final password = passwordController.text.trim();
+  final confirm = confirmPasswordController.text.trim();
+
+  if (password != confirm) {
     setState(() {
-      isLoading = true;
-      errorMessage = '';
+      errorMessage = 'パスワードが一致しません';
+      isLoading = false;
     });
-
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-    final confirm = confirmPasswordController.text.trim();
-
-    if (password != confirm) {
-      setState(() {
-        errorMessage = 'パスワードが一致しません';
-        isLoading = false;
-      });
-      return;
-    }
-
-    if (password.length < 6) {
-      setState(() {
-        errorMessage = 'パスワードは6文字以上で入力してください';
-        isLoading = false;
-      });
-      return;
-    }
-
-    try {
-      await _auth.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      if (!mounted) return;
-
-      // 新規登録成功後、個人情報入力ページへ遷移
-      Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message ?? '登録に失敗しました';
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = '予期せぬエラーが発生しました';
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    return;
   }
+
+  if (password.length < 6) {
+    setState(() {
+      errorMessage = 'パスワードは6文字以上で入力してください';
+      isLoading = false;
+    });
+    return;
+  }
+
+  try {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final user = userCredential.user;
+    if (user != null) {
+      final userDoc = await _firestore.collection('users').doc(user.uid).get();
+      if (!userDoc.exists) {
+        await _firestore.collection('users').doc(user.uid).set({
+          'email': email,
+          'role': 'patient',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    }
+
+    if (!mounted) return;
+
+    // 新規登録成功後、個人情報入力ページへ遷移
+    Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
+  } on FirebaseAuthException catch (e) {
+    setState(() {
+      errorMessage = e.message ?? '登録に失敗しました';
+    });
+  } catch (e) {
+    setState(() {
+      errorMessage = '予期せぬエラーが発生しました';
+    });
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+
 
   InputDecoration buildInputDecoration(String hint, Icon icon, bool isObscure, VoidCallback toggle) {
     return InputDecoration(
@@ -115,6 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
             await _firestore.collection('users').doc(user.uid).set({
               'name': user.displayName ?? '',
               'email': user.email ?? '',
+              'role': 'patient',
               'createdAt': FieldValue.serverTimestamp(),
             });
           }

@@ -1,10 +1,15 @@
+// lib/menu_page.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:miecal/role_provider.dart';
 import 'package:miecal/symptom.dart';
 import 'package:miecal/top_page.dart';
 import 'package:miecal/personal_information_page.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/qr_scanner_page.dart';
+import 'package:miecal/doctor_application_page.dart'; // ルート登録用
+import 'package:miecal/admin_approval_page.dart';   // ルート登録用
 
 class MenuPage extends StatelessWidget {
   final String? userName;
@@ -38,17 +43,30 @@ class MenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
 
+    // 🔽 RoleProvider からロールとローディング状態を取得
+    final roleProvider = context.watch<RoleProvider>();
+    final role  = roleProvider.role ?? 'patient';
+    final ready = !roleProvider.isLoading;
+
+    // まだロール取得中ならローディング表示
+    if (!ready) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(local.menuTitle),
         backgroundColor: Colors.teal,
-        automaticallyImplyLeading: false, // <-- 修正点: 戻るボタンを非表示にする
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // メイン操作ボタンエリア
+          // ────────── メイン操作ボタン Row ──────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -82,53 +100,76 @@ class MenuPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    VerticalSlideRoute(page: PersonalInformationPage()),
+                    VerticalSlideRoute(page: const PersonalInformationPage()),
                   );
                 },
               ),
             ],
           ),
 
-          _MenuIconButton(
-            imagePath: 'assets/icons/qr_scan.png', // <-- 適切なアイコン画像パスに変更
-            label: 'QRを読み込む', // local.qrScan などに多言語化可能
-            onTap: () {
-              Navigator.push(
-                context,
-                VerticalSlideRoute(
-                  page: const QrScannerPage(),
-                ), // QrScannerPageへ遷移
-              );
-            },
+          // ────────── QR 読み込み ──────────
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _MenuIconButton(
+                imagePath: 'assets/qr_scan.png',
+                label: 'QRを読み込む',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    VerticalSlideRoute(page: const QrScannerPage()),
+                  );
+                },
+              ),
+              if (role != 'doctor') 
+                _MenuIconButton(
+                  imagePath: 'assets/icons/medical_license.png',
+                  label: '医師申請',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/DoctorApplication');
+                  },
+                ),
+              if (role == 'admin')
+                _MenuIconButton(
+                  imagePath: 'assets/icons/approval.png',
+                  label: '申請承認',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/AdminApproval');
+                  },
+                ),
+            ],
           ),
 
-          // ログアウト
+
+          // ────────── ログアウト ──────────
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
             child: TextButton.icon(
               onPressed: () {
-                Navigator.push(context, VerticalSlideRoute(page: TopPage()));
+                Navigator.push(context, VerticalSlideRoute(page: const TopPage()));
               },
               icon: const Icon(Icons.logout, size: 18, color: Colors.grey),
-              label: Text(
-                local.logout,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
-              ),
+              label: Text(local.logout,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey)),
             ),
           ),
+
+          // ────────── 利用規約 ──────────
           TextButton(
             onPressed: () {
               Navigator.pushNamed(context, '/TermsOfServicePage');
             },
             child: const Text('利用規約を見る'),
           ),
-
         ],
       ),
     );
   }
 }
 
+// ────────────────────────────────────────────────
+// 共通アイコンボタンウィジェット
+// ────────────────────────────────────────────────
 class _MenuIconButton extends StatelessWidget {
   final String imagePath;
   final String label;
@@ -155,7 +196,7 @@ class _MenuIconButton extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 6,
@@ -165,10 +206,8 @@ class _MenuIconButton extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
+          Text(label,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         ],
       ),
     );
