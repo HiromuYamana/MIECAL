@@ -231,4 +231,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get choosingTheLevelOfPain => '程度の選択';
+
+  @override
+  String get showQrcode => 'この画面を提示してください。';
 }

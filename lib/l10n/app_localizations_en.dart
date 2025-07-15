@@ -231,4 +231,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get choosingTheLevelOfPain => 'Choosing the level of pain';
+
+  @override
+  String get showQrcode => 'Please show doctor or nurse this screen.';
 }

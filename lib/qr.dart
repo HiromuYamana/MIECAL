@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrPage extends StatelessWidget {
@@ -7,6 +8,7 @@ class QrPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Center(
@@ -49,8 +51,7 @@ class QrPage extends StatelessWidget {
                 child:Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:[
-                    Text('この画面を提示してください。', style: TextStyle(fontSize: 20)),
-                    Text('Please show doctor or nurse this screen.', style: TextStyle(fontSize: 20)),
+                    Text(loc.showQrcode, style: TextStyle(fontSize: 20)),
                     Image.asset(
                       'assets/show_screen.png',
                       height: screenHeight * 0.2,

@@ -538,6 +538,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choosing the level of pain'**
   String get choosingTheLevelOfPain;
+
+  /// No description provided for @showQrcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please show doctor or nurse this screen.'**
+  String get showQrcode;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
