@@ -141,9 +141,9 @@ class _LoginScreenState extends State<LoginScreen> {
         '/PersonalInformationPage',
         arguments: {'isNewUser': true},
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.userDataNotFound)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.userDataNotFound)));
     }
   }
 
@@ -154,52 +154,53 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(loc.addPassword),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: emailCtrl,
-              decoration: InputDecoration(labelText: loc.email),
+      builder:
+          (context) => AlertDialog(
+            title: Text(loc.addPassword),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: emailCtrl,
+                  decoration: InputDecoration(labelText: loc.email),
+                ),
+                TextField(
+                  controller: passCtrl,
+                  decoration: InputDecoration(labelText: loc.password),
+                  obscureText: true,
+                ),
+              ],
             ),
-            TextField(
-              controller: passCtrl,
-              decoration: InputDecoration(labelText: loc.password),
-              obscureText: true,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              try {
-                final email = emailCtrl.text.trim();
-                final password = passCtrl.text.trim();
-                final cred = EmailAuthProvider.credential(
-                  email: email,
-                  password: password,
-                );
-                await user.linkWithCredential(cred);
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(loc.addEmailAndPassword)),
-                );
-              } catch (e) {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${loc.linkFailed}: $e')),
-                );
-              }
-            },
-            child: Text(loc.add),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  try {
+                    final email = emailCtrl.text.trim();
+                    final password = passCtrl.text.trim();
+                    final cred = EmailAuthProvider.credential(
+                      email: email,
+                      password: password,
+                    );
+                    await user.linkWithCredential(cred);
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(loc.addEmailAndPassword)),
+                    );
+                  } catch (e) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('${loc.linkFailed}: $e')),
+                    );
+                  }
+                },
+                child: Text(loc.add),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(loc.later),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(loc.later),
-          ),
-        ],
-      ),
     );
   }
 
@@ -214,90 +215,148 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 246, 250),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white, // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 22,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'LOGIN',
-                style: GoogleFonts.montserrat(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 12,
+                  offset: Offset(0, 4),
                 ),
-              ),
-              const SizedBox(height: 40),
-              _buildTextField(emailController, loc.email, Icons.email_outlined),
-              const SizedBox(height: 20),
-              _buildPasswordField(loc),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : signIn,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 18, 81, 241),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child: isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(loc.signIn),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/PasswordResetPage'),
-                child: Text(loc.forgetPassword),
-              ),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: isLoading ? null : signInWithGoogle,
-                child: Image.asset(
-                  'assets/ios_light_google.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 16),
-              if (errorMessage.isNotEmpty)
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 25),
                 Text(
-                  errorMessage,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(loc.dontHaveAccount),
-                  TextButton.icon(
-                    onPressed: () => Navigator.pushNamed(context, '/RegisterPage'),
-                    icon: const Icon(Icons.person_add_alt_1_outlined),
-                    label: Text(loc.createNewAccount),
+                  'LOGIN',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 50),
+
+                // メールアドレス入力
+                _buildTextField(
+                  emailController,
+                  loc.email,
+                  Icons.email_outlined,
+                ),
+                const SizedBox(height: 20),
+
+                // パスワード入力
+                _buildPasswordField(loc),
+                const SizedBox(height: 2),
+
+                // パスワードを忘れた方リンク
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed:
+                        () =>
+                            Navigator.pushNamed(context, '/PasswordResetPage'),
+                    child: Text('  ${loc.forgetPassword}'),
+                  ),
+                ),
+                const SizedBox(height: 4),
+
+                // ログインボタン
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : signIn,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 18, 81, 241),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child:
+                        isLoading
+                            ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                            : Text(loc.signIn),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Google ログインボタン
+                GestureDetector(
+                  onTap: isLoading ? null : signInWithGoogle,
+                  child: Image.asset(
+                    'assets/ios_light_google.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // エラーメッセージ表示
+                if (errorMessage.isNotEmpty)
+                  Text(errorMessage, style: const TextStyle(color: Colors.red)),
+
+                const SizedBox(height: 16),
+                const Divider(thickness: 1), // 区切り線
+                const SizedBox(height: 8),
+
+                // 新規登録リンク（アイコン付き）
+                TextButton(
+                  onPressed:
+                      () => Navigator.pushNamed(context, '/RegisterPage'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.person_add_alt_1_outlined, size: 20),
+                      SizedBox(width: 6),
+                      Text('Create new account'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, IconData icon) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint,
+    IconData icon,
+  ) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: Icon(icon),
         contentPadding: const EdgeInsets.symmetric(vertical: 18),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }
@@ -310,7 +369,9 @@ class _LoginScreenState extends State<LoginScreen> {
         hintText: loc.password,
         prefixIcon: const Icon(Icons.lock_outline),
         suffixIcon: IconButton(
-          icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+          icon: Icon(
+            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+          ),
           onPressed: () {
             setState(() {
               _obscurePassword = !_obscurePassword;
@@ -318,9 +379,7 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
         contentPadding: const EdgeInsets.symmetric(vertical: 18),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }

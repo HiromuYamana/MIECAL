@@ -173,101 +173,132 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 246, 250),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white, // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 22,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-              Text(
-                loc.createNewAccount,
-                style: GoogleFonts.poppins(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 12,
+                  offset: Offset(0, 4),
                 ),
-              ),
-              const SizedBox(height: 40),
-
-              // e-mail
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: loc.email,
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  loc.createNewAccount,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 30),
 
-              // password
-              TextField(
-                controller: passwordController,
-                obscureText: obscurePassword,
-                decoration: buildInputDecoration(
-                  loc.password,
-                  const Icon(Icons.lock_outline),
-                  obscurePassword,
-                  () {
-                    setState(() {
-                      obscurePassword = !obscurePassword;
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // confirm password
-              TextField(
-                controller: confirmPasswordController,
-                obscureText: obscureConfirmPassword,
-                decoration: buildInputDecoration(
-                  loc.confirmPassword,
-                  const Icon(Icons.lock_outline),
-                  obscureConfirmPassword,
-                  () {
-                    setState(() {
-                      obscureConfirmPassword = !obscureConfirmPassword;
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // エラーメッセージ
-              if (errorMessage.isNotEmpty)
-                Text(
-                  errorMessage,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              const SizedBox(height: 20),
-            
-            // Google登録ボタン（画像そのままのサイズで）
-            GestureDetector(
-              onTap: isLoading ? null : signInWithGoogle,
-              child: Image.asset(
-                'assets/google_light_new.png',
-                fit: BoxFit.contain,
-              ),
-            ),
-
-              // 登録（矢印）ボタン
-              isLoading
-                  ? const CircularProgressIndicator()
-                  : GestureDetector(
-                      onTap: register,
-                      child: const Icon(
-                        Icons.arrow_downward,
-                        size: 60,
-                        color: Colors.black87,
-                      ),
+                // E-mail
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    hintText: loc.email,
+                    prefixIcon: const Icon(Icons.email_outlined),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 18),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-            const SizedBox(height: 24),
-            ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Password
+                TextField(
+                  controller: passwordController,
+                  obscureText: obscurePassword,
+                  decoration: buildInputDecoration(
+                    loc.password,
+                    const Icon(Icons.lock_outline),
+                    obscurePassword,
+                    () {
+                      setState(() {
+                        obscurePassword = !obscurePassword;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Confirm Password
+                TextField(
+                  controller: confirmPasswordController,
+                  obscureText: obscureConfirmPassword,
+                  decoration: buildInputDecoration(
+                    loc.confirmPassword,
+                    const Icon(Icons.lock_outline),
+                    obscureConfirmPassword,
+                    () {
+                      setState(() {
+                        obscureConfirmPassword = !obscureConfirmPassword;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // エラーメッセージ
+                if (errorMessage.isNotEmpty)
+                  Text(
+                    errorMessage,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+
+                const SizedBox(height: 20),
+
+                // Google登録ボタン
+                GestureDetector(
+                  onTap: isLoading ? null : signInWithGoogle,
+                  child: Image.asset(
+                    'assets/google_light_new.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // 登録ボタン（矢印）
+                isLoading
+                    ? const CircularProgressIndicator()
+                    : GestureDetector(
+                        onTap: register,
+                        child: const Icon(
+                          Icons.arrow_downward,
+                          size: 60,
+                          color: Colors.black87,
+                        ),
+                      ),
+
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
         ),
       ),
