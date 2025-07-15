@@ -161,6 +161,23 @@ class MenuPage extends StatelessWidget {
                         );
                       },
                     ),
+                    if (role != 'doctor') 
+                          _MenuIconButton(
+                            imagePath: 'assets/icons/medical_license.png',
+                            label: '医師申請',
+                            onTap: () {
+                              Navigator.pushNamed(context, '/DoctorApplication');
+                            },
+                          ),
+                        if (role == 'admin')
+                          _MenuIconButton(
+                            imagePath: 'assets/icons/approval.png',
+                            label: '申請承認',
+                            onTap: () {
+                              Navigator.pushNamed(context, '/AdminApproval');
+                            },
+                          ),
+
                     const SizedBox(height: 20),
                     TextButton.icon(
                       onPressed: () {
