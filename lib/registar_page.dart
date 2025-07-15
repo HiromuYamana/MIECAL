@@ -26,56 +26,69 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isLoading = false;
 
   Future<void> register() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
+  setState(() {
+    isLoading = true;
+    errorMessage = '';
+  });
 
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-    final confirm = confirmPasswordController.text.trim();
+  final email = emailController.text.trim();
+  final password = passwordController.text.trim();
+  final confirm = confirmPasswordController.text.trim();
     final loc = AppLocalizations.of(context)!;
 
-    if (password != confirm) {
-      setState(() {
-        errorMessage = loc.authWrongPassword;
-        isLoading = false;
-      });
-      return;
-    }
-
-    if (password.length < 6) {
-      setState(() {
-        errorMessage = loc.authShortPassword;
-        isLoading = false;
-      });
-      return;
-    }
-
-    try {
-      await _auth.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      if (!mounted) return;
-
-      // 新規登録成功後、個人情報入力ページへ遷移
-      Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message ?? loc.registerFailed;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = loc.unknownError;
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+  if (password != confirm) {
+    setState(() {
+      errorMessage = loc.authWrongPassword;
+      isLoading = false;
+    });
+    return;
   }
+
+  if (password.length < 6) {
+    setState(() {
+      errorMessage = loc.authShortPassword;
+      isLoading = false;
+    });
+    return;
+  }
+
+  try {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final user = userCredential.user;
+    if (user != null) {
+      final userDoc = await _firestore.collection('users').doc(user.uid).get();
+      if (!userDoc.exists) {
+        await _firestore.collection('users').doc(user.uid).set({
+          'email': email,
+          'role': 'patient',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    }
+
+    if (!mounted) return;
+
+    // 新規登録成功後、個人情報入力ページへ遷移
+    Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
+  } on FirebaseAuthException catch (e) {
+    setState(() {
+      errorMessage = e.message ?? loc.registerFailed;
+    });
+  } catch (e) {
+    setState(() {
+      errorMessage = loc.unknownError;
+    });
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+
 
   InputDecoration buildInputDecoration(String hint, Icon icon, bool isObscure, VoidCallback toggle) {
     return InputDecoration(
@@ -118,6 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
             await _firestore.collection('users').doc(user.uid).set({
               'name': user.displayName ?? '',
               'email': user.email ?? '',
+              'role': 'patient',
               'createdAt': FieldValue.serverTimestamp(),
             });
           }

@@ -1,10 +1,15 @@
+// lib/menu_page.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:miecal/role_provider.dart';
 import 'package:miecal/symptom.dart';
 import 'package:miecal/top_page.dart';
 import 'package:miecal/personal_information_page.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/qr_scanner_page.dart';
+import 'package:miecal/doctor_application_page.dart'; // ルート登録用
+import 'package:miecal/admin_approval_page.dart';   // ルート登録用
 
 class MenuPage extends StatelessWidget {
   final String? userName;
@@ -37,6 +42,19 @@ class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
+
+    // 🔽 RoleProvider からロールとローディング状態を取得
+    final roleProvider = context.watch<RoleProvider>();
+    final role  = roleProvider.role ?? 'patient';
+    final ready = !roleProvider.isLoading;
+
+    // まだロール取得中ならローディング表示
+    if (!ready) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -171,6 +189,9 @@ class MenuPage extends StatelessWidget {
   }
 }
 
+// ────────────────────────────────────────────────
+// 共通アイコンボタンウィジェット
+// ────────────────────────────────────────────────
 class _MenuIconButton extends StatelessWidget {
   final String imagePath;
   final String label;
@@ -197,7 +218,7 @@ class _MenuIconButton extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 6,
@@ -207,10 +228,8 @@ class _MenuIconButton extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
+          Text(label,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         ],
       ),
     );
