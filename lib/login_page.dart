@@ -248,7 +248,7 @@ Future<void> signIn() async {
           style: TextStyle(
             color: Colors.white, // 白文字
             fontWeight: FontWeight.bold, // 太字
-            fontSize: 22,
+            fontSize: 24,
           ),
         ),
         centerTitle: true,

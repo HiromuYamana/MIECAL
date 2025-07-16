@@ -72,10 +72,19 @@ class _CousePageState extends State<CousePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
       appBar: AppBar(
-        title: Text("MIECAL"),
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,        // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true, 
         backgroundColor: const Color.fromARGB(255, 75, 170, 248),
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
@@ -87,27 +96,38 @@ class _CousePageState extends State<CousePage> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                //padding: EdgeInsets.only(top: topPadding),
                 child: SizedBox(
                   child: Center(
-                    //mainAxisSize: MainAxisSize.min,
                     child: const Icon(
                       Icons.arrow_upward,
                       color: Colors.white,
                       size: 36,
                     ),
                   ),
-
-                  //const Text('原因', style: TextStyle(color: Colors.black)),
                 ),
               ),
             ),
           ),
-
           Expanded(
-            flex: 15,
+            flex:1,
+            child:Container(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Center(
+                child:Text(
+                  '原因',
+                  style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ) 
+            ),
+          ),
+          Expanded(
+            flex: 12,
             child: Container(
-              color: const Color.fromARGB(255, 218, 246, 250),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: GridView.builder(
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -222,7 +242,7 @@ class _CousePageState extends State<CousePage> {
                 child: SizedBox(
                   child: Center(
                     child: const Icon(
-                      Icons.arrow_downward,
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),

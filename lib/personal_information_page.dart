@@ -280,7 +280,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           style: TextStyle(
             color: Colors.white,        // 白文字
             fontWeight: FontWeight.bold, // 太字
-            fontSize: 22,
+            fontSize: 24,
           ),
         ),
         centerTitle: true, 
@@ -315,7 +315,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
             child:Container( 
               color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
-                child: Text(loc.profileEdit, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Text(loc.profileEdit, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
               )
             ),
           ),

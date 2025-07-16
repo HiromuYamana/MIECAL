@@ -116,12 +116,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     for (int y = 0; y < _rawMaskImage!.height; y++) {
       for (int x = 0; x < _rawMaskImage!.width; x++) {
         final pixel = _rawMaskImage!.getPixel(x, y);
-        final color = Color.fromARGB(
-          pixel.a.toInt(),
-          pixel.r.toInt(),
-          pixel.g.toInt(),
-          pixel.b.toInt(),
-        );
+        final color = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
         if (localizedColorToPart.containsKey(color)) {
           _colorPixelCache
               .putIfAbsent(color, () => [])
@@ -170,12 +165,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     }
 
     final pixel = _rawMaskImage!.getPixel(x, y);
-    final pixelColor = Color.fromARGB(
-      pixel.a.toInt(),
-      pixel.r.toInt(),
-      pixel.g.toInt(),
-      pixel.b.toInt(),
-    );
+    final pixelColor = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
 
     if (localizedColorToPart.containsKey(pixelColor)) {
       setState(() {
@@ -206,10 +196,24 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // 背景色
+        appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white, // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
               //padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -219,11 +223,8 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                 },
                 child: SizedBox(
                   child: Center(
-                  //mainAxisSize: MainAxisSize.min,
-                  //children: [
-                    //IconButton(
                       child: const Icon(
-                        Icons.arrow_upward,
+                        Icons.expand_less,
                         color: Colors.white,
                         size: 36,
                       ),
@@ -233,19 +234,19 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
               ),
             ),
           Expanded(
-            flex:1,
+            flex: 1,
             child: Container(
-              color: const Color.fromARGB(255, 207, 227, 230),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
                 child:Text(
                       loc.affectedAreaSelection,
-                      style: const TextStyle(color: Colors.black, fontSize: 20),
+                      style: const TextStyle(color: Colors.black, fontSize: 22),
                     ),
                   ),
             ),
           ),
           Expanded(
-            flex: 15,
+            flex: 12,
             child:
                 _maskImage == null
                     ? const Center(child: CircularProgressIndicator())
@@ -308,7 +309,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                 child: SizedBox(
                   child: Center(
                     child: const Icon(
-                      Icons.arrow_downward,
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),

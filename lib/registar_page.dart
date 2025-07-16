@@ -194,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
           style: TextStyle(
             color: Color.fromARGB(255, 255, 255, 255), // 白文字
             fontWeight: FontWeight.bold, // 太字
-            fontSize: 22,
+            fontSize: 24,
           ),
         ),
         centerTitle: true,
@@ -304,7 +304,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     : GestureDetector(
                         onTap: register,
                         child: const Icon(
-                          Icons.arrow_downward,
+                          Icons.expand_more,
                           size: 60,
                           color: Colors.black87,
                         ),

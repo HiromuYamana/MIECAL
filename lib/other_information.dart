@@ -81,14 +81,26 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 246, 250), // 背景色
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              //padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               child: InkWell(
                 onTap:(){
                   Navigator.pop(context);
@@ -108,22 +120,21 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
           Expanded(
             flex:1,
             child:Container(
-              color: const Color.fromARGB(255, 207, 227, 230),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
                 child:Text(
                   'その他情報',
                   style: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 22
+                  ),
                 ),
-              ),
-            ) 
-          ),
+              ) 
+            ),
           ),
 
           Expanded(
-            flex: 15,
+            flex: 12,
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
@@ -250,7 +261,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                 child: SizedBox(
                   child: Center(
                     child: const Icon(
-                      Icons.arrow_downward,
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),
