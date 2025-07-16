@@ -92,7 +92,7 @@ class _SymptomPageState extends State<SymptomPage> {
           style: TextStyle(
             color: Colors.white,        // 白文字
             fontWeight: FontWeight.bold, // 太字
-            fontSize: 22,
+            fontSize: 24,
           ),
         ),
         centerTitle: true, 
@@ -126,12 +126,12 @@ class _SymptomPageState extends State<SymptomPage> {
             child:Container( 
               color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
-                child: const Text('症状選択', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+                child: const Text('症状選択', style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
               )
             ),
           ),
           Expanded(
-            flex: 14,
+            flex: 12,
             child: Container(
               color: const Color.fromARGB(255, 255, 255, 255), // グリッドの背景色
               child: GridView.builder(

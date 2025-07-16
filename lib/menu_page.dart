@@ -64,7 +64,7 @@ class MenuPage extends StatelessWidget {
           style: TextStyle(
             color: Colors.white,        // 白文字
             fontWeight: FontWeight.bold, // 太字
-            fontSize: 22,
+            fontSize: 24,
           ),
         ),
         centerTitle: true, 
@@ -83,13 +83,13 @@ class MenuPage extends StatelessWidget {
               'メニュー',
               style: TextStyle(
               color: Colors.black,
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               ),
             ),
           ),
           Expanded(
-            flex: 17,
+            flex: 14,
             child: Center(
               child: Container(
                 height: 650,
@@ -151,24 +151,27 @@ class MenuPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    _MenuIconButton(
-                      imagePath: 'assets/QR.png',
-                      label: 'QRを読み込む',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          VerticalSlideRoute(page: const QrScannerPage()),
-                        );
-                      },
-                    ),
-                    if (role != 'doctor') 
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        if (role != 'doctor')
                           _MenuIconButton(
-                            imagePath: 'assets/icons/medical_license.png',
-                            label: '医師申請',
+                            imagePath: 'assets/icons/QR.png',
+                            label: 'QRを読み込む',
                             onTap: () {
-                              Navigator.pushNamed(context, '/DoctorApplication');
+                              Navigator.push(
+                                context,
+                                VerticalSlideRoute(page: const QrScannerPage()),
+                              );
                             },
                           ),
+                        _MenuIconButton(
+                          imagePath: 'assets/icons/medical_license.png',
+                          label: '医師申請',
+                          onTap: () {
+                            Navigator.pushNamed(context, '/DoctorApplication');
+                          },
+                        ),
                         if (role == 'admin')
                           _MenuIconButton(
                             imagePath: 'assets/icons/approval.png',
@@ -177,6 +180,8 @@ class MenuPage extends StatelessWidget {
                               Navigator.pushNamed(context, '/AdminApproval');
                             },
                           ),
+                      ],
+                    ),
 
                     const SizedBox(height: 20),
                     TextButton.icon(

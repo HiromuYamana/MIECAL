@@ -147,289 +147,313 @@ String _formatDateForQr(BuildContext context, DateTime? date) {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_upward),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      // 修正点: body の SingleChildScrollView を Expanded で囲む
-      body: Expanded(
-        // <-- ここを追加
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                loc.questionnaireConfirmTitle,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-
-              // 基本情報セクション
-              Card(
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        loc.basicInformation,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      const Divider(),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.person,
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.name),
-                        trailing: Text(
-                          displayUserName,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.cake, // 誕生日アイコン
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.birthdate),
-                        trailing: Text(
-                          displayUserDateOfBirth,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.home, // 住所アイコン
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.address),
-                        trailing: Text(
-                          displayUserHome,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.wc, // 性別アイコン
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.gender),
-                        trailing: Text(
-                          displayUserGender,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.phone, // 電話アイコン
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.phone),
-                        trailing: Text(
-                          displayUserTelNum,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.event, // イベントアイコンなど
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.onsetDate),
-                        trailing: Text(
-                          displayOnsetDay,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              // 症状・原因セクション
-              Card(
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        loc.symptomsCauseDetails,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      const Divider(),
-                      ListTile(
-                        leading: const Icon(Icons.sick, color: Colors.blueGrey),
-                        title: Text(loc.symptom),
-                        trailing: Expanded(
-                          child: Text(
-                            displaySymptom,
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.healing,
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.affectedArea),
-                        trailing: Expanded(
-                          child: Text(
-                            displayAffectedArea,
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.sentiment_neutral,
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.severity),
-                        trailing: Text(
-                          displaySufferLevel,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.info_outline,
-                          color: Colors.blueGrey,
-                        ),
-                        title: Text(loc.cause),
-                        trailing: Expanded(
-                          child: Text(
-                            displayCause,
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              // その他情報セクション
-              Card(
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        loc.otherInfo,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      const Divider(),
-                      if (displayOtherInfoItems.isEmpty)
-                        Row(
-                          children: [
-                            const Icon(Icons.notes, color: Colors.blueGrey),
-                            const SizedBox(width: 16),
-                            Text(loc.detailsNotEntered, style: const TextStyle(fontSize: 16)),
-                          ],
-                        )
-                      else // 項目がある場合
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children:
-                              displayOtherInfoItems.map((item) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 2.0),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.notes,
-                                        color: Colors.blueGrey,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: Text(
-                                          item,
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              // QRコード発行ボタンの表示を条件付きにする
-              if (!isFromQrScanner) // QrScannerPageから来ていなければ表示
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () => _showQrCodePage(context),
-                    child: Text(loc.createQrCode),
-                  ),
-                ),
-            ],
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
           ),
         ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
       ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Material(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: SizedBox(
+                  child:Center(
+                  child: const Icon(
+                    Icons.arrow_upward,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                  )
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(loc.questionnaireConfirmTitle, style: const TextStyle(color: Colors.black, fontSize: 22)), 
+          ),
+          Expanded(
+            flex: 14,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            loc.basicInformation,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.person,
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.name),
+                            trailing: Text(
+                              displayUserName,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.cake, // 誕生日アイコン
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.birthdate),
+                            trailing: Text(
+                              displayUserDateOfBirth,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.home, // 住所アイコン
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.address),
+                            trailing: Text(
+                              displayUserHome,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.wc, // 性別アイコン
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.gender),
+                            trailing: Text(
+                              displayUserGender,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.phone, // 電話アイコン
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.phone),
+                            trailing: Text(
+                              displayUserTelNum,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.event, // イベントアイコンなど
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.onsetDate),
+                            trailing: Text(
+                              displayOnsetDay,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // 症状・原因セクション
+                  Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            loc.symptomsCauseDetails,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.sick, color: Colors.blueGrey),
+                            title: Text(loc.symptom),
+                            trailing: Expanded(
+                              child: Text(
+                                displaySymptom,
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.healing,
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.affectedArea),
+                            trailing: Expanded(
+                              child: Text(
+                                displayAffectedArea,
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.sentiment_neutral,
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.severity),
+                            trailing: Text(
+                              displaySufferLevel,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.info_outline,
+                              color: Colors.blueGrey,
+                            ),
+                            title: Text(loc.cause),
+                            trailing: Expanded(
+                              child: Text(
+                                displayCause,
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // その他情報セクション
+                  Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            loc.otherInfo,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                          const Divider(),
+                          if (displayOtherInfoItems.isEmpty)
+                            Row(
+                              children: [
+                                const Icon(Icons.notes, color: Colors.blueGrey),
+                                const SizedBox(width: 16),
+                                Text(loc.detailsNotEntered, style: const TextStyle(fontSize: 16)),
+                              ],
+                            )
+                          else // 項目がある場合
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:
+                                  displayOtherInfoItems.map((item) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.notes,
+                                            color: Colors.blueGrey,
+                                            size: 20,
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(fontSize: 16),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+
+                  // QRコード発行ボタンの表示を条件付きにする
+                  if (!isFromQrScanner) // QrScannerPageから来ていなければ表示
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () => _showQrCodePage(context),
+                        child: Text(loc.createQrCode),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ]
+      )
     );
   }
 }
