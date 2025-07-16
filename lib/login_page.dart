@@ -4,6 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+// 以下はパスの解決のため必要に応じて追加または確認
+import 'package:go_router/go_router.dart';
+import 'package:miecal/menu_page.dart';
+import 'package:miecal/personal_info_service.dart';
+import 'package:miecal/registar_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,15 +28,40 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool _obscurePassword = true;
 
+  // 多言語化された認証エラーメッセージを取得するヘルパーメソッド
+  String _getLocalizedAuthError(String code, AppLocalizations loc) {
+    switch (code) {
+      case 'user-not-found':
+        return loc.authUserNotFound;
+      case 'wrong-password':
+        return loc.authWrongPassword;
+      case 'invalid-email':
+        return loc.authInvalidEmail;
+      case 'user-disabled':
+        return loc.authUserDisabled;
+      default:
+        return loc.authUnknownError;
+    }
+  }
+
   // 🔵 Googleログイン処理
   Future<void> signInWithGoogle() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return;
+      if (googleUser == null) {
+        setState(() {
+          isLoading = false;
+        });
+        return; // ユーザーがGoogleサインインをキャンセルした場合
+      }
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -43,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null) {
         // 🔵 まだパスワードプロバイダとリンクされていなければ追加
         if (user.providerData.every((p) => p.providerId != 'password')) {
+          if (!mounted) return;
           await showDialog(
             context: context,
             builder: (context) {
@@ -52,11 +83,13 @@ class _LoginScreenState extends State<LoginScreen> {
               return AlertDialog(
                 title: const Text('パスワードを追加しますか？'),
                 content: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize:
+                      MainAxisSize.min, // <-- 修正点: MainAxisSize.min に変更
                   children: [
                     TextField(
                       controller: emailCtrl,
                       decoration: const InputDecoration(labelText: 'メールアドレス'),
+                      keyboardType: TextInputType.emailAddress,
                     ),
                     TextField(
                       controller: passCtrl,
@@ -77,11 +110,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           password: password,
                         );
                         await user.linkWithCredential(emailCred);
+                        if (!mounted) return;
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('メール+パスワードを追加しました')),
                         );
                       } on FirebaseAuthException catch (e) {
+                        if (!mounted) return;
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('リンク失敗: ${e.message}')),
@@ -100,71 +135,77 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
 
-        // 🔵 Firestore のデータ確認
-        final userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
-
-        if (userDoc.exists) {
-          final userData = userDoc.data() as Map<String, dynamic>;
-          final initialQuestionnaireData = {
-            'userName': userData['name'] as String?,
-            'selectedOnsetDay':
-                userData['onsetDay'] != null
-                    ? DateTime.tryParse(userData['onsetDay'])
-                    : null,
-            'symptom': userData['symptom'] as String?,
-            'affectedArea': userData['affectedArea'] as String?,
-            'sufferLevel': userData['sufferLevel'] as String?,
-            'cause': userData['cause'] as String?,
-            'otherInformation': userData['otherInformation'] as String?,
-          };
-
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            '/Menupage',
-            arguments: initialQuestionnaireData,
-          );
-        } else {
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            '/PersonalInformationPage',
-            arguments: {'isNewUser': true},
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('ユーザーデータがありません。個人情報を登録してください。')),
-          );
-        }
+        // 🔵 Firestore のデータ確認（共通ロジック化）
+        await _handleUserLoginSuccess(user); // 共通処理を呼び出し
       }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = _getLocalizedAuthError(
+          e.code,
+          AppLocalizations.of(context)!,
+        );
+      });
+      print('Firebase Auth Error (Google): ${e.code} - ${e.message}');
     } catch (e) {
-      print('Googleログイン失敗: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Googleログインに失敗しました: $e')));
+      setState(() {
+        errorMessage = '予期せぬエラーが発生しました: ${e.toString()}';
+      });
+      print('Unexpected Error (Google): ${e.toString()}');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // 共通のユーザーログイン成功後の処理
+  Future<void> _handleUserLoginSuccess(User user) async {
+    final DocumentSnapshot userDoc =
+        await _firestore.collection('users').doc(user.uid).get();
+
+    if (userDoc.exists) {
+      final Map<String, dynamic> userData =
+          userDoc.data() as Map<String, dynamic>;
+
+      final Map<String, dynamic> initialQuestionnaireData = {
+        'userName': userData['name'] as String?,
+        'userDateOfBirth':
+            userData['birthday'] != null
+                ? DateTime.tryParse(userData['birthday'] as String)
+                : null,
+        'userHome': userData['address'] as String?,
+        'userGender': userData['gender'] as String?,
+        'userTelNum': userData['phone'] as String?,
+
+        'selectedOnsetDay':
+            userData['onsetDay'] != null
+                ? DateTime.tryParse(userData['onsetDay'] as String)
+                : null,
+        'symptom': userData['symptom'] as String?,
+        'affectedArea': userData['affectedArea'] as String?,
+        'sufferLevel': userData['sufferLevel'] as String?,
+        'cause': userData['cause'] as String?,
+        'otherInformation': userData['otherInformation'] as String?,
+      };
+
+      if (!mounted) return;
+      // ログイン成功時にMenuPageへ遷移し、データを渡す (GoRouter 形式)
+      context.go('/Menupage', extra: initialQuestionnaireData);
+    } else {
+      if (!mounted) return;
+      // PersonalInformationPageに強制遷移し、個人情報を入力・保存させる (GoRouter 形式)
+      context.go('/PersonalInformationPage', extra: {'isNewUser': true});
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('ユーザーデータがありません。個人情報を登録してください。')),
+      );
     }
   }
 
   Future<void> signIn() async {
     setState(() {
-      isLoading = true; // ローディング開始
-      errorMessage = ''; // エラーメッセージをクリア
+      isLoading = true;
+      errorMessage = '';
     });
-
-    String getLocalizedAuthError(String code, AppLocalizations loc) {
-      switch (code) {
-        case 'user-not-found':
-          return loc.authUserNotFound;
-        case 'wrong-password':
-          return loc.authWrongPassword;
-        case 'invalid-email':
-          return loc.authInvalidEmail;
-        case 'user-disabled':
-          return loc.authUserDisabled;
-        default:
-          return loc.authUnknownError;
-      }
-    }
 
     try {
       final UserCredential userCredential = await _auth
@@ -176,88 +217,34 @@ class _LoginScreenState extends State<LoginScreen> {
       final User? user = userCredential.user;
 
       if (user != null) {
-        // 🔐 ログイン成功時
-        // Firestoreからユーザーに紐付く個人情報と問診票情報を取得
-        final DocumentSnapshot userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
-
-        if (userDoc.exists) {
-          // ドキュメントが存在すればデータを取得
-          final Map<String, dynamic> userData =
-              userDoc.data() as Map<String, dynamic>;
-
-          // 取得した個人情報と問診票情報をMapにまとめる
-          // MenuPageのコンストラクタ引数に合わせてキーと型を調整
-          final Map<String, dynamic> initialQuestionnaireData = {
-            'userName': userData['name'] as String?, // 氏名
-            // 修正点: 'birthday'はFirestoreにStringで保存されているため、DateTime.tryParseで変換
-            'userDateOfBirth':
-                userData['birthday'] != null
-                    ? DateTime.tryParse(userData['birthday'] as String)
-                    : null, // 生年月日
-            'userHome': userData['address'] as String?, // 住所
-            'userGender': userData['gender'] as String?, // 性別
-            'userTelNum': userData['phone'] as String?, // 電話番号
-            // 問診票データ（Firestoreに保存済みのものがあれば）
-            'selectedOnsetDay':
-                userData['onsetDay'] != null
-                    ? DateTime.tryParse(userData['onsetDay'] as String)
-                    : null, // 発症日
-            'symptom': userData['symptom'] as String?, // 症状
-            'affectedArea': userData['affectedArea'] as String?, // 患部
-            'sufferLevel': userData['sufferLevel'] as String?, // 程度
-            'cause': userData['cause'] as String?, // 原因
-            'otherInformation':
-                userData['otherInformation'] as String?, // その他情報
-            // ... 他の問診票項目もここに追加 ...
-          };
-
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            '/Menupage',
-            arguments: initialQuestionnaireData,
-          );
-        } else {
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(
-            context,
-            '/PersonalInformationPage',
-            arguments: {
-              'isNewUser': true,
-            }, // PersonalInformationPageで新規ユーザーであることを示す
-          );
-
-          // ユーザーにデータがないことをSnackBarで通知
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('ユーザーデータがありません。個人情報を登録してください。')),
-          );
-        }
+        await _handleUserLoginSuccess(user); // 共通処理を呼び出し
       } else {
         setState(() {
           errorMessage = 'ユーザー情報が取得できませんでした';
         });
       }
     } on FirebaseAuthException catch (e) {
-      // Firebase認証に関するエラーをキャッチ
       setState(() {
-        errorMessage = e.message ?? 'ログインに失敗しました'; // エラーメッセージを表示
+        errorMessage = _getLocalizedAuthError(
+          e.code,
+          AppLocalizations.of(context)!,
+        );
       });
+      print('Firebase Auth Error (Email): ${e.code} - ${e.message}');
     } catch (e) {
-      // その他の予期せぬエラーをキャッチ
       setState(() {
-        errorMessage = '予期せぬエラーが発生しました: ${e.toString()}'; // エラーメッセージを表示
+        errorMessage = '予期せぬエラーが発生しました: ${e.toString()}';
       });
+      print('Unexpected Error (Email): ${e.toString()}');
     } finally {
       setState(() {
-        isLoading = false; // ローディング終了
+        isLoading = false;
       });
     }
   }
 
   @override
   void dispose() {
-    // TextEditingControllerを破棄してリソースを解放
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -267,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 246, 250),
+      backgroundColor: const Color.fromARGB(255, 218, 246, 250), // 薄いブルー系背景
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -279,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: GoogleFonts.montserrat(
                   fontSize: 64,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1565C0),
+                  color: const Color(0xFF1565C0),
                 ),
               ),
               const SizedBox(height: 40),
@@ -295,6 +282,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
+                keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 20),
 
@@ -343,9 +331,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16),
 
+              // パスワードリセット誘導
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/PasswordResetPage');
+                  context.push('/PasswordResetPage'); // GoRouter 形式に修正
                 },
                 child: Text(loc.forgetPassword),
               ),
@@ -366,7 +355,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(loc.dontHaveAccount),
                   TextButton.icon(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/RegisterPage');
+                      context.push('/RegisterPage'); // GoRouter 形式に修正
                     },
                     icon: const Icon(Icons.person_add_alt_1_outlined),
                     label: Text(loc.createNewAccount),

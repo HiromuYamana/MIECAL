@@ -122,7 +122,6 @@ class MenuPage extends StatelessWidget {
             },
             child: const Text('利用規約を見る'),
           ),
-
         ],
       ),
     );

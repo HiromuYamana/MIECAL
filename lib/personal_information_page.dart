@@ -38,7 +38,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
-  // 修正点: _birthdayController を一つに戻す
   final _birthdayController = TextEditingController(); // YYYY-MM-DD 形式の文字列を保持
   final _phoneController = TextEditingController();
   final _allergyController = TextEditingController();
@@ -58,7 +57,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
   int? _calculateAge(String dateString) {
     try {
-      final birthDate = DateTime.parse(dateString); // 文字列からDateTimeに変換
+      final birthDate = DateTime.parse(dateString);
       final today = DateTime.now();
       int calculatedAge = today.year - birthDate.year;
       if (today.month < birthDate.month ||
@@ -75,6 +74,13 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     setState(() {
       try {
         if (_selectedYear != 0 && _selectedMonth != 0 && _selectedDay != 0) {
+          // 月の日数を考慮して、選択された日がその月の最大日数を超えないように調整
+          int maxDayInMonth =
+              DateTime(_selectedYear, _selectedMonth + 1, 0).day;
+          if (_selectedDay > maxDayInMonth) {
+            _selectedDay = maxDayInMonth;
+          }
+
           String fullDate =
               '$_selectedYear-${_selectedMonth.toString().padLeft(2, '0')}-'
               '${_selectedDay.toString().padLeft(2, '0')}';
@@ -103,8 +109,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           // パース失敗時は現在の年月日を使用
         }
       }
-      // 初期年齢の計算
-      _updateAgeFromSelectors();
+      _updateAgeFromSelectors(); // 初期年齢の計算
     });
   }
 
@@ -130,7 +135,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         gender = data['gender'];
         hadSurgery = data['surgery'] ?? false;
 
-        // 年齢自動計算
         String? birthdayString = data['birthday'];
         if (birthdayString != null && birthdayString.isNotEmpty) {
           try {
@@ -138,19 +142,30 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
             _selectedYear = parsedDate.year;
             _selectedMonth = parsedDate.month;
             _selectedDay = parsedDate.day;
-            age = _calculateAge(birthdayString); // 新しい年齢計算ロジックを呼び出し
-          } catch (_) {
-            //errorMessage = '読み込みエラー: $e';
+            age = _calculateAge(birthdayString); // 年齢計算
+          } catch (e) {
+            errorMessage = '読み込みエラー: ${e.toString()}'; // エラーメッセージにtoStringを追加
           }
         }
       }
     } catch (e) {
-      errorMessage = '読み込みエラー: $e';
+      errorMessage = '読み込みエラー: ${e.toString()}';
     } finally {
       setState(() {
         isLoading = false;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _addressController.dispose();
+    _birthdayController.dispose(); // _birthdayController は利用されているため、破棄を維持
+    _phoneController.dispose();
+    _allergyController.dispose();
+    _surgeryController.dispose();
+    super.dispose();
   }
 
   Future<void> saveUserData() async {
@@ -184,6 +199,10 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           isLoading = false;
           return;
         }
+      } else {
+        // 全て未選択の場合、空文字列を保存し、parsedBirthday は null
+        birthdayString = '';
+        parsedBirthday = null;
       }
 
       // 年齢の再計算 (保存時)
@@ -223,6 +242,10 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         isLoading = false;
       });
 
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('保存しました')));
+
       // MenuPageへ縦スライドで遷移し、問診票データもリレー
       final String? currentUserName = _nameController.text.trim();
       final DateTime? currentUserDateOfBirth = parsedBirthday;
@@ -255,17 +278,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         isLoading = false;
       });
     }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _addressController.dispose();
-    //_birthdayController.dispose(); // 修正点: 破棄するコントローラを一つに戻す
-    _phoneController.dispose();
-    _allergyController.dispose();
-    _surgeryController.dispose();
-    super.dispose();
   }
 
   @override
@@ -307,6 +319,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                       labelText: '住所',
                     ),
 
+                    // 生年月日入力を NumberPicker を使ったセレクターに
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Row(
@@ -381,7 +394,17 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                                 NumberPicker(
                                   value: _selectedDay,
                                   minValue: 1,
-                                  maxValue: 31, // 月による日数の自動調整は後ほど
+                                  // 修正点: 月によって日数を動的に変更
+                                  // _selectedMonth が 0 の場合のエラーを避けるために null チェックを追加
+                                  maxValue:
+                                      (_selectedYear != 0 &&
+                                              _selectedMonth != 0)
+                                          ? DateTime(
+                                            _selectedYear,
+                                            _selectedMonth + 1,
+                                            0,
+                                          ).day
+                                          : 31, // 無効な場合はデフォルト31日
                                   step: 1,
                                   itemHeight: 30,
                                   axis: Axis.vertical,
@@ -451,8 +474,9 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                         const Icon(Icons.local_hospital),
                         const SizedBox(width: 10),
                         const Text('手術歴'),
-                        const Spacer(),
+                        const Spacer(), // Spacer を使用して Switch を右に寄せる
                         Switch(
+                          // SwitchをRowのchildrenとして含む
                           value: hadSurgery,
                           onChanged: (val) => setState(() => hadSurgery = val),
                         ),

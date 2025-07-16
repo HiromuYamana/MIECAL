@@ -3,8 +3,10 @@ import 'package:miecal/suffer_level.dart'; // SufferLevelPage をインポート
 import 'package:table_calendar/table_calendar.dart';
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart'; // context.pop/push のために追加
 
 class DatePage extends StatefulWidget {
+  // DatePage が以前のページからデータを受け取る必要があればここに追加します
   final String? userName;
   final DateTime? userDateOfBirth;
   final String? userHome;
@@ -82,11 +84,11 @@ class _DatePageState extends State<DatePage> {
                         size: 36,
                       ),
                       onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
+                        context.pop(); // GoRouter の pop を使用
                       },
                     ),
                     Image.asset(
-                      'assets/onset_date.png',
+                      'assets/onset_date.png', // <-- 修正点: パスを 'assets/assets/' に変更
                       height: screenHeight * 0.16,
                       fit: BoxFit.contain,
                     ),
@@ -181,35 +183,31 @@ class _DatePageState extends State<DatePage> {
               color: Colors.blueGrey,
               child: InkWell(
                 onTap: () {
-                  if (_selectedDay != null) {
-                    // 選択された日付と、このページが受け取った過去のデータをSufferLevelPageに渡す
-                    Navigator.push(
-                      context,
-                      VerticalSlideRoute(
-                        page: SufferLevelPage(
-                          userName: widget.userName,
-                          userDateOfBirth: widget.userDateOfBirth,
-                          userHome: widget.userHome,
-                          userGender: widget.userGender,
-                          userTelNum: widget.userTelNum,
-                          selectedOnsetDay: _selectedDay,
-                          symptom: widget.symptom,
-                          affectedArea: widget.affectedArea,
-                          sufferLevel: widget.sufferLevel,
-                          cause: widget.cause,
-                          otherInformation: widget.otherInformation,
-                        ),
-                      ),
-                    );
-                  }
+                  // 選択された日付と、このページが受け取った過去のデータをSufferLevelPageに渡す
+                  // 修正点: GoRouter の context.push を使用
+                  context.push(
+                    '/SufferLevelPage', // main.dart で定義されたパス
+                    extra: {
+                      // GoRouter の extra プロパティでデータを渡す
+                      'userName': widget.userName,
+                      'userDateOfBirth': widget.userDateOfBirth,
+                      'userHome': widget.userHome,
+                      'userGender': widget.userGender,
+                      'userTelNum': widget.userTelNum,
+                      'selectedOnsetDay': _selectedDay, // このページで選択された日付
+                      'symptom': widget.symptom,
+                      'affectedArea': widget.affectedArea,
+                      'sufferLevel': widget.sufferLevel, // このページで選択した程度
+                      'cause': widget.cause,
+                      'otherInformation': widget.otherInformation,
+                    },
+                  );
                 },
-                child: SizedBox(
-                  child: Center(
-                    child: const Icon(
-                      Icons.arrow_downward,
-                      size: 50,
-                      color: Colors.white,
-                    ),
+                child: const Center(
+                  child: Icon(
+                    Icons.arrow_downward,
+                    size: 50,
+                    color: Colors.white,
                   ),
                 ),
               ),

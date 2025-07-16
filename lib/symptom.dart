@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/affected_area.dart'; // AffectedAreaPage の定義があるファイル
-import 'package:miecal/vertical_slide_page.dart'; // VerticalSlideRoute の定義があるファイル
+import 'package:miecal/vertical_slide_page.dart'; // VerticalSlideRoute は GoRouter への移行で不要になる可能性あり
+import 'package:go_router/go_router.dart'; // <-- 修正点: GoRouter をインポート
 
 class SymptomPage extends StatefulWidget {
   final String? userName;
@@ -9,7 +10,7 @@ class SymptomPage extends StatefulWidget {
   final String? userGender;
   final String? userTelNum;
   final DateTime? selectedOnsetDay;
-  final String? symptom;
+  final String? symptom; // このSymptomPageで選択される症状なので、ここはnull許容型
   final String? affectedArea;
   final String? sufferLevel;
   final String? cause;
@@ -35,7 +36,7 @@ class SymptomPage extends StatefulWidget {
 }
 
 class _SymptomPageState extends State<SymptomPage> {
-  // 画像のパスと対応する日本語名をペアで保持するリスト
+  // 修正点: 画像のパスを 'assets/assets/images/' で始めるように変更
   final List<Map<String, String>> symptomItems = const [
     {'path': 'assets/images/bienn.png', 'name': '鼻炎'},
     {'path': 'assets/images/fukutuu.png', 'name': '腹痛'},
@@ -45,7 +46,6 @@ class _SymptomPageState extends State<SymptomPage> {
     {'path': 'assets/images/seki.png', 'name': '咳'},
     {'path': 'assets/images/youtuu.png', 'name': '腰痛'},
 
-    // 以下はダミー画像と仮定し、対応する日本語名を追加
     {'path': 'assets/images/metabo.png', 'name': 'だるさ'},
     {'path': 'assets/images/metabo.png', 'name': '熱'},
     {'path': 'assets/images/metabo.png', 'name': 'のどの痛み'},
@@ -65,7 +65,6 @@ class _SymptomPageState extends State<SymptomPage> {
   @override
   void initState() {
     super.initState();
-    // symptomItems の数に合わせて、全て未選択 (false) で初期化
     isSelected = List.filled(symptomItems.length, false);
   }
 
@@ -87,50 +86,66 @@ class _SymptomPageState extends State<SymptomPage> {
     return Scaffold(
       body: Column(
         children: [
+          // 修正点: 上部ヘッダー部分を Material + Column に再構築
           Expanded(
-            flex: 2,
+            flex: 2, // flex 値は必要に応じて調整
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              //padding: EdgeInsets.only(top: topPadding),
-              child: InkWell(
-                onTap:(){
-                  Navigator.pop(context);
-                },
-                           
-                child: SizedBox(
-                  //mainAxisSize: MainAxisSize.min,
-                  //children: [
-                  child: Center(
-                    
-                      child: const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 36,
+              child: Stack(
+                // IconButton を左上、Text を中央に配置するため Stack を使用
+                children: [
+                  Padding(
+                    // 安全領域のパディング
+                    padding: EdgeInsets.only(top: topPadding, left: 8.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_upward,
+                          color: Colors.white,
+                          size: 36,
+                        ),
+                        onPressed: () {
+                          context.pop(); // GoRouter の pop を使用
+                        },
                       ),
-                    ),                 
-                ),
+                    ),
+                  ),
+                  Center(
+                    // タイトルを中央に
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          '症状選択',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        if (widget.userName != null && widget.userName != '未入力')
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              'ようこそ、${widget.userName}さん！',
+                              style: const TextStyle(
+                                color: Colors.black54,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
           Expanded(
-            flex: 1,
-            child:Container( 
-              color: const Color.fromARGB(255, 207, 227, 230),
-              child:Center(
-              //color: const Color.fromARGB(255, 207, 227, 230),
-              child:const Text(
-                      '症状選択',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-            ),)
-          ),
-          ),
-
-          Expanded(
-            flex: 15,
+            flex: 15, // 比率調整
             child: Container(
               color: const Color.fromARGB(255, 218, 246, 250), // グリッドの背景色
               child: GridView.builder(
@@ -153,8 +168,8 @@ class _SymptomPageState extends State<SymptomPage> {
                       children: [
                         Container(
                           margin: const EdgeInsets.all(8), // 画像コンテナの余白
-                          // width, heightはGridViewが自動調整するため削除
-                          width: 1050,
+                          // 修正点: width, height を削除
+                          // width: 1050,
                           // height: 1050,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -178,7 +193,13 @@ class _SymptomPageState extends State<SymptomPage> {
                         if (isSelected[index])
                           Container(
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 252, 166, 7,).withValues(alpha: 0.3), 
+                              // 修正点: .withValues(alpha: 0.3) を .withOpacity(0.3) に変更
+                              color: const Color.fromARGB(
+                                255,
+                                252,
+                                166,
+                                7,
+                              ).withOpacity(0.3), // 半透明のオーバーレイ
                               borderRadius: BorderRadius.circular(8), // 角丸
                             ),
                           ),
@@ -213,34 +234,38 @@ class _SymptomPageState extends State<SymptomPage> {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 2, // 比率調整
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(
                 onTap: () {
-                  final String selectedSymptom = _getSelectedSymptomSummary();
-                  Navigator.push(
-                    context,
-                    VerticalSlideRoute(
-                      page: AffectedAreaPage(
-                        userName: widget.userName,
-                        userDateOfBirth: widget.userDateOfBirth,
-                        userHome: widget.userHome,
-                        userGender: widget.userGender,
-                        userTelNum: widget.userTelNum,
-                        selectedOnsetDay: widget.selectedOnsetDay,
-                        symptom: selectedSymptom,
-                        affectedArea: widget.affectedArea,
-                        sufferLevel: widget.sufferLevel,
-                        cause: widget.cause,
-                        otherInformation: widget.otherInformation,
-                      ),
-                    ),
+                  final String selectedSymptom =
+                      _getSelectedSymptomSummary(); // 選択された症状を取得
+
+                  // Nextボタンが押されたら、これまでのデータとこのページで選択した症状を
+                  // AffectedAreaPageへ渡す
+                  // 修正点: GoRouter の context.push を使用
+                  context.push(
+                    '/AffectedAreaPage', // main.dart で定義されたパス
+                    extra: {
+                      // GoRouter の extra プロパティでデータを渡す
+                      'userName': widget.userName,
+                      'userDateOfBirth': widget.userDateOfBirth,
+                      'userHome': widget.userHome,
+                      'userGender': widget.userGender,
+                      'userTelNum': widget.userTelNum,
+                      'selectedOnsetDay': widget.selectedOnsetDay,
+                      'symptom': selectedSymptom, // このページで選択した症状
+                      'affectedArea': widget.affectedArea,
+                      'sufferLevel': widget.sufferLevel,
+                      'cause': widget.cause,
+                      'otherInformation': widget.otherInformation,
+                    },
                   );
                 },
-                child: SizedBox.expand(
+                child: const SizedBox.expand(
                   child: Center(
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_downward,
                       size: 50,
                       color: Colors.white,

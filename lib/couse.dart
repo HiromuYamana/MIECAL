@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/other_information.dart';
 import 'package:miecal/vertical_slide_page.dart';
+import 'package:go_router/go_router.dart'; // context.pop/push のために追加
 
 class CousePage extends StatefulWidget {
   final String? userName;
@@ -35,8 +36,6 @@ class CousePage extends StatefulWidget {
 }
 
 class _CousePageState extends State<CousePage> {
-  // 画像のパスと対応する日本語名をペアで保持するリスト
-  // Mapのキーが画像パス、値が日本語名
   final List<Map<String, String>> couseItems = const [
     {'path': 'assets/images/ziko.png', 'name': '事故'},
     {'path': 'assets/images/tennraku.png', 'name': '転落'},
@@ -46,22 +45,19 @@ class _CousePageState extends State<CousePage> {
     // 他の原因があればここに追加
   ];
 
-  // 選択状態
   late List<bool> isSelected;
 
   @override
   void initState() {
     super.initState();
-    // couseItems の数に合わせて、全て未選択 (false) で初期化
     isSelected = List.filled(couseItems.length, false);
   }
 
-  // 選択された原因を日本語名でまとめるヘルパー関数
   String _getSelectedCauseSummary() {
     List<String> selectedCauseNames = [];
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
-        selectedCauseNames.add(couseItems[i]['name']!); // 日本語名を取得
+        selectedCauseNames.add(couseItems[i]['name']!);
       }
     }
     return selectedCauseNames.isEmpty ? '未選択' : selectedCauseNames.join(', ');
@@ -69,6 +65,8 @@ class _CousePageState extends State<CousePage> {
 
   @override
   Widget build(BuildContext context) {
+    // final double topPadding = MediaQuery.of(context).padding.top; // 使われていないので削除
+
     return Scaffold(
       body: Column(
         children: [
@@ -78,27 +76,23 @@ class _CousePageState extends State<CousePage> {
               color: const Color.fromARGB(255, 207, 227, 230),
               child: InkWell(
                 onTap: () {
-                  Navigator.pop(context);
+                  context.pop(); // GoRouter の pop を使用
                 },
-                //padding: EdgeInsets.only(top: topPadding),
-                child: SizedBox(
+                child: const SizedBox.expand(
+                  // SizedBox.expand で InkWell のタップ領域を広げる
                   child: Center(
-                    //mainAxisSize: MainAxisSize.min,
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_upward,
                       color: Colors.white,
                       size: 36,
                     ),
                   ),
-
-                  //const Text('原因', style: TextStyle(color: Colors.black)),
                 ),
               ),
             ),
           ),
-
           Expanded(
-            flex: 15,
+            flex: 15, // 比率調整
             child: Container(
               color: const Color.fromARGB(255, 218, 246, 250),
               child: GridView.builder(
@@ -109,7 +103,7 @@ class _CousePageState extends State<CousePage> {
                   mainAxisSpacing: 10,
                   childAspectRatio: 1,
                 ),
-                itemCount: couseItems.length, // couseItemsの数を使用
+                itemCount: couseItems.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
@@ -121,8 +115,8 @@ class _CousePageState extends State<CousePage> {
                       children: [
                         Container(
                           margin: const EdgeInsets.all(8),
-                          // width, heightはGridViewが自動調整するため削除または調整
-                          width: 1050,
+                          // 修正点: width, height を削除 (GridView が自動調整)
+                          // width: 1050,
                           // height: 1050,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -145,35 +139,35 @@ class _CousePageState extends State<CousePage> {
                         if (isSelected[index])
                           Container(
                             decoration: BoxDecoration(
+                              // 修正点: .withValues(alpha: 0.3) を .withOpacity(0.3) に変更
                               color: const Color.fromARGB(
                                 255,
                                 252,
                                 166,
                                 7,
-                              ).withValues(alpha: 0.3),
+                              ).withOpacity(0.3),
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                        // 画像の下に日本語名をテキストで表示
                         Positioned(
                           bottom: 10,
                           left: 0,
                           right: 0,
                           child: Container(
-                            color: Colors.black54, // テキストの背景を半透明にする
+                            color: Colors.black54,
                             padding: const EdgeInsets.symmetric(
                               vertical: 4,
                               horizontal: 8,
                             ),
                             child: Text(
-                              couseItems[index]['name']!, // 日本語名を表示
+                              couseItems[index]['name']!,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
-                              overflow: TextOverflow.ellipsis, // 長すぎる場合は省略
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
@@ -185,36 +179,36 @@ class _CousePageState extends State<CousePage> {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 2, // 比率調整
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(
                 onTap: () {
-                  final String selectedCause =
-                      _getSelectedCauseSummary(); // 日本語名で原因を取得
+                  final String selectedCause = _getSelectedCauseSummary();
 
-                  Navigator.push(
-                    context,
-                    VerticalSlideRoute(
-                      page: OtherInformationPage(
-                        userName: widget.userName,
-                        userDateOfBirth: widget.userDateOfBirth,
-                        userHome: widget.userHome,
-                        userGender: widget.userGender,
-                        userTelNum: widget.userTelNum,
-                        selectedOnsetDay: widget.selectedOnsetDay,
-                        symptom: widget.symptom,
-                        affectedArea: widget.affectedArea,
-                        sufferLevel: widget.sufferLevel,
-                        cause: selectedCause,
-                        otherInformation: widget.otherInformation,
-                      ),
-                    ),
+                  // 修正点: GoRouter の context.push を使用
+                  context.push(
+                    '/OtherInformationPage', // main.dart で定義されたパス
+                    extra: {
+                      // GoRouter の extra プロパティでデータを渡す
+                      'userName': widget.userName,
+                      'userDateOfBirth': widget.userDateOfBirth,
+                      'userHome': widget.userHome,
+                      'userGender': widget.userGender,
+                      'userTelNum': widget.userTelNum,
+                      'selectedOnsetDay': widget.selectedOnsetDay,
+                      'symptom': widget.symptom,
+                      'affectedArea': widget.affectedArea,
+                      'sufferLevel': widget.sufferLevel,
+                      'cause': selectedCause, // このページで選択した原因
+                      'otherInformation': widget.otherInformation, // リレー
+                    },
                   );
                 },
-                child: SizedBox(
+                child: const SizedBox.expand(
+                  // SizedBox.expand を残し、Center を子にする
                   child: Center(
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_downward,
                       size: 50,
                       color: Colors.white,

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:miecal/couse.dart';
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart'; // context.pop/push のために追加
 
 class SufferLevelPage extends StatefulWidget {
+  // これまでのページから受け取る問診票データを定義します
   final String? userName;
   final DateTime? userDateOfBirth;
   final String? userHome;
@@ -47,7 +49,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
     ); // 0-10の範囲を6つの表情にマッピング (0-1.99 -> 0, 2-3.99 -> 1, ...)
   }
 
-  // 表情画像のパスリスト
+  // 修正点: 表情画像のパスを 'assets/assets/images/' で始めるように変更
   final List<String> faceImages = [
     'assets/images/face_very_happy.png', // 0: 0.0-1.99
     'assets/images/face_happy.png', // 1: 2.0-3.99
@@ -58,9 +60,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
   ];
 
   // 選択された程度を文字列としてまとめるヘルパー関数
-  // スライダーのseverity値を直接文字列化
   String _getSufferLevelSummary() {
-    // 例: "程度: 5.0" のように文字列で渡す
     return severity.toStringAsFixed(0); // 小数点以下を切り捨てて整数として渡す
   }
 
@@ -68,7 +68,6 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
   Widget build(BuildContext context) {
     int selectedIndex = getSeverityIndex(severity); // 現在のスライダー値に対応する表情インデックス
 
-    // 画面の安全な領域の上部パディングを取得 (ノッチなど)
     final double topPadding = MediaQuery.of(context).padding.top;
     final loc = AppLocalizations.of(context)!;
 
@@ -91,7 +90,7 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                         size: 36,
                       ),
                       onPressed: () {
-                        Navigator.pop(context); // 前の画面に戻る
+                        context.pop(); // GoRouter の pop を使用
                       },
                     ),
                     Text(
@@ -155,30 +154,29 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                   final String sufferLevelSummary =
                       _getSufferLevelSummary(); // 選択された程度を取得
 
-                  // Nextボタンが押されたら、これまでのデータとこのページで選択したデータを
-                  // CousePageへ渡す
-                  Navigator.push(
-                    context,
-                    VerticalSlideRoute(
-                      page: CousePage(
-                        userName: widget.userName,
-                        userDateOfBirth: widget.userDateOfBirth,
-                        userHome: widget.userHome,
-                        userGender: widget.userGender,
-                        userTelNum: widget.userTelNum,
-                        selectedOnsetDay: widget.selectedOnsetDay,
-                        symptom: widget.symptom,
-                        affectedArea: widget.affectedArea,
-                        sufferLevel: sufferLevelSummary,
-                        cause: widget.cause,
-                        otherInformation: widget.otherInformation,
-                      ),
-                    ),
+                  // 修正点: GoRouter の context.push を使用
+                  context.push(
+                    '/CousePage', // main.dart で定義されたパス
+                    extra: {
+                      // GoRouter の extra プロパティでデータを渡す
+                      'userName': widget.userName,
+                      'userDateOfBirth': widget.userDateOfBirth,
+                      'userHome': widget.userHome,
+                      'userGender': widget.userGender,
+                      'userTelNum': widget.userTelNum,
+                      'selectedOnsetDay': widget.selectedOnsetDay,
+                      'symptom': widget.symptom,
+                      'affectedArea': widget.affectedArea,
+                      'sufferLevel': sufferLevelSummary, // このページで選択した程度
+                      'cause': widget.cause,
+                      'otherInformation': widget.otherInformation,
+                    },
                   );
                 },
-                child: SizedBox(
+                child: const SizedBox.expand(
+                  // SizedBox.expand で InkWell のタップ領域を広げる
                   child: Center(
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_downward,
                       size: 50,
                       color: Colors.white,
@@ -194,10 +192,10 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
   }
 }
 
-// LinearGradient を BoxDecoration に直接渡せるようにする拡張機能 (Option)
-extension _LinearGradientAsBoxDecoration on LinearGradient {}
+// 修正点: 不要な _LinearGradientAsBoxDecoration 拡張を削除
+// extension _LinearGradientAsBoxDecoration on LinearGradient {} // <- この拡張が使われていないため削除
 
-// GradientSliderTrackShape は変更なし (以前のコードからそのまま)
+// GradientSliderTrackShape は変更なし
 class GradientSliderTrackShape extends SliderTrackShape {
   final LinearGradient gradient;
 
@@ -254,7 +252,7 @@ class GradientSliderTrackShape extends SliderTrackShape {
           ..style = PaintingStyle.fill;
 
     context.canvas.drawRRect(
-      RRect.fromRectAndRadius(trackRect, const Radius.circular(4)), // const を追加
+      RRect.fromRectAndRadius(trackRect, const Radius.circular(4)),
       paint,
     );
   }

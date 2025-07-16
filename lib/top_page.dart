@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/login_page.dart';
+import 'package:miecal/other_information.dart';
 import 'package:miecal/vertical_slide_page.dart';
-import 'package:vibration/vibration.dart';       // 振動用
-
+import 'package:vibration/vibration.dart'; // 振動用
 
 class TopPage extends StatefulWidget {
   const TopPage({super.key});
@@ -32,16 +32,16 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
     _handAnimation = Tween<double>(begin: 0.0, end: 60.0).animate(
       CurvedAnimation(parent: _handController, curve: Curves.easeInOut),
     )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _rippleController.forward(from: 0.0);
-          setState(() {
-            showRipple = true;
-          });
-          _handController.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          _handController.forward();
-        }
-      });
+      if (status == AnimationStatus.completed) {
+        _rippleController.forward(from: 0.0);
+        setState(() {
+          showRipple = true;
+        });
+        _handController.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        _handController.forward();
+      }
+    });
 
     _handController.forward();
 
@@ -71,18 +71,16 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
   }
 
   void _goToLoginPage() async {
-    
+    // 振動する（デバイスが対応しているか確認）
+    if (await Vibration.hasVibrator() ?? false) {
+      Vibration.vibrate(duration: 100);
+    }
 
-  // 振動する（デバイスが対応しているか確認）
-  if (await Vibration.hasVibrator() ?? false) {
-    Vibration.vibrate(duration: 100);
+    // 画面遷移
+    Navigator.of(
+      context,
+    ).push(VerticalSlideRoute(page: const LoginScreen())); //デバック用に変えた
   }
-
-  // 画面遷移
-  Navigator.of(context).push(
-    VerticalSlideRoute(page: const LoginScreen()),
-  );
-}
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +97,7 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
                 gradient: RadialGradient(
                   center: Alignment.center,
                   radius: 0.5,
-                  colors: [
-                    Colors.blue,
-                    Color(0xFF80D6FF),
-                  ],
+                  colors: [Colors.blue, Color(0xFF80D6FF)],
                 ),
               ),
             ),
@@ -127,10 +122,7 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
                   child: child!,
                 );
               },
-              child: Image.asset(
-                'assets/タッチアイコン.png',
-                width: 100,
-              ),
+              child: Image.asset('assets/タッチアイコン.png', width: 100),
             ),
 
             // 波紋（手の上に移動）
@@ -140,13 +132,17 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
                 builder: (context, child) {
                   return Positioned(
                     bottom: 150, // 波紋を少し上に表示
-                    left: MediaQuery.of(context).size.width / 2 - _rippleAnimation.value / 2,
+                    left:
+                        MediaQuery.of(context).size.width / 2 -
+                        _rippleAnimation.value / 2,
                     child: Container(
                       width: _rippleAnimation.value,
                       height: _rippleAnimation.value,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 1.0 - _rippleAnimation.value / 100,),
+                        color: Colors.white.withValues(
+                          alpha: 1.0 - _rippleAnimation.value / 100,
+                        ),
                       ),
                     ),
                   );

@@ -1,8 +1,11 @@
+// lib/other_information.dart の全体をこれで置き換える
 import 'package:flutter/material.dart';
 import 'package:miecal/questionnaire.dart';
 import 'package:miecal/vertical_slide_page.dart';
+import 'package:go_router/go_router.dart'; // context.push のために必要
 
 class OtherInformationPage extends StatefulWidget {
+  // これまでのページから受け取る問診票データを定義します
   final String? userName;
   final DateTime? userDateOfBirth;
   final String? userHome;
@@ -13,7 +16,8 @@ class OtherInformationPage extends StatefulWidget {
   final String? affectedArea;
   final String? sufferLevel;
   final String? cause;
-  final String? otherInformation;
+  // 修正点: otherInformation フィールドの宣言を追加
+  final String? otherInformation; // <-- この行が必須です
 
   const OtherInformationPage({
     super.key,
@@ -27,12 +31,12 @@ class OtherInformationPage extends StatefulWidget {
     this.affectedArea,
     this.sufferLevel,
     this.cause,
-    this.otherInformation,
+    this.otherInformation, // <-- コンストラクタ引数にも追加
   });
 
   @override
   // ignore: library_private_types_in_public_api
-  _OtherInformationPageState createState() => _OtherInformationPageState();
+  State<OtherInformationPage> createState() => _OtherInformationPageState();
 }
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
@@ -40,22 +44,36 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
   List<int?> selectedInRow = [null, null, null, null]; // 4項目に対応
 
   final List<Map<String, String>> imagePaths = [
-    {'path': 'assets/sample_image1.png', 'name': '飲む'},
-    {'path': 'assets/sample_image2.png', 'name': '飲まない'},
-    {'path': 'assets/sample_image3.png', 'name': '吸う'},
-    {'path': 'assets/sample_image4.png', 'name': '吸わない'},
-    {'path': 'assets/sample_image5.png', 'name': 'あり'},
-    {'path': 'assets/sample_image6.png', 'name': 'なし'},
-    {'path': 'assets/sample_image7.png', 'name': 'はい'},
-    {'path': 'assets/sample_image8.png', 'name': 'いいえ'},
+    {'path': 'assets/images/sample_image1.png', 'name': '飲む'},
+    {'path': 'assets/images/sample_image2.png', 'name': '飲まない'},
+    {'path': 'assets/images/sample_image3.png', 'name': '吸う'},
+    {'path': 'assets/images/sample_image4.png', 'name': '吸わない'},
+    {'path': 'assets/images/sample_image5.png', 'name': 'あり'},
+    {'path': 'assets/images/sample_image6.png', 'name': 'なし'},
+    {'path': 'assets/images/sample_image7.png', 'name': 'はい'},
+    {'path': 'assets/images/sample_image8.png', 'name': 'いいえ'},
   ];
 
-  final List<String> labels = ['飲酒', '喫煙', 'お薬', '妊娠']; // 各行のラベル
+  final List<String> labels = ['飲酒', '喫煙', 'お薬', '妊娠']; // <- 妊娠中 に修正済みを想定
 
   @override
   void initState() {
     super.initState();
-    // ここで必要であれば、初期選択状態を復元することも可能
+    // 既存のotherInformationがあれば、selectedInRow を初期化するロジックをここに追加できる
+    if (widget.otherInformation != null && widget.otherInformation != '未選択') {
+      List<String> existingParts = widget.otherInformation!.split('; ');
+      for (int i = 0; i < labels.length; i++) {
+        String labelPrefix = '${labels[i]}: ';
+        for (int j = 0; j < existingParts.length; j++) {
+          if (existingParts[j].startsWith(labelPrefix)) {
+            String value = existingParts[j].substring(labelPrefix.length);
+            // value に基づいて colIndex を特定し selectedInRow[i] を設定
+            // 例: (value == '飲む' || value == 'はい' など) ? 0 : ((value == '飲まない' || value == 'いいえ') ? 1 : null);
+            break;
+          }
+        }
+      }
+    }
   }
 
   // 選択された情報を文字列としてまとめるヘルパー関数
@@ -63,23 +81,20 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
     List<String> selectedSummaryParts = [];
     for (int i = 0; i < selectedInRow.length; i++) {
       if (selectedInRow[i] != null) {
-        // 選択された場合
         int imageIndex = i * 2 + selectedInRow[i]!;
         String selectedOptionName = imagePaths[imageIndex]['name']!;
         selectedSummaryParts.add('${labels[i]}: $selectedOptionName');
       } else {
-        // 未選択の場合も情報として含める
         selectedSummaryParts.add('${labels[i]}: 未選択');
       }
     }
-    // 全ての行の情報を含めて結合
-    return selectedSummaryParts.join('; '); // 各項目をセミコロンとスペースで区切る
+    return selectedSummaryParts.join('; ');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 246, 250), // 背景色
+      backgroundColor: const Color.fromARGB(255, 218, 246, 250),
       body: Column(
         children: [
           Expanded(
@@ -95,7 +110,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                     size: 36,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop(); // GoRouter の pop を使用
                   },
                 ),
               ),
@@ -108,7 +123,6 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(4, (rowIndex) {
-                  // 4行に対応
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Row(
@@ -141,10 +155,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                                 ),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    fixedSize: const Size(
-                                      100,
-                                      100,
-                                    ), // ボタンの固定サイズ
+                                    fixedSize: const Size(100, 100),
                                     backgroundColor:
                                         isSelected
                                             ? const Color.fromARGB(
@@ -152,12 +163,10 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                                               225,
                                               171,
                                               85,
-                                            ) // 選択時
-                                            : Colors.grey[300], // 未選択時
+                                            )
+                                            : Colors.grey[300],
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        16,
-                                      ), // ボタンの角丸
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
                                   ),
                                   onPressed: () {
@@ -202,28 +211,28 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
               color: Colors.blueGrey,
               child: InkWell(
                 onTap: () {
+                  print(
+                    'OtherInformationPage: Next button tapped. Preparing to navigate.',
+                  );
                   final String otherInformationSummary =
                       _getOtherInformationSummary();
-
-                  // これまでのページから受け取ったデータと、このページで選択した情報をまとめて渡す
-                  Navigator.push(
-                    context,
-                    VerticalSlideRoute(
-                      page: QuestionnairePage(
-                        userName: widget.userName,
-                        userDateOfBirth: widget.userDateOfBirth,
-                        userHome: widget.userHome,
-                        userGender: widget.userGender,
-                        userTelNum: widget.userTelNum,
-                        selectedOnsetDay: widget.selectedOnsetDay,
-                        symptom: widget.symptom,
-                        affectedArea: widget.affectedArea,
-                        sufferLevel: widget.sufferLevel,
-                        cause: widget.cause,
-                        otherInformation: otherInformationSummary,
-                      ),
-                    ),
-                  );
+                  final Map<String, dynamic> dataToPass = {
+                    'userName': widget.userName,
+                    'userDateOfBirth': widget.userDateOfBirth,
+                    'userHome': widget.userHome,
+                    'userGender': widget.userGender,
+                    'userTelNum': widget.userTelNum,
+                    'selectedOnsetDay': widget.selectedOnsetDay,
+                    'symptom': widget.symptom,
+                    'affectedArea': widget.affectedArea,
+                    'sufferLevel': widget.sufferLevel,
+                    'cause': widget.cause,
+                    'otherInformation': otherInformationSummary,
+                  };
+                  print(
+                    'OtherInformationPage: Passing extra data: $dataToPass',
+                  ); // これを確認
+                  context.push('/QuestionnairePage', extra: dataToPass);
                 },
                 child: SizedBox(
                   child: Center(
