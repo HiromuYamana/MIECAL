@@ -112,7 +112,7 @@ class _SymptomPageState extends State<SymptomPage> {
                 child: SizedBox(
                   child: Center(
                     child: const Icon(
-                      Icons.arrow_upward,
+                      Icons.expand_less,
                       color: Colors.white,
                       size: 36,
                     ),
@@ -242,7 +242,7 @@ class _SymptomPageState extends State<SymptomPage> {
                 child: SizedBox.expand(
                   child: Center(
                     child: const Icon(
-                      Icons.arrow_downward,
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),
