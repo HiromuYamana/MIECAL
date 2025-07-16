@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:miecal/login_page.dart';
 import 'package:miecal/other_information.dart';
 import 'package:miecal/vertical_slide_page.dart';
-import 'package:vibration/vibration.dart'; // 振動用
+import 'package:vibration/vibration.dart';
+
 
 class TopPage extends StatefulWidget {
   const TopPage({super.key});
@@ -112,20 +113,7 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
               ),
             ),
 
-            // 手のアニメーション
-            AnimatedBuilder(
-              animation: _handAnimation,
-              builder: (context, child) {
-                return Positioned(
-                  bottom: 30 + _handAnimation.value, // 手を少し下へ
-                  left: MediaQuery.of(context).size.width / 2 - 50,
-                  child: child!,
-                );
-              },
-              child: Image.asset('assets/タッチアイコン.png', width: 100),
-            ),
-
-            // 波紋（手の上に移動）
+            // 波紋
             if (showRipple)
               AnimatedBuilder(
                 animation: _rippleAnimation,
@@ -148,6 +136,22 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
                   );
                 },
               ),
+            
+            // 手のアニメーション
+            AnimatedBuilder(
+              animation: _handAnimation,
+              builder: (context, child) {
+                return Positioned(
+                  bottom: 35 + _handAnimation.value, // 手を少し下へ
+                  left: MediaQuery.of(context).size.width / 2 - 50,
+                  child: child!,
+                );
+              },
+              child: Image.asset(
+                'assets/タッチアイコン.png',
+                width: 100,
+              ),
+            ),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrPage extends StatelessWidget {
@@ -7,6 +8,7 @@ class QrPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Center(
@@ -15,19 +17,21 @@ class QrPage extends StatelessWidget {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: Container(
+              child: Material(
                 color: const Color.fromARGB(255, 207, 227, 230),
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                child: Center(
-                  child: IconButton(
-                      icon: const Icon(
+                //padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: InkWell(
+                  onTap:(){
+                    Navigator.pop(context);
+                  },
+                  child: SizedBox(
+                    child:Center(
+                      child: const Icon(
                         Icons.arrow_upward,
                         color: Colors.white,
                         size: 36,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                     ) 
                     ),
                   ),
                 ),
@@ -47,8 +51,7 @@ class QrPage extends StatelessWidget {
                 child:Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:[
-                    Text('この画面を提示してください。', style: TextStyle(fontSize: 20)),
-                    Text('Please show doctor or nurse this screen.', style: TextStyle(fontSize: 20)),
+                    Text(loc.showQrcode, style: TextStyle(fontSize: 20)),
                     Image.asset(
                       'assets/show_screen.png',
                       height: screenHeight * 0.2,

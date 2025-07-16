@@ -18,10 +18,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileEdit => 'Profile';
 
   @override
-  String get eMail => 'e-mail';
+  String get email => 'Email';
 
   @override
-  String get passWord => 'pass word';
+  String get password => 'Password';
+
+  @override
+  String get confirmPassword => 'Password(confirm)';
+
+  @override
+  String get addPassword => 'Add password?';
+
+  @override
+  String get addEmailAndPassword => 'Your email and password have been successfully added.';
+
+  @override
+  String get googleLoginFailed => 'Google sign-in failed. ';
+
+  @override
+  String get registerFailed => 'Registration failed';
+
+  @override
+  String get unknownError => 'An expexted error has occurred.';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get linkFailed => 'Link failed';
+
+  @override
+  String accountExistsWithMethods(Object methods) {
+    return 'This email is already registered with: $methods. Please log in using one of them.';
+  }
+
+  @override
+  String get userDataNotFound => 'User data not found. Please register your personal infomartion.';
 
   @override
   String get authUserNotFound => 'User not found.';
@@ -30,13 +65,60 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authWrongPassword => 'Incorrect password.';
 
   @override
+  String get authShortPassword => 'Prease enter a password of six characters or more.';
+
+  @override
   String get authInvalidEmail => 'Invalid email format.';
 
   @override
   String get authUserDisabled => 'This account is disabled.';
 
   @override
-  String get authUnknownError => 'The email address to password is incorrect.';
+  String get authUnknownError => 'The email address or password is incorrect.';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get loginRequest => 'Please sign in.';
+
+  @override
+  String get loadingError => 'Loading Error';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get saveFailed => 'Saving failed';
+
+  @override
+  String get allergy => 'Allergy';
+
+  @override
+  String get surgicalHistory => 'Surgical history';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String ageLabel(Object age) {
+    return 'Age: $age';
+  }
 
   @override
   String get signIn => 'Sign in';
@@ -54,7 +136,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout => 'Logout';
 
   @override
+  String get questionnaireConfirmTitle => 'Confirm Questionnaire Details';
+
+  @override
+  String get basicInformation => 'Basic information';
+
+  @override
+  String get symptomsCauseDetails => 'Symptom / Cause Details';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get birthdate => 'Date of Birth';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get phone => 'Phone Number';
+
+  @override
+  String get onsetDate => 'Onset Date';
+
+  @override
+  String get symptom => 'Symptom';
+
+  @override
+  String get affectedArea => 'Affected Area';
+
+  @override
+  String get severity => 'Severity';
+
+  @override
+  String get cause => 'Cause';
+
+  @override
+  String get otherInfo => 'Other Information';
+
+  @override
+  String get notEntered => 'Not Entered';
+
+  @override
   String get notSelected => 'Not selected';
+
+  @override
+  String get createQrCode => 'Create QR Code';
+
+  @override
+  String get qrSaveSuccess => 'Questionnaire data saved successfully!';
+
+  @override
+  String get qrSaveFailed => 'Failed to save questionnaire data';
+
+  @override
+  String get notLoggedIn => 'Not logged in. Cannot save data.';
+
+  @override
+  String get detailsNotEntered => 'Details: Not entered';
 
   @override
   String get affectedAreaSelection => 'Affected Area Selection';
@@ -133,4 +275,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get choosingTheLevelOfPain => 'Choosing the level of pain';
+
+  @override
+  String get showQrcode => 'Please show doctor or nurse this screen.';
 }

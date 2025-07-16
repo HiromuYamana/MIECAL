@@ -124,72 +124,21 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
       final codec = await ui.instantiateImageCodec(buffer);
       final frame = await codec.getNextFrame();
 
-      setState(() {
-        _rawMaskImage = rawImage;
-        _maskImage = frame.image;
-      });
-    } catch (e) {
-      print("マスク画像のロードに失敗しました: $e");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('画像のロードに失敗しました。: ${e.toString()}')),
-        );
+    setState(() {
+      _rawMaskImage = rawImage;
+      _maskImage = frame.image;
+    });
+
+    for (int y = 0; y < _rawMaskImage!.height; y++) {
+      for (int x = 0; x < _rawMaskImage!.width; x++) {
+        final pixel = _rawMaskImage!.getPixel(x, y);
+        final color = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+        if (localizedColorToPart.containsKey(color)) {
+          _colorPixelCache
+              .putIfAbsent(color, () => [])
+              .add(Offset(x.toDouble(), y.toDouble()));
+        }
       }
-      rethrow; // エラーを上位に伝える
-    }
-  }
-
-  // 選択された色に基づいてハイライトオーバーレイ画像を非同期（Isolate）で生成
-  Future<void> _generateHighlightedImage() async {
-    if (_rawMaskImage == null) {
-      _imageGenerationCompleter?.completeError('rawMaskImage is null');
-      return;
-    }
-
-    if (_imageGenerationCompleter != null &&
-        !_imageGenerationCompleter!.isCompleted) {
-      print("画像生成中...新しいリクエストをスキップ");
-      return;
-    }
-
-    _imageGenerationCompleter = Completer<void>();
-
-    try {
-      final Uint8List? pngBytes = await compute(
-        _generateImageInIsolate, // Isolateで実行するトップレベル関数
-        {
-          'rawMaskImage': _rawMaskImage!,
-          'selectedColors':
-              _selectedColors.toList(), // SetはIsolateに直接渡せないためListに変換
-          'highlightColorARGB':
-              Colors.red.withOpacity(0.5).value, // ハイライト色 (ARGB int)
-        },
-      );
-
-      ui.Image? newHighlightImage;
-      if (pngBytes != null) {
-        final completer = Completer<ui.Image>();
-        ui.decodeImageFromList(
-          pngBytes,
-          (result) => completer.complete(result),
-        );
-        newHighlightImage = await completer.future;
-      }
-
-      if (mounted && newHighlightImage != null) {
-        setState(() {
-          _highlightedOverlayImage = newHighlightImage;
-        });
-      }
-      _imageGenerationCompleter!.complete();
-    } catch (e) {
-      print("ハイライト画像生成中にエラー: $e");
-      if (mounted) {
-        setState(() {
-          // _isLoadingData = false; // エラー時もフラグを解除 (このメソッドでは変更しない)
-        });
-      }
-      _imageGenerationCompleter!.completeError(e);
     }
   }
 
@@ -228,16 +177,12 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     if (x < 0 ||
         y < 0 ||
         x >= _rawMaskImage!.width ||
-        y >= _rawMaskImage!.height)
+        y >= _rawMaskImage!.height) {
       return;
+    }
 
     final pixel = _rawMaskImage!.getPixel(x, y);
-    final pixelColor = Color.fromARGB(
-      pixel.a.toInt(),
-      pixel.r.toInt(),
-      pixel.g.toInt(),
-      pixel.b.toInt(),
-    );
+    final pixelColor = Color.fromARGB(pixel.a.toInt(), pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
 
     if (_colorToPartMap.containsKey(pixelColor)) {
       setState(() {
@@ -286,11 +231,25 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // 背景色
+        appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white, // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           // 上部ヘッダー部分を Material + Column に再構築
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
               child: Column(
@@ -338,7 +297,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
             ),
           ),
           Expanded(
-            flex: 15,
+            flex: 12,
             child:
                 _maskImage == null ||
                         _isLoadingData // ロード中または画像がない場合はインジケーター
@@ -410,8 +369,8 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                 },
                 child: const SizedBox.expand(
                   child: Center(
-                    child: Icon(
-                      Icons.arrow_downward,
+                    child: const Icon(
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),

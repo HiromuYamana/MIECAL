@@ -20,21 +20,26 @@ import 'package:miecal/menu_page.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:miecal/user_input_model.dart';
 import 'package:provider/provider.dart';
-
-// dart:html は Web アプリなので通常不要
-// ignore: unused_import
-// import 'dart:html' as html;
-
-// uni_links はWebアプリでは不要なので削除
-// import 'package:uni_links/uni_links.dart';
-// import 'dart:async';
+import 'package:miecal/password_reset_page.dart';
+import 'package:miecal/terms_of_service_page.dart';
+import 'package:miecal/role_provider.dart';
+import 'package:miecal/admin_approval_page.dart';
+import 'package:miecal/doctor_application_page.dart';
+import 'package:miecal/qr_scanner_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => UserInputModel(),
+ runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserInputModel()),
+        ChangeNotifierProvider(create: (_) {
+          final p = RoleProvider();
+          p.listenAuth();                       // ← 自動で Auth 変化を監視したい場合
+          return p;
+        }),
+      ],
       child: const MyApp(),
     ),
   );

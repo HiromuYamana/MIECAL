@@ -1,16 +1,10 @@
-// lib/questionnaire.dart (全体を置き換えてください)
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-// ignore: avoid_web_libraries_in_flutter, deprecated_member_use, unused_import
-import 'dart:html' as html;
-import 'dart:convert'; // jsonEncode を使うために追加
 import 'package:firebase_auth/firebase_auth.dart'; // FirebaseAuth を使うために追加
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore を使うために追加
-
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/qr.dart';
-import 'package:miecal/qr_scanner_page.dart';
+import 'package:miecal/l10n/app_localizations.dart'; 
+import 'package:intl/intl.dart'; // 多言語日付フォーマット用
 
 class QuestionnairePage extends StatefulWidget {
   final bool isFromQrScanner;
@@ -158,115 +152,10 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       ).showSnackBar(const SnackBar(content: Text('問診票データを保存しました！')));
       return docRef.id;
     } catch (e) {
-      print('Firestore: SAVE FAILED (Unexpected Error): ${e.toString()}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('問診票データの保存に失敗しました: ${e.toString()}')),
       );
-      return null;
-    }
-  }
-
-  // lib/questionnaire.dart (抜粋)
-
-  // ... (_QuestionnairePageState クラス内) ...
-
-  // ドキュメントIDに基づいてFirestoreからデータをロードするメソッド (QRスキャン時用)
-  Future<void> _loadQuestionnaireDataById(String id) async {
-    print(
-      'QuestionnairePage: _loadQuestionnaireDataById START. ID: $id',
-    ); // <-- 呼び出し開始とIDを確認
-    setState(() {
-      _isLoadingData = true;
-      _loadError = null;
-    });
-    try {
-      // Firestore操作の直前に認証状態をログ出力 (重要)
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        print(
-          'QuestionnairePage: DEBUG - User is NOT logged in when trying to load data for ID: $id',
-        );
-      } else {
-        print(
-          'QuestionnairePage: DEBUG - User IS logged in (UID: ${user.uid}) when trying to load data for ID: $id',
-        );
-      }
-
-      final doc =
-          await FirebaseFirestore.instance
-              .collection('questionnaire_records')
-              .doc(id)
-              .get();
-
-      print(
-        'QuestionnairePage: Firestore document fetch complete. doc.exists: ${doc.exists}',
-      ); // <-- ドキュメントの存在を確認
-
-      if (doc.exists && doc.data() != null) {
-        final data = doc.data()!;
-        print(
-          'QuestionnairePage: Raw Firestore Data: $data',
-        ); // <-- 取得した生データ全体を確認
-
-        setState(() {
-          // ロードしたデータをState変数にセット (型キャストも問題ないか確認)
-          _displayUserName = data['userName'] as String?;
-          _displayUserDateOfBirth =
-              data['userDateOfBirth'] is String
-                  ? DateTime.tryParse(data['userDateOfBirth'] as String)
-                  : null;
-          _displayUserHome = data['userHome'] as String?;
-          _displayUserGender = data['userGender'] as String?;
-          _displayUserTelNum = data['userTelNum'] as String?;
-          _displaySelectedOnsetDay =
-              data['selectedOnsetDay'] is String
-                  ? DateTime.tryParse(data['selectedOnsetDay'] as String)
-                  : null;
-          _displaySymptom = data['symptom'] as String?;
-          _displayAffectedArea = data['affectedArea'] as String?;
-          _displaySufferLevel = data['sufferLevel'] as String?;
-          _displayCause = data['cause'] as String?;
-          _displayOtherInformation = data['otherInformation'] as String?;
-          _isLoadingData = false;
-          print(
-            'QuestionnairePage: Data set to State. isLoadingData = false.',
-          ); // ロード成功ログ
-        });
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('問診票データをロードしました。')));
-      } else {
-        setState(() {
-          _loadError = '指定された問診票データが見つかりません。';
-          _isLoadingData = false;
-        });
-        print(
-          'QuestionnairePage: Document not found for ID: $id. Or data is null.',
-        ); // <-- データ見つからないログ
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('指定された問診票データが見つかりません。')));
-      }
-    } on FirebaseException catch (e) {
-      setState(() {
-        _loadError = 'Firestoreエラー: ${e.code} - ${e.message}';
-        _isLoadingData = false;
-      });
-      print(
-        'QuestionnairePage: Firestore ERROR: ${e.code} - ${e.message}',
-      ); // <-- Firebaseエラー詳細ログ
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Firestoreロード失敗: ${e.message}')));
-    } catch (e) {
-      setState(() {
-        _loadError = '問診票データのロードに失敗しました: ${e.toString()}';
-        _isLoadingData = false;
-      });
-      print('QuestionnairePage: UNEXPECTED LOAD ERROR: $e'); // <-- 予期せぬエラーログ
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('問診票データのロードに失敗しました: ${e.toString()}')),
-      );
+      print('Firestore save error: $e');
     }
   }
 

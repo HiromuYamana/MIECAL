@@ -54,13 +54,14 @@ class _CousePageState extends State<CousePage> {
   }
 
   String _getSelectedCauseSummary() {
+    final loc = AppLocalizations.of(context)!;
     List<String> selectedCauseNames = [];
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
         selectedCauseNames.add(couseItems[i]['name']!);
       }
     }
-    return selectedCauseNames.isEmpty ? '未選択' : selectedCauseNames.join(', ');
+    return selectedCauseNames.isEmpty ? loc.notSelected: selectedCauseNames.join(', ');
   }
 
   @override
@@ -68,21 +69,34 @@ class _CousePageState extends State<CousePage> {
     // final double topPadding = MediaQuery.of(context).padding.top; // 使われていないので削除
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,        // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           Expanded(
-            flex: 3,
+            flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
               child: InkWell(
                 onTap: () {
                   context.pop(); // GoRouter の pop を使用
                 },
-                child: const SizedBox.expand(
-                  // SizedBox.expand で InkWell のタップ領域を広げる
+                child: SizedBox(
                   child: Center(
-                    child: Icon(
-                      Icons.arrow_upward,
+                    child: const Icon(
+                      Icons.expand_less,
                       color: Colors.white,
                       size: 36,
                     ),
@@ -92,9 +106,25 @@ class _CousePageState extends State<CousePage> {
             ),
           ),
           Expanded(
-            flex: 15, // 比率調整
+            flex:1,
+            child:Container(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Center(
+                child:Text(
+                  '原因',
+                  style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ) 
+            ),
+          ),
+          Expanded(
+            flex: 12,
             child: Container(
-              color: const Color.fromARGB(255, 218, 246, 250),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: GridView.builder(
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -208,8 +238,8 @@ class _CousePageState extends State<CousePage> {
                 child: const SizedBox.expand(
                   // SizedBox.expand を残し、Center を子にする
                   child: Center(
-                    child: Icon(
-                      Icons.arrow_downward,
+                    child: const Icon(
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),

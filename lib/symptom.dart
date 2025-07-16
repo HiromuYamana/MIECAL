@@ -46,8 +46,9 @@ class _SymptomPageState extends State<SymptomPage> {
     {'path': 'assets/images/seki.png', 'name': '咳'},
     {'path': 'assets/images/youtuu.png', 'name': '腰痛'},
 
-    {'path': 'assets/images/metabo.png', 'name': 'だるさ'},
-    {'path': 'assets/images/metabo.png', 'name': '熱'},
+    // 以下はダミー画像と仮定し、対応する日本語名を追加
+    {'path': 'assets/images/darusa.png', 'name': 'だるさ'},
+    {'path': 'assets/images/netu.png', 'name': '熱'},
     {'path': 'assets/images/metabo.png', 'name': 'のどの痛み'},
     {'path': 'assets/images/metabo.png', 'name': '吐き気'},
 
@@ -84,70 +85,55 @@ class _SymptomPageState extends State<SymptomPage> {
     final double topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,        // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           // 修正点: 上部ヘッダー部分を Material + Column に再構築
           Expanded(
-            flex: 2, // flex 値は必要に応じて調整
+            flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              child: Stack(
-                // IconButton を左上、Text を中央に配置するため Stack を使用
-                children: [
-                  Padding(
-                    // 安全領域のパディング
-                    padding: EdgeInsets.only(top: topPadding, left: 8.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_upward,
-                          color: Colors.white,
-                          size: 36,
-                        ),
-                        onPressed: () {
-                          context.pop(); // GoRouter の pop を使用
-                        },
-                      ),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: SizedBox(
+                  child: Center(
+                    child: const Icon(
+                      Icons.expand_less,
+                      color: Colors.white,
+                      size: 36,
                     ),
                   ),
-                  Center(
-                    // タイトルを中央に
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          '症状選択',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        if (widget.userName != null && widget.userName != '未入力')
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'ようこそ、${widget.userName}さん！',
-                              style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
           Expanded(
-            flex: 15, // 比率調整
+            flex: 1,
+            child:Container( 
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Center(
+                child: const Text('症状選択', style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+              )
+            ),
+          ),
+          Expanded(
+            flex: 12, // 比率調整
             child: Container(
-              color: const Color.fromARGB(255, 218, 246, 250), // グリッドの背景色
+              color: const Color.fromARGB(255, 255, 255, 255), // グリッドの背景色
               child: GridView.builder(
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -265,8 +251,8 @@ class _SymptomPageState extends State<SymptomPage> {
                 },
                 child: const SizedBox.expand(
                   child: Center(
-                    child: Icon(
-                      Icons.arrow_downward,
+                    child: const Icon(
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),

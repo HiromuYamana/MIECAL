@@ -79,13 +79,15 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
   // 選択された情報を文字列としてまとめるヘルパー関数
   String _getOtherInformationSummary() {
     List<String> selectedSummaryParts = [];
+    final loc = AppLocalizations.of(context)!;
     for (int i = 0; i < selectedInRow.length; i++) {
       if (selectedInRow[i] != null) {
         int imageIndex = i * 2 + selectedInRow[i]!;
         String selectedOptionName = imagePaths[imageIndex]['name']!;
         selectedSummaryParts.add('${labels[i]}: $selectedOptionName');
       } else {
-        selectedSummaryParts.add('${labels[i]}: 未選択');
+        // 未選択の場合も情報として含める
+        selectedSummaryParts.add('${labels[i]}:${loc.notSelected}');
       }
     }
     return selectedSummaryParts.join('; ');
@@ -94,30 +96,60 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 246, 250),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           Expanded(
             flex: 1,
-            child: Container(
+            child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_upward,
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: SizedBox(
+                  child:Center(
+                  child: const Icon(
+                    Icons.expand_less,
                     color: Colors.white,
                     size: 36,
                   ),
-                  onPressed: () {
-                    context.pop(); // GoRouter の pop を使用
-                  },
+                  )
                 ),
               ),
             ),
           ),
           Expanded(
-            flex: 8,
+            flex:1,
+            child:Container(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Center(
+                child:Text(
+                  'その他情報',
+                  style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22
+                  ),
+                ),
+              ) 
+            ),
+          ),
+
+          Expanded(
+            flex: 12,
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
@@ -131,7 +163,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: const Color.fromARGB(255, 120, 120, 120),
                             border: Border.all(color: Colors.blueAccent),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: const [
@@ -147,8 +179,9 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                               int index = rowIndex * 2 + colIndex;
                               bool isSelected =
                                   selectedInRow[rowIndex] == colIndex;
-                              if (index >= imagePaths.length)
+                              if (index >= imagePaths.length) {
                                 return const SizedBox.shrink();
+                              }
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 8,
@@ -163,8 +196,8 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                                               225,
                                               171,
                                               85,
-                                            )
-                                            : Colors.grey[300],
+                                            ) // 選択時
+                                            : const Color.fromARGB(255, 255, 255, 255), // 未選択時
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
@@ -206,7 +239,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(
@@ -237,7 +270,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                 child: SizedBox(
                   child: Center(
                     child: const Icon(
-                      Icons.arrow_downward,
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),

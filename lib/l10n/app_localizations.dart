@@ -113,17 +113,83 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get profileEdit;
 
-  /// No description provided for @eMail.
+  /// No description provided for @email.
   ///
   /// In en, this message translates to:
-  /// **'e-mail'**
-  String get eMail;
+  /// **'Email'**
+  String get email;
 
-  /// No description provided for @passWord.
+  /// No description provided for @password.
   ///
   /// In en, this message translates to:
-  /// **'pass word'**
-  String get passWord;
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password(confirm)'**
+  String get confirmPassword;
+
+  /// No description provided for @addPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Add password?'**
+  String get addPassword;
+
+  /// No description provided for @addEmailAndPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email and password have been successfully added.'**
+  String get addEmailAndPassword;
+
+  /// No description provided for @googleLoginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed. '**
+  String get googleLoginFailed;
+
+  /// No description provided for @registerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed'**
+  String get registerFailed;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An expexted error has occurred.'**
+  String get unknownError;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @linkFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Link failed'**
+  String get linkFailed;
+
+  /// No description provided for @accountExistsWithMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered with: {methods}. Please log in using one of them.'**
+  String accountExistsWithMethods(Object methods);
+
+  /// No description provided for @userDataNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'User data not found. Please register your personal infomartion.'**
+  String get userDataNotFound;
 
   /// No description provided for @authUserNotFound.
   ///
@@ -136,6 +202,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incorrect password.'**
   String get authWrongPassword;
+
+  /// No description provided for @authShortPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Prease enter a password of six characters or more.'**
+  String get authShortPassword;
 
   /// No description provided for @authInvalidEmail.
   ///
@@ -152,8 +224,92 @@ abstract class AppLocalizations {
   /// No description provided for @authUnknownError.
   ///
   /// In en, this message translates to:
-  /// **'The email address to password is incorrect.'**
+  /// **'The email address or password is incorrect.'**
   String get authUnknownError;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @loginRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in.'**
+  String get loginRequest;
+
+  /// No description provided for @loadingError.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading Error'**
+  String get loadingError;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @saveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving failed'**
+  String get saveFailed;
+
+  /// No description provided for @allergy.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergy'**
+  String get allergy;
+
+  /// No description provided for @surgicalHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Surgical history'**
+  String get surgicalHistory;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @ageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Age: {age}'**
+  String ageLabel(Object age);
 
   /// No description provided for @signIn.
   ///
@@ -185,11 +341,131 @@ abstract class AppLocalizations {
   /// **'Logout'**
   String get logout;
 
+  /// No description provided for @questionnaireConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Questionnaire Details'**
+  String get questionnaireConfirmTitle;
+
+  /// No description provided for @basicInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic information'**
+  String get basicInformation;
+
+  /// No description provided for @symptomsCauseDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom / Cause Details'**
+  String get symptomsCauseDetails;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @birthdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get birthdate;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phone;
+
+  /// No description provided for @onsetDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Onset Date'**
+  String get onsetDate;
+
+  /// No description provided for @symptom.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom'**
+  String get symptom;
+
+  /// No description provided for @affectedArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Affected Area'**
+  String get affectedArea;
+
+  /// No description provided for @severity.
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get severity;
+
+  /// No description provided for @cause.
+  ///
+  /// In en, this message translates to:
+  /// **'Cause'**
+  String get cause;
+
+  /// No description provided for @otherInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Information'**
+  String get otherInfo;
+
+  /// No description provided for @notEntered.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Entered'**
+  String get notEntered;
+
   /// No description provided for @notSelected.
   ///
   /// In en, this message translates to:
   /// **'Not selected'**
   String get notSelected;
+
+  /// No description provided for @createQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Create QR Code'**
+  String get createQrCode;
+
+  /// No description provided for @qrSaveSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Questionnaire data saved successfully!'**
+  String get qrSaveSuccess;
+
+  /// No description provided for @qrSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save questionnaire data'**
+  String get qrSaveFailed;
+
+  /// No description provided for @notLoggedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Not logged in. Cannot save data.'**
+  String get notLoggedIn;
+
+  /// No description provided for @detailsNotEntered.
+  ///
+  /// In en, this message translates to:
+  /// **'Details: Not entered'**
+  String get detailsNotEntered;
 
   /// No description provided for @affectedAreaSelection.
   ///
@@ -346,6 +622,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choosing the level of pain'**
   String get choosingTheLevelOfPain;
+
+  /// No description provided for @showQrcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please show doctor or nurse this screen.'**
+  String get showQrcode;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

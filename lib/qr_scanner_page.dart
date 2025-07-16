@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:miecal/questionnaire.dart'; // QuestionnairePage をインポート
 import 'package:miecal/vertical_slide_page.dart';
-import 'dart:async';
 import 'package:collection/collection.dart';
 
 class QrScannerPage extends StatefulWidget {

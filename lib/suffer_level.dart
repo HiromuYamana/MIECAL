@@ -72,77 +72,96 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
+        appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white, // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         children: [
           Expanded(
-            flex: 3, // 上部のヘッダー部分の割合
-            child: Container(
-              color: const Color.fromARGB(255, 218, 246, 250), // 背景色
-              padding: EdgeInsets.only(top: topPadding), // 上部パディング
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min, // 子要素のサイズに合わせる
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 36,
-                      ),
-                      onPressed: () {
-                        context.pop(); // GoRouter の pop を使用
-                      },
+            flex: 1,
+            child: Material(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              child:InkWell(
+                onTap:() {
+                  Navigator.pop(context); 
+                },
+              child: SizedBox(
+                  child: Center(
+                    child: const Icon(
+                      Icons.expand_less,
+                      color: Colors.white,
+                      size: 36,
                     ),
-                    Text(
-                      loc.choosingTheLevelOfPain,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ), // タイトル追加
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
           Expanded(
-            flex: 15,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  faceImages[selectedIndex], // スライダー値に応じて表情画像を表示
-                  width: 200,
-                  height: 200,
-                ),
-                const SizedBox(height: 30), // 画像とスライダーの間のスペース
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    trackHeight: 8.0, // トラックの高さ
-                    thumbShape: const RoundSliderThumbShape(
-                      enabledThumbRadius: 14.0, // 親指の半径
-                    ),
-                    trackShape: GradientSliderTrackShape(
-                      gradient: const LinearGradient(
-                        colors: [Colors.green, Colors.yellow, Colors.red],
+            flex:1,
+            child:Container(
+              color: const Color.fromARGB(255, 255, 255, 255), // 背景色
+              child:Center(
+                child: Text(
+                  loc.choosingTheLevelOfPain,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 22
+                  ),
+                )
+              )
+            ),
+          ),
+          Expanded(
+            flex: 12,
+            child:Container(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    faceImages[selectedIndex], // スライダー値に応じて表情画像を表示
+                    width: 200,
+                    height: 200,
+                  ),
+                  const SizedBox(height: 30), // 画像とスライダーの間のスペース
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      trackHeight: 12.0, // トラックの高さ
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 15.0, // 親指の半径
+                      ),
+                      trackShape: GradientSliderTrackShape(
+                        gradient: const LinearGradient(
+                          colors: [Colors.green, Colors.yellow, Colors.red],
+                        ),
                       ),
                     ),
+                    child: Slider(
+                      value: severity,
+                      min: 0,
+                      max: 10,
+                      divisions: 10,
+                      label: severity.toStringAsFixed(0),
+                      onChanged: (value) {
+                        setState(() {
+                          severity = value;
+                        });
+                      },
+                    ),
                   ),
-                  child: Slider(
-                    value: severity,
-                    min: 0,
-                    max: 10,
-                    divisions: 10,
-                    label: severity.toStringAsFixed(0),
-                    onChanged: (value) {
-                      setState(() {
-                        severity = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -176,8 +195,8 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
                 child: const SizedBox.expand(
                   // SizedBox.expand で InkWell のタップ領域を広げる
                   child: Center(
-                    child: Icon(
-                      Icons.arrow_downward,
+                    child: const Icon(
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),

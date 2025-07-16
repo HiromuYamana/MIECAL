@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:miecal/l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:miecal/l10n/app_localizations.dart';
+import 'package:provider/provider.dart';           // ★ 追加
+import 'package:miecal/role_provider.dart';        // ★ 追加
+import 'package:miecal/firestore_service.dart';
 // 以下はパスの解決のため必要に応じて追加または確認
 import 'package:go_router/go_router.dart';
 import 'package:miecal/menu_page.dart';
@@ -28,40 +31,20 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool _obscurePassword = true;
 
-  // 多言語化された認証エラーメッセージを取得するヘルパーメソッド
-  String _getLocalizedAuthError(String code, AppLocalizations loc) {
-    switch (code) {
-      case 'user-not-found':
-        return loc.authUserNotFound;
-      case 'wrong-password':
-        return loc.authWrongPassword;
-      case 'invalid-email':
-        return loc.authInvalidEmail;
-      case 'user-disabled':
-        return loc.authUserDisabled;
-      default:
-        return loc.authUnknownError;
-    }
-  }
-
   // 🔵 Googleログイン処理
   Future<void> signInWithGoogle() async {
+    final loc = AppLocalizations.of(context)!;
     setState(() {
       isLoading = true;
       errorMessage = '';
     });
 
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) {
-        setState(() {
-          isLoading = false;
-        });
-        return; // ユーザーがGoogleサインインをキャンセルした場合
-      }
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
+
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -70,87 +53,32 @@ class _LoginScreenState extends State<LoginScreen> {
       final userCredential = await _auth.signInWithCredential(credential);
       final user = userCredential.user;
 
-      if (user != null) {
-        // 🔵 まだパスワードプロバイダとリンクされていなければ追加
-        if (user.providerData.every((p) => p.providerId != 'password')) {
-          if (!mounted) return;
-          await showDialog(
-            context: context,
-            builder: (context) {
-              final emailCtrl = TextEditingController(text: user.email ?? '');
-              final passCtrl = TextEditingController();
-
-              return AlertDialog(
-                title: const Text('パスワードを追加しますか？'),
-                content: Column(
-                  mainAxisSize:
-                      MainAxisSize.min, // <-- 修正点: MainAxisSize.min に変更
-                  children: [
-                    TextField(
-                      controller: emailCtrl,
-                      decoration: const InputDecoration(labelText: 'メールアドレス'),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    TextField(
-                      controller: passCtrl,
-                      decoration: const InputDecoration(labelText: 'パスワード'),
-                      obscureText: true,
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () async {
-                      try {
-                        final email = emailCtrl.text.trim();
-                        final password = passCtrl.text.trim();
-
-                        final emailCred = EmailAuthProvider.credential(
-                          email: email,
-                          password: password,
-                        );
-                        await user.linkWithCredential(emailCred);
-                        if (!mounted) return;
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('メール+パスワードを追加しました')),
-                        );
-                      } on FirebaseAuthException catch (e) {
-                        if (!mounted) return;
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('リンク失敗: ${e.message}')),
-                        );
-                      }
-                    },
-                    child: const Text('追加'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('後で'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-
-        // 🔵 Firestore のデータ確認（共通ロジック化）
-        await _handleUserLoginSuccess(user); // 共通処理を呼び出し
+      if (user == null) {
+        setState(() {
+          errorMessage = '${loc.googleLoginFailed}: user == null';
+        });
+        return;                               // 以降の処理を中断
       }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = _getLocalizedAuthError(
-          e.code,
-          AppLocalizations.of(context)!,
-        );
-      });
-      print('Firebase Auth Error (Google): ${e.code} - ${e.message}');
+
+
+      await FirestoreService.instance.ensureUserDoc(user.uid, email: user.email! ?? '');
+
+
+      if (user == null) return;
+
+      // パスワード追加ダイアログ
+      if (user.providerData.every((p) => p.providerId != 'password')) {
+        await _showAddPasswordDialog(user, loc);
+      }
+
+      await _handleUserLogin(user, loc);
+
+      context.read<RoleProvider>().fetchRole(user.uid);
+
     } catch (e) {
       setState(() {
-        errorMessage = '予期せぬエラーが発生しました: ${e.toString()}';
+        errorMessage = '${loc.googleLoginFailed}: $e';
       });
-      print('Unexpected Error (Google): ${e.toString()}');
     } finally {
       setState(() {
         isLoading = false;
@@ -158,89 +86,137 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // 共通のユーザーログイン成功後の処理
-  Future<void> _handleUserLoginSuccess(User user) async {
-    final DocumentSnapshot userDoc =
-        await _firestore.collection('users').doc(user.uid).get();
+  // メールログイン
+Future<void> signIn() async {
+  final loc = AppLocalizations.of(context)!;
+  setState(() {
+    isLoading = true;
+    errorMessage = '';
+  });
+
+  try {
+    // ① メール & パスワードでログイン
+    final credential = await _auth.signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+
+    // ② User を取得し null チェック
+    final user = credential.user;
+    if (user == null) {
+      setState(() => errorMessage = loc.authUnknownError);
+      return;
+    }
+
+    // ③ users/{uid} が無ければ role: patient で作成
+    await FirestoreService.instance.ensureUserDoc(
+      user.uid,
+      email: user.email ?? '',
+    );
+
+    // ④ アプリ側のログイン後処理
+    await _handleUserLogin(user, loc);
+
+    // ⑤ RoleProvider を更新
+    context.read<RoleProvider>().fetchRole(user.uid);
+  } on FirebaseAuthException catch (e) {
+    setState(() => errorMessage = getLocalizedAuthError(e.code, loc));
+  } finally {
+    setState(() => isLoading = false);
+  }
+}
+
+
+  // Firestore情報取得
+  Future<void> _handleUserLogin(User user, AppLocalizations loc) async {
+    final userDoc = await _firestore.collection('users').doc(user.uid).get();
 
     if (userDoc.exists) {
-      final Map<String, dynamic> userData =
-          userDoc.data() as Map<String, dynamic>;
-
-      final Map<String, dynamic> initialQuestionnaireData = {
-        'userName': userData['name'] as String?,
-        'userDateOfBirth':
-            userData['birthday'] != null
-                ? DateTime.tryParse(userData['birthday'] as String)
-                : null,
-        'userHome': userData['address'] as String?,
-        'userGender': userData['gender'] as String?,
-        'userTelNum': userData['phone'] as String?,
-
-        'selectedOnsetDay':
-            userData['onsetDay'] != null
-                ? DateTime.tryParse(userData['onsetDay'] as String)
-                : null,
-        'symptom': userData['symptom'] as String?,
-        'affectedArea': userData['affectedArea'] as String?,
-        'sufferLevel': userData['sufferLevel'] as String?,
-        'cause': userData['cause'] as String?,
-        'otherInformation': userData['otherInformation'] as String?,
+      final data = userDoc.data()!;
+      final args = {
+        'userName': data['name'],
+        'userDateOfBirth': DateTime.tryParse(data['birthday'] ?? ''),
+        'userHome': data['address'],
+        'userGender': data['gender'],
+        'userTelNum': data['phone'],
+        'selectedOnsetDay': DateTime.tryParse(data['onsetDay'] ?? ''),
+        'symptom': data['symptom'],
+        'affectedArea': data['affectedArea'],
+        'sufferLevel': data['sufferLevel'],
+        'cause': data['cause'],
+        'otherInformation': data['otherInformation'],
       };
 
       if (!mounted) return;
-      // ログイン成功時にMenuPageへ遷移し、データを渡す (GoRouter 形式)
-      context.go('/Menupage', extra: initialQuestionnaireData);
+      Navigator.pushReplacementNamed(context, '/Menupage', arguments: args);
     } else {
       if (!mounted) return;
-      // PersonalInformationPageに強制遷移し、個人情報を入力・保存させる (GoRouter 形式)
-      context.go('/PersonalInformationPage', extra: {'isNewUser': true});
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('ユーザーデータがありません。個人情報を登録してください。')),
+      Navigator.pushReplacementNamed(
+        context,
+        '/PersonalInformationPage',
+        arguments: {'isNewUser': true},
       );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.userDataNotFound)));
     }
   }
 
-  Future<void> signIn() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
+  // パスワード追加ダイアログ
+  Future<void> _showAddPasswordDialog(User user, AppLocalizations loc) async {
+    final emailCtrl = TextEditingController(text: user.email ?? '');
+    final passCtrl = TextEditingController();
 
-    try {
-      final UserCredential userCredential = await _auth
-          .signInWithEmailAndPassword(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim(),
-          );
-
-      final User? user = userCredential.user;
-
-      if (user != null) {
-        await _handleUserLoginSuccess(user); // 共通処理を呼び出し
-      } else {
-        setState(() {
-          errorMessage = 'ユーザー情報が取得できませんでした';
-        });
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = _getLocalizedAuthError(
-          e.code,
-          AppLocalizations.of(context)!,
-        );
-      });
-      print('Firebase Auth Error (Email): ${e.code} - ${e.message}');
-    } catch (e) {
-      setState(() {
-        errorMessage = '予期せぬエラーが発生しました: ${e.toString()}';
-      });
-      print('Unexpected Error (Email): ${e.toString()}');
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    return showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(loc.addPassword),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: emailCtrl,
+                  decoration: InputDecoration(labelText: loc.email),
+                ),
+                TextField(
+                  controller: passCtrl,
+                  decoration: InputDecoration(labelText: loc.password),
+                  obscureText: true,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  try {
+                    final email = emailCtrl.text.trim();
+                    final password = passCtrl.text.trim();
+                    final cred = EmailAuthProvider.credential(
+                      email: email,
+                      password: password,
+                    );
+                    await user.linkWithCredential(cred);
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(loc.addEmailAndPassword)),
+                    );
+                  } catch (e) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('${loc.linkFailed}: $e')),
+                    );
+                  }
+                },
+                child: Text(loc.add),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(loc.later),
+              ),
+            ],
+          ),
+    );
   }
 
   @override
@@ -254,117 +230,171 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 246, 250), // 薄いブルー系背景
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white, // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'LOGIN',
-                style: GoogleFonts.montserrat(
-                  fontSize: 64,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1565C0),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 12,
+                  offset: Offset(0, 4),
                 ),
-              ),
-              const SizedBox(height: 40),
-
-              // メール入力
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: loc.eMail,
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 25),
+                Text(
+                  'LOGIN',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 20),
+                const SizedBox(height: 50),
 
-              // パスワード入力
-              TextField(
-                controller: passwordController,
-                obscureText: _obscurePassword,
-                decoration: InputDecoration(
-                  hintText: loc.passWord,
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                // メールアドレス入力
+                _buildTextField(
+                  emailController,
+                  loc.email,
+                  Icons.email_outlined,
+                ),
+                const SizedBox(height: 20),
+
+                // パスワード入力
+                _buildPasswordField(loc),
+                const SizedBox(height: 2),
+
+                // パスワードを忘れた方リンク
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed:
+                        () =>
+                            Navigator.pushNamed(context, '/PasswordResetPage'),
+                    child: Text('  ${loc.forgetPassword}'),
+                  ),
+                ),
+                const SizedBox(height: 4),
+
+                // ログインボタン
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : signIn,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 18, 81, 241),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    child:
+                        isLoading
+                            ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                            : Text(loc.signIn),
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
+                const SizedBox(height: 24),
 
-              // 通常ログインボタン
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : signIn,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 18, 81, 241),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                // Google ログインボタン
+                GestureDetector(
+                  onTap: isLoading ? null : signInWithGoogle,
+                  child: Image.asset(
+                    'assets/ios_light_google.png',
+                    fit: BoxFit.contain,
                   ),
-                  child: Text(loc.signIn),
                 ),
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // パスワードリセット誘導
-              TextButton(
-                onPressed: () {
-                  context.push('/PasswordResetPage'); // GoRouter 形式に修正
-                },
-                child: Text(loc.forgetPassword),
-              ),
+                // エラーメッセージ表示
+                if (errorMessage.isNotEmpty)
+                  Text(errorMessage, style: const TextStyle(color: Colors.red)),
 
-              // Googleログイン画像ボタン
-              GestureDetector(
-                onTap: isLoading ? null : signInWithGoogle,
-                child: Image.asset(
-                  'assets/ios_light_google.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
+                const SizedBox(height: 16),
+                const Divider(thickness: 1), // 区切り線
+                const SizedBox(height: 8),
 
-              // 新規登録案内
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(loc.dontHaveAccount),
-                  TextButton.icon(
-                    onPressed: () {
-                      context.push('/RegisterPage'); // GoRouter 形式に修正
-                    },
-                    icon: const Icon(Icons.person_add_alt_1_outlined),
-                    label: Text(loc.createNewAccount),
+                // 新規登録リンク（アイコン付き）
+                TextButton(
+                  onPressed:
+                      () => Navigator.pushNamed(context, '/RegisterPage'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.person_add_alt_1_outlined, size: 20),
+                      SizedBox(width: 6),
+                      Text('Create new account'),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint,
+    IconData icon,
+  ) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hint,
+        prefixIcon: Icon(icon),
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(AppLocalizations loc) {
+    return TextField(
+      controller: passwordController,
+      obscureText: _obscurePassword,
+      decoration: InputDecoration(
+        hintText: loc.password,
+        prefixIcon: const Icon(Icons.lock_outline),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+          ),
+          onPressed: () {
+            setState(() {
+              _obscurePassword = !_obscurePassword;
+            });
+          },
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }
