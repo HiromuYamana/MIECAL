@@ -82,7 +82,7 @@ class _DatePageState extends State<DatePage> {
                 child: SizedBox(
                     child:Center(
                       child: const Icon(
-                        Icons.arrow_upward,
+                        Icons.expand_less,
                         color: Colors.white,
                         size: 36,
                       ),
