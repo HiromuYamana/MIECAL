@@ -24,6 +24,22 @@
   "authUserDisabled": "This account is disabled.",
   "authUnknownError": "The email address or password is incorrect.",
 
+  "male": "Male",
+  "female": "Female",
+  "loginRequest":"Please sign in.",
+  "loadingError": "Loading Error",
+  "yes": "Yes",
+  "no": "No",
+  "saveFailed": "Saving failed",
+  "allergy": "Allergy",
+  "surgicalHistory": "Surgical history",
+  "save": "Save",
+  "year": "Year",
+  "month": "Month",
+  "day": "Day",
+  "ageLabel": "Age: {age}",
+
+
   "signIn": "Sign in",
   "createNewAccount": "Create new account",
   "dontHaveAccount": "Don't you have account?",
@@ -82,5 +98,5 @@
 
   "choosingTheLevelOfPain": "Choosing the level of pain",
 
-    "showQrcode": "Please show doctor or nurse this screen."
+  "showQrcode": "Please show doctor or nurse this screen."
 }

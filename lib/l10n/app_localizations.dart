@@ -227,6 +227,90 @@ abstract class AppLocalizations {
   /// **'The email address or password is incorrect.'**
   String get authUnknownError;
 
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @loginRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in.'**
+  String get loginRequest;
+
+  /// No description provided for @loadingError.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading Error'**
+  String get loadingError;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @saveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving failed'**
+  String get saveFailed;
+
+  /// No description provided for @allergy.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergy'**
+  String get allergy;
+
+  /// No description provided for @surgicalHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Surgical history'**
+  String get surgicalHistory;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @ageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Age: {age}'**
+  String ageLabel(Object age);
+
   /// No description provided for @signIn.
   ///
   /// In en, this message translates to:

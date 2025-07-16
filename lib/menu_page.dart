@@ -134,7 +134,7 @@ class MenuPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     _MenuIconButton(
-                      imagePath: 'assets/icons/qr_scan.png',
+                      imagePath: 'assets/QR.png',
                       label: 'QRを読み込む',
                       onTap: () {
                         Navigator.push(

@@ -77,6 +77,50 @@ class AppLocalizationsJa extends AppLocalizations {
   String get authUnknownError => 'メールアドレスかパスワードが間違っています。';
 
   @override
+  String get male => '男性';
+
+  @override
+  String get female => '女性';
+
+  @override
+  String get loginRequest => 'ログインしてください';
+
+  @override
+  String get loadingError => '読み込みエラー';
+
+  @override
+  String get yes => 'あり';
+
+  @override
+  String get no => 'なし';
+
+  @override
+  String get saveFailed => '保存に失敗しました:';
+
+  @override
+  String get allergy => 'アレルギー';
+
+  @override
+  String get surgicalHistory => '手術歴';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get year => '年';
+
+  @override
+  String get month => '月';
+
+  @override
+  String get day => '日';
+
+  @override
+  String ageLabel(Object age) {
+    return '年齢：$age歳';
+  }
+
+  @override
   String get signIn => 'ログイン';
 
   @override
