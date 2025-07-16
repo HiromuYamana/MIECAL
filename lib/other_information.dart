@@ -261,7 +261,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                 child: SizedBox(
                   child: Center(
                     child: const Icon(
-                      Icons.arrow_downward,
+                      Icons.expand_more,
                       size: 50,
                       color: Colors.white,
                     ),

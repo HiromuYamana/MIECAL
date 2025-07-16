@@ -304,7 +304,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     : GestureDetector(
                         onTap: register,
                         child: const Icon(
-                          Icons.arrow_downward,
+                          Icons.expand_more,
                           size: 60,
                           color: Colors.black87,
                         ),
