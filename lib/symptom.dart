@@ -105,19 +105,18 @@ class _SymptomPageState extends State<SymptomPage> {
             flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 207, 227, 230),
-              //padding: EdgeInsets.only(top: topPadding),
               child: InkWell(
                 onTap:(){
                   Navigator.pop(context);
                 },
                 child: SizedBox(
                   child: Center(
-                      child: const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 36,
-                      ),
-                    ),                 
+                    child: const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                      size: 36,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -127,19 +126,12 @@ class _SymptomPageState extends State<SymptomPage> {
             child:Container( 
               color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
-                child: const Text(
-                        '症状選択',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                ),
+                child: const Text('症状選択', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
               )
             ),
           ),
           Expanded(
-            flex: 15,
+            flex: 14,
             child: Container(
               color: const Color.fromARGB(255, 255, 255, 255), // グリッドの背景色
               child: GridView.builder(
@@ -222,7 +214,7 @@ class _SymptomPageState extends State<SymptomPage> {
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Material(
               color: Colors.blueGrey,
               child: InkWell(

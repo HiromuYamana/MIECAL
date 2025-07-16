@@ -20,14 +20,24 @@ import 'package:miecal/user_input_model.dart';
 import 'package:provider/provider.dart';
 import 'package:miecal/password_reset_page.dart';
 import 'package:miecal/terms_of_service_page.dart';
+import 'package:miecal/role_provider.dart';
+import 'package:miecal/admin_approval_page.dart';
+import 'package:miecal/doctor_application_page.dart';
 import 'package:miecal/qr_scanner_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => UserInputModel(),
+ runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserInputModel()),
+        ChangeNotifierProvider(create: (_) {
+          final p = RoleProvider();
+          p.listenAuth();                       // ← 自動で Auth 変化を監視したい場合
+          return p;
+        }),
+      ],
       child: const MyApp(),
     ),
   );
@@ -38,7 +48,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //locale: const Locale('en'),
+      locale: const Locale('en'),
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -90,6 +100,8 @@ class MyApp extends StatelessWidget {
         '/CousePage': (context) => const CousePage(),
         '/OtherInformationPage': (context) => const OtherInformationPage(),
         '/PasswordResetPage': (context) => const PasswordResetPage(),
+        '/DoctorApplication': (context) => const DoctorApplicationPage(),
+        '/AdminApproval': (context) => const AdminApprovalPage(),
         '/TermsOfServicePage': (context) => const TermsOfServicePage(),
         '/QuestionnairePage': (context) {
           final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;

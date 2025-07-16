@@ -77,6 +77,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authUnknownError => 'The email address or password is incorrect.';
 
   @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get loginRequest => 'Please sign in.';
+
+  @override
+  String get loadingError => 'Loading Error';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get saveFailed => 'Saving failed';
+
+  @override
+  String get allergy => 'Allergy';
+
+  @override
+  String get surgicalHistory => 'Surgical history';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String ageLabel(Object age) {
+    return 'Age: $age';
+  }
+
+  @override
   String get signIn => 'Sign in';
 
   @override

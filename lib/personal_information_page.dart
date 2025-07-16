@@ -6,6 +6,7 @@ import 'package:miecal/vertical_slide_page.dart';
 import 'package:provider/provider.dart';
 import 'package:miecal/user_input_model.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:miecal/l10n/app_localizations.dart';
 
 /// 画像のパス
 const String _malePictPath   = 'assets/man_image.png';
@@ -61,11 +62,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   /* ──────────── 性別オプションボタン ──────────── */
 
   Widget _genderOption({required bool isMale}) {
-    final bool  selected = gender == (isMale ? '男性' : '女性');
+    final loc = AppLocalizations.of(context)!;
+    final bool  selected = gender == (isMale ? loc.male : loc.female);
     const Color accent   = Colors.black;   // 黒で統一
 
     return InkWell(
-      onTap: () => setState(() => gender = isMale ? '男性' : '女性'),
+      onTap: () => setState(() => gender = isMale ? loc.male : loc.female),
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: 80,
@@ -105,31 +107,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           _genderOption(isMale: false),
         ],
       );
-
-  /* ──────────── CircleAvatar 表示 ──────────── */
-
-  Widget _buildAvatar() {
-    if (gender == null) {
-      return const Icon(Icons.person, size: 40, color: Colors.grey);
-    }
-
-    final bool isMale = gender == '男性';
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.asset(isMale ? _malePictPath : _femalePictPath, width: 40),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: Icon(
-            isMale ? Icons.male : Icons.female,
-            size: 16,
-            color: isMale ? Colors.blue : Colors.pink,
-          ),
-        ),
-      ],
-    );
-  }
 
   /* ──────────── 年齢計算 ──────────── */
 
@@ -172,8 +149,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       _updateAgeFromSelectors();
     });
   }
-
-  /* ──────────── Firestore から読み込み ──────────── */
+   /* ──────────── Firestore から読み込み ──────────── */
 
   Future<void> loadUserData() async {
     try {
@@ -296,150 +272,238 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('プロフィール')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (errorMessage.isNotEmpty)
-                    Text(errorMessage, style: const TextStyle(color: Colors.red)),
-                  const SizedBox(height: 16),
-
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.grey[200],
-                    child: _buildAvatar(),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  _buildIconTextField(Icons.person, _nameController, labelText: '氏名'),
-                  _buildIconTextField(Icons.home, _addressController, labelText: '住所'),
-
-                  _buildBirthdayPickers(),
-
-                  if (age != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text('年齢: $age 歳',
-                          style: const TextStyle(color: Colors.grey)),
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,        // 白文字
+            fontWeight: FontWeight.bold, // 太字
+            fontSize: 22,
+          ),
+        ),
+        centerTitle: true, 
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: false,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Material(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              //padding: EdgeInsets.only(top: topPadding),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: SizedBox(
+                  child: Center(
+                    child: const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                      size: 36,
                     ),
-
-                  const SizedBox(height: 12),
-
-                  _buildGenderSelector(),
-
-                  _buildIconTextField(Icons.phone, _phoneController,
-                      keyboardType: TextInputType.phone, labelText: '電話番号'),
-                  _buildIconTextField(Icons.warning, _allergyController,
-                      labelText: 'アレルギー'),
-
-                  Row(
-                    children: [
-                      const Icon(Icons.local_hospital),
-                      const SizedBox(width: 10),
-                      const Text('手術歴'),
-                      const Spacer(),
-                      Switch(
-                        value: hadSurgery,
-                        onChanged: (v) => setState(() => hadSurgery = v),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    onPressed: saveUserData,
-                    icon: const Icon(Icons.save),
-                    label: const Text('保存'),
-                  ),
-                ],
+                  ),                 
+                ),
               ),
             ),
+          ),
+          Expanded(
+            flex: 1,
+            child:Container( 
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Center(
+                child: Text(loc.profileEdit, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+              )
+            ),
+          ),
+          Expanded(
+            flex: 16,
+            child: Container(
+              color: Colors.white, // 背景色を白に設定
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (errorMessage.isNotEmpty)
+                      Text(errorMessage, style: const TextStyle(color: Colors.red)),
+                    const SizedBox(height: 16),
+
+                    _buildIconTextField(Icons.person, _nameController, labelText: loc.name),
+                    _buildIconTextField(Icons.home, _addressController, labelText: loc.address),
+
+                    _buildBirthdayPickers(context),
+
+                    if (age != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          loc.ageLabel(age.toString()),
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ),
+
+
+                    const SizedBox(height: 12),
+                    _buildGenderSelector(),
+                    _buildIconTextField(Icons.phone, _phoneController,
+                        keyboardType: TextInputType.phone, labelText: loc.phone),
+                    _buildIconTextField(Icons.warning, _allergyController,
+                        labelText: loc.allergy),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.local_hospital),
+                            const SizedBox(width: 10),
+                            Text(loc.surgicalHistory, style: TextStyle(fontSize: 16)),
+                            const Spacer(),
+                            Text(loc.yes),
+                            Switch(
+                              value: hadSurgery,
+                              onChanged: (v) => setState(() => hadSurgery = v),
+                            ),
+                            Text(loc.no),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton.icon(
+                        onPressed: saveUserData,
+                        icon: const Icon(Icons.save, size: 24),
+                        label: Text( loc.save, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        style: ElevatedButton.styleFrom(backgroundColor:
+                        Colors.blue, 
+                        foregroundColor: Colors.white, 
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          elevation: 4,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   /* ──────────── 補助 Widget ──────────── */
 
-  Widget _buildBirthdayPickers() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.calendar_today),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                children: [
-                  const Text('年',
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
-                  NumberPicker(
-                    value: _selectedYear,
-                    minValue: DateTime.now().year - 120,
-                    maxValue: DateTime.now().year,
-                    itemHeight: 30,
-                    axis: Axis.vertical,
-                    onChanged: (v) {
-                      setState(() {
-                        _selectedYear = v;
-                        _updateAgeFromSelectors();
-                      });
-                    },
-                  ),
-                ],
-              ),
+  Widget _buildBirthdayPickers(BuildContext context) {
+  final loc = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            loc.birthdate,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                children: [
-                  const Text('月',
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
-                  NumberPicker(
-                    value: _selectedMonth,
-                    minValue: 1,
-                    maxValue: 12,
-                    itemHeight: 30,
-                    axis: Axis.vertical,
-                    onChanged: (v) {
-                      setState(() {
-                        _selectedMonth = v;
-                        _updateAgeFromSelectors();
-                      });
-                    },
-                  ),
-                ],
-              ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade400),
+              borderRadius: BorderRadius.circular(8),
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                children: [
-                  const Text('日',
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
-                  NumberPicker(
-                    value: _selectedDay,
-                    minValue: 1,
-                    maxValue: 31,
-                    itemHeight: 30,
-                    axis: Axis.vertical,
-                    onChanged: (v) {
-                      setState(() {
-                        _selectedDay = v;
-                        _updateAgeFromSelectors();
-                      });
-                    },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.calendar_today),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(loc.year, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      NumberPicker(
+                        value: _selectedYear,
+                        minValue: DateTime.now().year - 120,
+                        maxValue: DateTime.now().year,
+                        itemHeight: 30,
+                        axis: Axis.vertical,
+                        onChanged: (v) {
+                          setState(() {
+                            _selectedYear = v;
+                            _updateAgeFromSelectors();
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(loc.month, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      NumberPicker(
+                        value: _selectedMonth,
+                        minValue: 1,
+                        maxValue: 12,
+                        itemHeight: 30,
+                        axis: Axis.vertical,
+                        onChanged: (v) {
+                          setState(() {
+                            _selectedMonth = v;
+                            _updateAgeFromSelectors();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(loc.day, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      NumberPicker(
+                        value: _selectedDay,
+                        minValue: 1,
+                        maxValue: 31,
+                        itemHeight: 30,
+                        axis: Axis.vertical,
+                        onChanged: (v) {
+                          setState(() {
+                            _selectedDay = v;
+                            _updateAgeFromSelectors();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildIconTextField(
     IconData icon,
