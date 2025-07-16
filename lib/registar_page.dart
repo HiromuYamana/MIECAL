@@ -192,7 +192,7 @@ class _RegisterPageState extends State<RegisterPage> {
         title: const Text(
           "MIECAL",
           style: TextStyle(
-            color: Colors.white, // 白文字
+            color: Color.fromARGB(255, 255, 255, 255), // 白文字
             fontWeight: FontWeight.bold, // 太字
             fontSize: 22,
           ),
