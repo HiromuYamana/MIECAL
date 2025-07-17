@@ -31,6 +31,21 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool _obscurePassword = true;
 
+  String getLocalizedAuthError(String code, AppLocalizations loc) {
+    switch (code) {
+      case 'user-not-found':
+        return loc.authUserNotFound;
+      case 'wrong-password':
+        return loc.authWrongPassword;
+      case 'invalid-email':
+        return loc.authInvalidEmail;
+      case 'user-disabled':
+        return loc.authUserDisabled;
+      default:
+        return loc.authUnknownError;
+    }
+  }
+
   // 🔵 Googleログイン処理
   Future<void> signInWithGoogle() async {
     final loc = AppLocalizations.of(context)!;
