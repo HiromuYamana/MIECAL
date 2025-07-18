@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // FirebaseAuth を使うた�
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore を使うために追加
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:miecal/qr.dart';
+import 'package:miecal/qr_scanner_page.dart';
 import 'package:miecal/l10n/app_localizations.dart'; 
 import 'package:intl/intl.dart'; // 多言語日付フォーマット用
 
@@ -70,7 +71,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       print(
         'QuestionnairePage: Loading data by ID: ${widget.questionnaireRecordId}',
       );
-      _loadQuestionnaireDataById(widget.questionnaireRecordId!);
+      //_loadQuestionnaireDataById(widget.questionnaireRecordId!);
     } else {
       _initializeFromWidgetData();
       setState(() {

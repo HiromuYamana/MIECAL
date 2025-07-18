@@ -268,7 +268,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       input.updatePersonal(
         name           : _nameController.text.trim(),
         address        : _addressController.text.trim(),
-        birthday       : birthday,
+        birthday       : 'birthday',
         age            : age?.toString() ?? '',
         gender         : gender ?? '',
         phoneNumber    : _phoneController.text.trim(),
@@ -333,15 +333,15 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
   /* ──────────── dispose ──────────── */
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _addressController.dispose();
-    _phoneController.dispose();
-    _allergyController.dispose();
-    _surgeryController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _nameController.dispose();
+  //   _addressController.dispose();
+  //   _phoneController.dispose();
+  //   _allergyController.dispose();
+  //   _surgeryController.dispose();
+  //   super.dispose();
+  // }
 
   /* ──────────── UI ──────────── */
 

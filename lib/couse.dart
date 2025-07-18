@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:miecal/other_information.dart';
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:go_router/go_router.dart'; // context.pop/push のために追加
+import 'package:miecal/l10n/app_localizations.dart';
 
 class CousePage extends StatefulWidget {
   final String? userName;

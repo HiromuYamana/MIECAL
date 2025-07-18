@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:miecal/questionnaire.dart';
 import 'package:miecal/vertical_slide_page.dart';
 import 'package:go_router/go_router.dart'; // context.push のために必要
+import 'package:miecal/l10n/app_localizations.dart';
 
 class OtherInformationPage extends StatefulWidget {
   // これまでのページから受け取る問診票データを定義します
