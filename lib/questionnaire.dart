@@ -95,28 +95,6 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     _displayOtherInformation = widget.otherInformation;
   }
 
-  // 画面表示用：人間が読む日付フォーマット
-  // String _formatDateHumanReadable(BuildContext context, DateTime? date) {
-  //   final loc = AppLocalizations.of(context)!;
-  //   if (date == null) {
-  //     return loc.notSelected; // ← l10n 対応
-  //   }
-
-  //   // ローカライズされた日付フォーマット（例: ja -> "2025年7月5日", en -> "July 5, 2025"）
-  //   return DateFormat.yMMMMd(loc.localeName).format(date);
-  // }
-
-  // // QRコード用：固定フォーマットだけど「未選択」は翻訳される
-  // String _formatDateForQr(BuildContext context, DateTime? date) {
-  //   final loc = AppLocalizations.of(context)!;
-  //   if (date == null) {
-  //     return loc.notSelected; // ← QRでも多言語化された "未選択" を使う
-  //   }
-
-  //   // 固定フォーマットでシンプルに（例: "2025-07-05"）
-  //   return DateFormat('yyyy-MM-dd').format(date);
-  // }
-
   String _formatDateHumanReadable(DateTime? date) {
     if (date == null) {
       return '未選択';
@@ -130,39 +108,6 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     }
     return '${date.year}年${date.month}月${date.day}日';
   }
-
-  // 修正点: 問診票データをFirestoreに保存するメソッドを追加
-  // Future<void> _saveQuestionnaireDataToFirestore(BuildContext context) async {
-  //   final loc = AppLocalizations.of(context)!;
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user == null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.notLoggedIn)));
-  //     return;
-  //   }
-
-  //   try {
-  //     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-  //       'lastQuestionnaireData': {
-  //         'selectedOnsetDay': selectedOnsetDay?.toIso8601String(),
-  //         'symptom': symptom,
-  //         'affectedArea': affectedArea,
-  //         'sufferLevel': sufferLevel,
-  //         'cause': cause,
-  //         'otherInformation': otherInformation,
-  //         'submissionDate': FieldValue.serverTimestamp(),
-  //       },
-  //     }, SetOptions(merge: true));
-
-  //     ScaffoldMessenger.of(
-  //       context,
-  //     ).showSnackBar(SnackBar(content: Text(loc.qrSaveSuccess)));
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('${loc.qrSaveFailed} ${e.toString()}')),
-  //     );
-  //     print('Firestore save error: $e');
-  //   }
-  // }
 
   Future<String?> _saveQuestionnaireDataToFirestore(
     BuildContext context,
@@ -215,38 +160,6 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       return null;
     }
   }
-
-  // void _showQrCodePage(BuildContext context) async {
-  //   await _saveQuestionnaireDataToFirestore(context);
-  //   final loc = AppLocalizations.of(context)!;
-  //   final Map<String, dynamic> questionnaireData = {
-  //     loc.name: userName ?? loc.notEntered,
-  //     loc.address: userHome ?? loc.notEntered,
-  //     loc.birthdate: _formatDateForQr(context, userDateOfBirth),
-  //     loc.gender: userGender ?? loc.notEntered,
-  //     loc.phone: userTelNum ?? loc.notEntered,
-  //     loc.onsetDate: _formatDateForQr(context, selectedOnsetDay),
-  //     loc.symptom: symptom ?? loc.notEntered,
-  //     loc.affectedArea: affectedArea ?? loc.notEntered,
-  //     loc.severity: sufferLevel ?? loc.notEntered,
-  //     loc.cause: cause ?? loc.notEntered,
-  //     loc.otherInfo: otherInformation ?? loc.notEntered,
-  //   };
-
-  //   List<String> qrDataLines = [];
-  //   questionnaireData.forEach((key, value) {
-  //     if (value != null &&
-  //         value.toString().isNotEmpty &&
-  //         value.toString() != loc.notEntered &&
-  //         value.toString() != loc.notSelected) {
-  //       qrDataLines.add('$key: $value');
-  //     }
-  //   });
-
-  //   String qrData = qrDataLines.join('\n');
-
-  //   Navigator.push(context, VerticalSlideRoute(page: QrPage(data: qrData)));
-  // }
 
   Future<void> _loadQuestionnaireDataById(String id) async {
     print('QuestionnairePage: _loadQuestionnaireDataById START. ID: $id');
@@ -670,9 +583,6 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                     ),
                   ),
                   const SizedBox(height: 30),
-
-                  // QRコード発行ボタンの表示を条件付きにする
-                  // QRコード発行ボタンの表示を条件付きにする
                   Center(
                     child: ElevatedButton(
                       onPressed: () => _showQrCodePage(context),
