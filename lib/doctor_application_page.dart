@@ -14,6 +14,8 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _hospitalController = TextEditingController();
+  final _licenseNumberController = TextEditingController();
+  final _notesController = TextEditingController();
 
   bool _isSubmitting = false;
   String errorMessage = '';
@@ -42,6 +44,8 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
         'userId': uid,
         'name': _nameController.text.trim(),
         'hospital': _hospitalController.text.trim(),
+        'licenseNumber': _licenseNumberController.text.trim(),
+        'notes': _notesController.text.trim(),
         'status': 'pending',
         'timestamp': FieldValue.serverTimestamp(),
       });
@@ -63,120 +67,163 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
   void dispose() {
     _nameController.dispose();
     _hospitalController.dispose();
+    _licenseNumberController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 246, 250),
-      appBar: AppBar(
-        title: Text('医師申請フォーム', style: GoogleFonts.poppins()),
-        backgroundColor: Colors.teal,
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '医師申請',
-                  style: GoogleFonts.poppins(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 40),
-
-                // 氏名
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    hintText: '氏名',
-                    prefixIcon: const Icon(Icons.person_outline),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return '氏名を入力してください';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // 所属医療機関
-                TextFormField(
-                  controller: _hospitalController,
-                  decoration: InputDecoration(
-                    hintText: '所属医療機関',
-                    prefixIcon: const Icon(Icons.local_hospital_outlined),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return '所属医療機関を入力してください';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 24),
-
-                // エラーメッセージ表示
-                if (errorMessage.isNotEmpty)
-                  Text(
-                    errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                if (errorMessage.isNotEmpty) const SizedBox(height: 16),
-
-                // 申請ボタン
-                _isSubmitting
-                    ? const CircularProgressIndicator()
-                    : GestureDetector(
-                        onTap: _submitApplication,
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.teal,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.teal.withOpacity(0.6),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              )
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.arrow_downward,
-                            size: 40,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                const SizedBox(height: 24),
-              ],
-            ),
-          ),
+  Widget _buildTextField(
+      TextEditingController controller, String hintText, IconData icon,
+      {int maxLines = 1}) {
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        hintText: hintText,
+        prefixIcon: Icon(icon),
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
         ),
+        filled: true,
+        fillColor: Colors.white,
       ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return '$hintText を入力してください';
+        }
+        return null;
+      },
     );
   }
+
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    appBar: AppBar(
+      title: const Text(
+        "MIECAL",
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
+        ),
+      ),
+      centerTitle: true,
+      backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+      automaticallyImplyLeading: true,
+    ),
+    body: Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // 白いカードボックス
+            Container(
+              padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 24),
+
+                    // 以下、各テキストフィールドやボタン
+                    _buildTextField(_nameController, '氏名', Icons.person_outline),
+                    const SizedBox(height: 20),
+                    _buildTextField(_hospitalController, '所属医療機関', Icons.local_hospital_outlined),
+                    const SizedBox(height: 20),
+                    _buildTextField(_licenseNumberController, '医師ライセンス番号', Icons.badge_outlined),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _notesController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        hintText: '備考（任意）',
+                        prefixIcon: const Icon(Icons.note_alt_outlined),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    if (errorMessage.isNotEmpty)
+                      Text(errorMessage, style: const TextStyle(color: Colors.red)),
+                    const SizedBox(height: 20),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _isSubmitting ? null : _submitApplication,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 18, 81, 241),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: _isSubmitting
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text('申請する'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // タイトルラベル（重ねて表示）
+            Positioned(
+              top: -30,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 6,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    '医師申請フォーム',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
- 
+
+}
