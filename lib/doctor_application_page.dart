@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 class DoctorApplicationPage extends StatefulWidget {
   const DoctorApplicationPage({Key? key}) : super(key: key);
@@ -117,12 +119,25 @@ Widget build(BuildContext context) {
     body: Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Stack(
-          clipBehavior: Clip.none,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // 白いカードボックス
+            const SizedBox(height: 32),
+
+            // 🔹 タイトル（カードの外）
+            Text(
+              '医師申請フォーム',
+              style: GoogleFonts.notoSansJp(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // 🔸 中央の白カードボックス（フォーム）
             Container(
-              padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -138,12 +153,9 @@ Widget build(BuildContext context) {
                 key: _formKey,
                 child: Column(
                   children: [
-                    const SizedBox(height: 24),
-
-                    // 以下、各テキストフィールドやボタン
                     _buildTextField(_nameController, '氏名', Icons.person_outline),
                     const SizedBox(height: 20),
-                    _buildTextField(_hospitalController, '所属医療機関', Icons.local_hospital_outlined),
+                    _buildTextField(_hospitalController, '所属医療機関', FontAwesomeIcons.hospital,),
                     const SizedBox(height: 20),
                     _buildTextField(_licenseNumberController, '医師ライセンス番号', Icons.badge_outlined),
                     const SizedBox(height: 20),
@@ -189,41 +201,13 @@ Widget build(BuildContext context) {
               ),
             ),
 
-            // タイトルラベル（重ねて表示）
-            Positioned(
-              top: -30,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    '医師申請フォーム',
-                    style: GoogleFonts.montserrat(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),
     ),
   );
 }
+
 
 }
