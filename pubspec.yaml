@@ -29,7 +29,6 @@ dependencies:
   numberpicker: ^2.1.2
   mobile_scanner: ^7.0.1
   intl: ^0.20.0
-  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
@@ -37,7 +36,21 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
+  uses-material-design: true
+  generate: true
+  # 修正点: assets の指定を簡潔な形にする
   assets:
+    # images フォルダ内の画像をすべて含める
+    - assets/images/
+    # assets 直下の特定のファイルを指定
+    - assets/app_icon.png
+    - assets/body_mask.png
+    - assets/google_light_new.png
+    - assets/human_outline.png
+    - assets/ios_light_google.png
+    - assets/onset_date.png
+    - assets/show_screen.png
+    - assets/タッチアイコン.png
     - assets/sample_image1.png
     - assets/sample_image2.png
     - assets/sample_image3.png
@@ -57,5 +70,3 @@ flutter:
     - assets/google_light_new.png
     - assets/man_image.png
     - assets/woman_image.png
-  #uses-material-design: true
-  #generate: true
