@@ -463,12 +463,10 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                               color: Colors.blueGrey,
                             ),
                             title: Text(loc.symptom),
-                            trailing: Expanded(
-                              child: Text(
-                                displaySymptom,
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(fontSize: 16),
-                              ),
+                            trailing: Text(
+                              displaySymptom,
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                           ListTile(
@@ -477,12 +475,10 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                               color: Colors.blueGrey,
                             ),
                             title: Text(loc.affectedArea),
-                            trailing: Expanded(
-                              child: Text(
-                                displayAffectedArea,
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(fontSize: 16),
-                              ),
+                            trailing: Text(
+                              displayAffectedArea,
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                           ListTile(
@@ -502,12 +498,10 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                               color: Colors.blueGrey,
                             ),
                             title: Text(loc.cause),
-                            trailing: Expanded(
-                              child: Text(
-                                displayCause,
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(fontSize: 16),
-                              ),
+                            trailing: Text(
+                              displayCause,
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                         ],
