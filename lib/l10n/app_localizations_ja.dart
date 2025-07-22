@@ -295,6 +295,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get choosingTheLevelOfPain => '程度の選択';
 
   @override
+  String get causeAccident => '事故';
+
+  @override
+  String get causeFallFromHeight => '転落';
+
+  @override
+  String get causeFall => '転倒';
+
+  @override
+  String get causeStrain => '負荷';
+
+  @override
+  String get causeContusion => '打撲';
+
+  @override
+  String get causeUnknown => '不明';
+
+  @override
+  String get causeOther => 'その他';
+
+  @override
   String get labelAlcohol => '飲酒はしますか？';
 
   @override

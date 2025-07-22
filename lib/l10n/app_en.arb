@@ -104,6 +104,15 @@
 
   "choosingTheLevelOfPain": "Choosing the level of pain",
 
+  "cause": "Cause",
+  "causeAccident": "Accident",
+  "causeFallFromHeight": "Fall from height",
+  "causeFall": "Slipping",
+  "causeStrain": "Strain",
+  "causeContusion": "Contusion",
+  "causeUnknown": "Unknown",
+  "causeOther": "Other",
+
   "labelAlcohol": "Do you drink alcohol?",
   "labelSmoking": "Do you smoke?",
   "labelMedication": "Are you taking any medication?",

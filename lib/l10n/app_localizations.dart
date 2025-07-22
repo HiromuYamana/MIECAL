@@ -659,6 +659,48 @@ abstract class AppLocalizations {
   /// **'Choosing the level of pain'**
   String get choosingTheLevelOfPain;
 
+  /// No description provided for @causeAccident.
+  ///
+  /// In en, this message translates to:
+  /// **'Accident'**
+  String get causeAccident;
+
+  /// No description provided for @causeFallFromHeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Fall from height'**
+  String get causeFallFromHeight;
+
+  /// No description provided for @causeFall.
+  ///
+  /// In en, this message translates to:
+  /// **'Slipping'**
+  String get causeFall;
+
+  /// No description provided for @causeStrain.
+  ///
+  /// In en, this message translates to:
+  /// **'Strain'**
+  String get causeStrain;
+
+  /// No description provided for @causeContusion.
+  ///
+  /// In en, this message translates to:
+  /// **'Contusion'**
+  String get causeContusion;
+
+  /// No description provided for @causeUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get causeUnknown;
+
+  /// No description provided for @causeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get causeOther;
+
   /// No description provided for @labelAlcohol.
   ///
   /// In en, this message translates to:

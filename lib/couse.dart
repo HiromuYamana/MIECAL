@@ -37,14 +37,15 @@ class CousePage extends StatefulWidget {
 
 class _CousePageState extends State<CousePage> {
   final List<Map<String, String>> couseItems = const [
-    {'path': 'assets/images/cause/ziko.png', 'name': '事故'},
-    {'path': 'assets/images/cause/tennraku.png', 'name': '転落'},
-    {'path': 'assets/images/cause/tenntou.png', 'name': '転倒'},
-    {'path': 'assets/images/cause/huka.png', 'name': '負荷'},
-    {'path': 'assets/images/cause/daboku.png', 'name': '打撲'},
-    {'path': 'assets/images/cause/humei.png', 'name': '不明'},
-    {'path': 'assets/images/cause/sonota.png', 'name': 'その他'},
+    {'path': 'assets/images/cause/ziko.png', 'key': 'causeAccident'},
+    {'path': 'assets/images/cause/tennraku.png', 'key': 'causeFallFromHeight'},
+    {'path': 'assets/images/cause/tenntou.png', 'key': 'causeFall'},
+    {'path': 'assets/images/cause/huka.png', 'key': 'causeStrain'},
+    {'path': 'assets/images/cause/daboku.png', 'key': 'causeContusion'},
+    {'path': 'assets/images/cause/humei.png', 'key': 'causeUnknown'},
+    {'path': 'assets/images/cause/sonota.png', 'key': 'causeOther'},
   ];
+
 
   // 選択状態
   late List<bool> isSelected;
@@ -58,15 +59,37 @@ class _CousePageState extends State<CousePage> {
 
   // 選択された原因を日本語名でまとめるヘルパー関数
   String _getSelectedCauseSummary() {
-    final loc = AppLocalizations.of(context)!;
-    List<String> selectedCauseNames = [];
-    for (int i = 0; i < isSelected.length; i++) {
-      if (isSelected[i]) {
-        selectedCauseNames.add(couseItems[i]['name']!); // 日本語名を取得
-      }
+  final loc = AppLocalizations.of(context)!;
+  List<String> selectedCauseNames = [];
+  for (int i = 0; i < isSelected.length; i++) {
+    if (isSelected[i]) {
+      final key = couseItems[i]['key']!;
+      selectedCauseNames.add(_getLocalizedCauseName(loc, key));
     }
-    return selectedCauseNames.isEmpty ? loc.notSelected: selectedCauseNames.join(', ');
   }
+  return selectedCauseNames.isEmpty ? loc.notSelected : selectedCauseNames.join(', ');
+}
+
+String _getLocalizedCauseName(AppLocalizations loc, String key) {
+  switch (key) {
+    case 'causeAccident':
+      return loc.causeAccident;
+    case 'causeFallFromHeight':
+      return loc.causeFallFromHeight;
+    case 'causeFall':
+      return loc.causeFall;
+    case 'causeStrain':
+      return loc.causeStrain;
+    case 'causeContusion':
+      return loc.causeContusion;
+    case 'causeUnknown':
+      return loc.causeUnknown;
+    case 'causeOther':
+      return loc.causeOther;
+    default:
+      return '';
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +100,7 @@ class _CousePageState extends State<CousePage> {
         title: const Text(
           "MIECAL",
           style: TextStyle(
-            color: Colors.white,        // 白文字
+            color: Colors.white,// 白文字
             fontWeight: FontWeight.bold, // 太字
             fontSize: 24,
           ),
@@ -118,7 +141,6 @@ class _CousePageState extends State<CousePage> {
                   style: TextStyle(
                   color: Colors.black,
                   fontSize: 22,
-                  fontWeight: FontWeight.bold,
                   ),
                 ),
               ) 
@@ -136,7 +158,7 @@ class _CousePageState extends State<CousePage> {
                   mainAxisSpacing: 10,
                   childAspectRatio: 1,
                 ),
-                itemCount: couseItems.length, // couseItemsの数を使用
+                itemCount: couseItems.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
@@ -148,15 +170,12 @@ class _CousePageState extends State<CousePage> {
                       children: [
                         Container(
                           margin: const EdgeInsets.all(8),
-                          // width, heightはGridViewが自動調整するため削除または調整
                           width: 1050,
-                          // height: 1050,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color:
-                                  isSelected[index]
-                                      ? Colors.orange
-                                      : Colors.transparent,
+                              color: isSelected[index]
+                                  ? Colors.orange
+                                  : Colors.transparent,
                               width: isSelected[index] ? 4 : 1,
                             ),
                             borderRadius: BorderRadius.circular(8),
@@ -164,43 +183,41 @@ class _CousePageState extends State<CousePage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.asset(
-                              couseItems[index]['path']!, // 画像パスを使用
+                              couseItems[index]['path'] ?? '',
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error, color: Colors.red);
+                              },
                             ),
                           ),
                         ),
                         if (isSelected[index])
                           Container(
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(
-                                255,
-                                252,
-                                166,
-                                7,
-                              ).withValues(alpha: 0.3),
+                              color: const Color.fromARGB(255, 252, 166, 7)
+                                  .withOpacity(0.3),
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                        // 画像の下に日本語名をテキストで表示
                         Positioned(
                           bottom: 10,
                           left: 0,
                           right: 0,
                           child: Container(
-                            color: Colors.black54, // テキストの背景を半透明にする
+                            color: Colors.black54,
                             padding: const EdgeInsets.symmetric(
                               vertical: 4,
                               horizontal: 8,
                             ),
                             child: Text(
-                              couseItems[index]['name']!, // 日本語名を表示
+                              _getLocalizedCauseName(loc, couseItems[index]['key']!),
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
-                              overflow: TextOverflow.ellipsis, // 長すぎる場合は省略
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
@@ -211,6 +228,7 @@ class _CousePageState extends State<CousePage> {
               ),
             ),
           ),
+
           Expanded(
             flex: 2,
             child: Material(

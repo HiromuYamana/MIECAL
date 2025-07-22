@@ -295,6 +295,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get choosingTheLevelOfPain => 'Choosing the level of pain';
 
   @override
+  String get causeAccident => 'Accident';
+
+  @override
+  String get causeFallFromHeight => 'Fall from height';
+
+  @override
+  String get causeFall => 'Slipping';
+
+  @override
+  String get causeStrain => 'Strain';
+
+  @override
+  String get causeContusion => 'Contusion';
+
+  @override
+  String get causeUnknown => 'Unknown';
+
+  @override
+  String get causeOther => 'Other';
+
+  @override
   String get labelAlcohol => 'Do you drink alcohol?';
 
   @override

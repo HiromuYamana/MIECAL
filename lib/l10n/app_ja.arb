@@ -101,6 +101,15 @@
 
   "choosingTheLevelOfPain": "程度の選択",
 
+  "cause": "原因",
+  "causeAccident": "事故",
+  "causeFallFromHeight": "転落",
+  "causeFall": "転倒",
+  "causeStrain": "負荷",
+  "causeContusion": "打撲",
+  "causeUnknown": "不明",
+  "causeOther": "その他",
+
   "labelAlcohol": "飲酒はしますか？",
   "labelSmoking": "喫煙はしますか？",
   "labelMedication": "現在使用しているお薬はありますか？",
