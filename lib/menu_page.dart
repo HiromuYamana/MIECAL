@@ -115,7 +115,7 @@ class MenuPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _MenuIconButton(
-                          imagePath: 'assets/icons/monnsinnhyo.png',
+                          imagePath: 'assets/monnsinnhyo.png',
                           label: local.symptomForm,
                           onTap: () {
                             Navigator.push(
@@ -166,7 +166,7 @@ class MenuPage extends StatelessWidget {
                             },
                           ),
                         _MenuIconButton(
-                          imagePath: 'assets/icons/medical_license.png',
+                          imagePath: 'assets/doctor_icon.png',
                           label: '医師申請',
                           onTap: () {
                             Navigator.pushNamed(context, '/DoctorApplication');
@@ -174,7 +174,7 @@ class MenuPage extends StatelessWidget {
                         ),
                         if (role == 'admin')
                           _MenuIconButton(
-                            imagePath: 'assets/icons/approval.png',
+                            imagePath: 'assets/sinseikyoka.png',
                             label: '申請承認',
                             onTap: () {
                               Navigator.pushNamed(context, '/AdminApproval');
