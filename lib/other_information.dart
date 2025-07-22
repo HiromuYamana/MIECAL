@@ -37,7 +37,7 @@ class OtherInformationPage extends StatefulWidget {
 }
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
-  List<bool?> toggleValues = [false, false, false, false];
+  List<bool> toggleValues = [false, false, false, false];
   final List<String> imagePaths = [
   'assets/images/other_information/drink.png',
   'assets/images/other_information/smoke.png',
@@ -55,10 +55,10 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final List<String> labels2 = [
-      loc.labelAlcohol,
-      loc.labelSmoking,
-      loc.labelMedication,
-      loc.labelPregnancy,
+      loc.alcohol,
+      loc.smoke,
+      loc.medication,
+      loc.pregnancy,
     ];
 
     return Scaffold(
@@ -134,6 +134,12 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                             height: 60,
                           ),
                           const SizedBox(width: 12),
+                              Icon(
+                                toggleValues[index] ? Icons.check_circle : Icons.cancel,
+                                color: toggleValues[index] ? Colors.green : Colors.red,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 8),
 
                           // ラベル
                           Expanded(
@@ -152,7 +158,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
 
                           // トグルスイッチ
                           Switch(
-                            value: toggleValue ?? false,
+                            value: toggleValue,
                             onChanged: (value) {
                               setState(() {
                                 toggleValues[index] = value;
@@ -228,7 +234,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
     for (int i = 0; i < toggleValues.length; i++) {
       final value = toggleValues[i];
       String label = labels[i];
-      String result = value == null
+      String result = value
           ? loc.notSelected
           : value
               ? loc.yes // ← "はい"
