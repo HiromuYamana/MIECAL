@@ -156,7 +156,7 @@ Widget build(BuildContext context) {
                     const SizedBox(height: 20),
                     _buildTextField(_hospitalController, '所属医療機関', Icons.local_hospital_outlined),
                     const SizedBox(height: 20),
-                    _buildTextField(_licenseNumberController, '医師ライセンス番号', Icons.badge_outlined),
+                    _buildTextField(_licenseNumberController, '医師登録番号', Icons.badge_outlined),
                     const SizedBox(height: 20),
                     TextFormField(
                       controller: _notesController,
