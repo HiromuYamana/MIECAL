@@ -1,53 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // FirebaseAuth を使うために追加
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore を使うために追加
-import 'package:miecal/vertical_slide_page.dart';
-import 'package:miecal/qr.dart';
 import 'package:miecal/l10n/app_localizations.dart';
 import 'package:intl/intl.dart'; // 多言語日付フォーマット用
 
-class QuestionnairePage extends StatefulWidget {
-  // 修正点: isFromQrScanner フラグを追加
-  final bool isFromQrScanner;
-  final String? questionnaireRecordId;
+class QuestionnaireDisplayPage extends StatefulWidget {
+  final String questionnaireRecordId; // 表示する問診票のIDは必須
 
-  // 個人情報フィールド
-  final String? userName;
-  final DateTime? userDateOfBirth;
-  final String? userHome;
-  final String? userGender;
-  final String? userTelNum;
-
-  // 問診票データフィールド
-  final DateTime? selectedOnsetDay;
-  final String? symptom;
-  final String? affectedArea;
-  final String? sufferLevel;
-  final String? cause;
-  final String? otherInformation;
-
-  const QuestionnairePage({
+  const QuestionnaireDisplayPage({
     super.key,
-    this.isFromQrScanner = false, // <-- 追加: デフォルトは false
-    this.questionnaireRecordId,
-    this.userName,
-    this.userDateOfBirth,
-    this.userHome,
-    this.userGender,
-    this.userTelNum,
-    this.selectedOnsetDay,
-    this.symptom,
-    this.affectedArea,
-    this.sufferLevel,
-    this.cause,
-    this.otherInformation,
+    required this.questionnaireRecordId,
   });
 
   @override
-  State<QuestionnairePage> createState() => _QuestionnairePageState();
+  State<QuestionnaireDisplayPage> createState() =>
+      _QuestionnaireDisplayPageState();
 }
 
-class _QuestionnairePageState extends State<QuestionnairePage> {
+class _QuestionnaireDisplayPageState extends State<QuestionnaireDisplayPage> {
+  // 表示用データフィールド
   String? _displayUserName;
   DateTime? _displayUserDateOfBirth;
   String? _displayUserHome;
@@ -66,103 +37,33 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   @override
   void initState() {
     super.initState();
-    print('QuestionnairePage: initState called.');
-    if (widget.questionnaireRecordId != null) {
+    print('QuestionnaireDisplayPage: initState called.');
+    if (widget.questionnaireRecordId.isNotEmpty) {
       print(
-        'QuestionnairePage: Loading data by ID: ${widget.questionnaireRecordId}',
+        'QuestionnaireDisplayPage: Loading data by ID: ${widget.questionnaireRecordId}',
       );
-      _loadQuestionnaireDataById(widget.questionnaireRecordId!);
+      _loadQuestionnaireDataById(widget.questionnaireRecordId);
     } else {
-      _initializeFromWidgetData();
       setState(() {
+        _loadError = '問診票IDが指定されていません。';
         _isLoadingData = false;
-        print('QuestionnairePage: Initial data set, isLoadingData = false.');
       });
+      print('QuestionnaireDisplayPage: No questionnaireRecordId provided.');
     }
-  }
-
-  void _initializeFromWidgetData() {
-    _displayUserName = widget.userName;
-    _displayUserDateOfBirth = widget.userDateOfBirth;
-    _displayUserHome = widget.userHome;
-    _displayUserGender = widget.userGender;
-    _displayUserTelNum = widget.userTelNum;
-    _displaySelectedOnsetDay = widget.selectedOnsetDay;
-    _displaySymptom = widget.symptom;
-    _displayAffectedArea = widget.affectedArea;
-    _displaySufferLevel = widget.sufferLevel;
-    _displayCause = widget.cause;
-    _displayOtherInformation = widget.otherInformation;
   }
 
   String _formatDateHumanReadable(DateTime? date) {
     if (date == null) {
       return '未選択';
     }
-    return '${date.year}年${date.month}月${date.day}日';
-  }
-
-  String _formatDateForQr(DateTime? date) {
-    if (date == null) {
-      return '未選択';
-    }
-    return '${date.year}年${date.month}月${date.day}日';
-  }
-
-  Future<String?> _saveQuestionnaireDataToFirestore(
-    BuildContext context,
-  ) async {
-    print('Firestore: _saveQuestionnaireDataToFirestore called.');
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      print('Firestore: User not logged in. Cannot save data.');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('ログインしていません。データを保存できません。')));
-      return null;
-    }
-
-    final Map<String, dynamic> dataToSave = {
-      'userId': user.uid,
-      'userName': _displayUserName,
-      'userDateOfBirth': _displayUserDateOfBirth?.toIso8601String(),
-      'userHome': _displayUserHome,
-      'userGender': _displayUserGender,
-      'userTelNum': _displayUserTelNum,
-
-      'selectedOnsetDay': _displaySelectedOnsetDay?.toIso8601String(),
-      'symptom': _displaySymptom,
-      'affectedArea': _displayAffectedArea,
-      'sufferLevel': _displaySufferLevel,
-      'cause': _displayCause,
-      'otherInformation': _displayOtherInformation,
-      'submissionDate': FieldValue.serverTimestamp(),
-    };
-
-    try {
-      print(
-        'Firestore: Attempting to save data for user ${user.uid} to questionnaire_records.',
-      );
-      final DocumentReference docRef = await FirebaseFirestore.instance
-          .collection('questionnaire_records')
-          .add(dataToSave);
-
-      print('Firestore: Data saved SUCCESSFULLY! Record ID: ${docRef.id}');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('問診票データを保存しました！')));
-      return docRef.id;
-    } catch (e) {
-      print('Firestore: SAVE FAILED (Unexpected Error): ${e.toString()}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('問診票データの保存に失敗しました: ${e.toString()}')),
-      );
-      return null;
-    }
+    // 日本語のフォーマット
+    return DateFormat('yyyy年MM月dd日').format(date);
   }
 
   Future<void> _loadQuestionnaireDataById(String id) async {
-    print('QuestionnairePage: _loadQuestionnaireDataById START. ID: $id');
+    print(
+      'QuestionnaireDisplayPage: _loadQuestionnaireDataById START. ID: $id',
+    );
     setState(() {
       _isLoadingData = true;
       _loadError = null;
@@ -176,8 +77,8 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
 
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
-        print('QuestionnairePage: Firestore Doc Exists: ${doc.exists}');
-        print('QuestionnairePage: Raw Firestore Data: $data');
+        print('QuestionnaireDisplayPage: Firestore Doc Exists: ${doc.exists}');
+        print('QuestionnaireDisplayPage: Raw Firestore Data: $data');
 
         setState(() {
           _displayUserName = data['userName'] as String?;
@@ -199,63 +100,39 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           _displayOtherInformation = data['otherInformation'] as String?;
           _isLoadingData = false;
         });
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('問診票データをロードしました。')));
+        // スナックバーはWebアプリでは常に表示されると邪魔になる可能性があるので、適宜コメントアウト
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('問診票データをロードしました。')));
       } else {
         setState(() {
           _loadError = '指定された問診票データが見つかりません。';
           _isLoadingData = false;
         });
-        print('QuestionnairePage: Document not found for ID: $id');
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('指定された問診票データが見つかりません。')));
+        print('QuestionnaireDisplayPage: Document not found for ID: $id');
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('指定された問診票データが見つかりません。')));
       }
     } on FirebaseException catch (e) {
       setState(() {
         _loadError = 'Firestoreエラー: ${e.code} - ${e.message}';
         _isLoadingData = false;
       });
-      print('QuestionnairePage: Firestore ERROR: ${e.code} - ${e.message}');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Firestoreロード失敗: ${e.message}')));
+      print(
+        'QuestionnaireDisplayPage: Firestore ERROR: ${e.code} - ${e.message}',
+      );
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Firestoreロード失敗: ${e.message}')));
     } catch (e) {
       setState(() {
         _loadError = '問診票データのロードに失敗しました: ${e.toString()}';
         _isLoadingData = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('問診票データのロードに失敗しました: ${e.toString()}')),
-      );
-      print('QuestionnairePage: UNEXPECTED LOAD ERROR: $e');
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('問診票データのロードに失敗しました: ${e.toString()}')));
+      print('QuestionnaireDisplayPage: UNEXPECTED LOAD ERROR: $e');
     }
-  }
-
-  void _showQrCodePage(BuildContext context) async {
-    final String? recordId = await _saveQuestionnaireDataToFirestore(context);
-
-    if (recordId == null) {
-      return;
-    }
-
-    final Uri qrCodeUri = Uri(
-      scheme: 'https',
-      host: 'miecal-7190e.web.app', // あなたのWebアプリがデプロイされているドメイン
-      path: 'questionnaire_records/$recordId', // パスにIDを直接含める
-    );
-
-    final String qrCodeUrl = qrCodeUri.toString();
-    print('Generated QR Code URL: $qrCodeUrl');
-
-    Navigator.push(context, VerticalSlideRoute(page: QrPage(data: qrCodeUrl)));
   }
 
   @override
   Widget build(BuildContext context) {
     print(
-      'QuestionnairePage: build method called. isLoadingData: $_isLoadingData, loadError: $_loadError',
+      'QuestionnaireDisplayPage: build method called. isLoadingData: $_isLoadingData, loadError: $_loadError',
     );
 
     final loc = AppLocalizations.of(context)!;
@@ -276,6 +153,35 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     List<String> displayOtherInfoItems =
         _displayOtherInformation?.split('; ') ?? [];
 
+    if (_isLoadingData) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("MIECAL", style: TextStyle(color: Colors.white)),
+          backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_loadError != null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("MIECAL", style: TextStyle(color: Colors.white)),
+          backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'エラー: $_loadError',
+              style: const TextStyle(color: Colors.red, fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -288,34 +194,17 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        // QRコードから開かれるページなので、戻るボタンは不要な場合が多いですが、
+        // 必要に応じて自動で表示させない（false）か、独自のボタンを設置してください。
         automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
-          Expanded(
-            flex: 1,
-            child: Material(
-              color: const Color.fromARGB(255, 207, 227, 230),
-              child: InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: SizedBox(
-                  child: Center(
-                    child: const Icon(
-                      Icons.expand_less,
-                      color: Colors.white,
-                      size: 36,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // このページにはスライドアップダウンは不要なので削除
           Expanded(
             flex: 1,
             child: Text(
-              loc.questionnaireConfirmTitle,
+              loc.questionnaireConfirmTitle, // 「問診票データ確認」など
               style: const TextStyle(color: Colors.black, fontSize: 22),
             ),
           ),
@@ -577,12 +466,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () => _showQrCodePage(context),
-                      child: const Text('QRコード作成 Create QRcode'),
-                    ),
-                  ),
+                  // このページにはQRコード作成ボタンは不要
                 ],
               ),
             ),

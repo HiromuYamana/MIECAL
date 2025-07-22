@@ -26,71 +26,76 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isLoading = false;
 
   Future<void> register() async {
-  setState(() {
-    isLoading = true;
-    errorMessage = '';
-  });
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
 
-  final email = emailController.text.trim();
-  final password = passwordController.text.trim();
-  final confirm = confirmPasswordController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final confirm = confirmPasswordController.text.trim();
     final loc = AppLocalizations.of(context)!;
 
-  if (password != confirm) {
-    setState(() {
-      errorMessage = loc.authWrongPassword;
-      isLoading = false;
-    });
-    return;
-  }
-
-  if (password.length < 6) {
-    setState(() {
-      errorMessage = loc.authShortPassword;
-      isLoading = false;
-    });
-    return;
-  }
-
-  try {
-    final userCredential = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-
-    final user = userCredential.user;
-    if (user != null) {
-      final userDoc = await _firestore.collection('users').doc(user.uid).get();
-      if (!userDoc.exists) {
-        await _firestore.collection('users').doc(user.uid).set({
-          'email': email,
-          'role': 'patient',
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-      }
+    if (password != confirm) {
+      setState(() {
+        errorMessage = loc.authWrongPassword;
+        isLoading = false;
+      });
+      return;
     }
 
-    if (!mounted) return;
+    if (password.length < 6) {
+      setState(() {
+        errorMessage = loc.authShortPassword;
+        isLoading = false;
+      });
+      return;
+    }
 
-    // 新規登録成功後、個人情報入力ページへ遷移
-    Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
-  } on FirebaseAuthException catch (e) {
-    setState(() {
-      errorMessage = e.message ?? loc.registerFailed;
-    });
-  } catch (e) {
-    setState(() {
-      errorMessage = loc.unknownError;
-    });
-  } finally {
-    setState(() {
-      isLoading = false;
-    });
+    try {
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final user = userCredential.user;
+      if (user != null) {
+        final userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+        if (!userDoc.exists) {
+          await _firestore.collection('users').doc(user.uid).set({
+            'email': email,
+            'role': 'patient',
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+        }
+      }
+
+      if (!mounted) return;
+
+      // 新規登録成功後、個人情報入力ページへ遷移
+      Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message ?? loc.registerFailed;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = loc.unknownError;
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
-}
 
-
-  InputDecoration buildInputDecoration(String hint, Icon icon, bool isObscure, VoidCallback toggle) {
+  InputDecoration buildInputDecoration(
+    String hint,
+    Icon icon,
+    bool isObscure,
+    VoidCallback toggle,
+  ) {
     return InputDecoration(
       hintText: hint,
       prefixIcon: icon,
@@ -99,9 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
         onPressed: toggle,
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 18),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
     );
   }
 
@@ -112,7 +115,8 @@ class _RegisterPageState extends State<RegisterPage> {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -124,7 +128,8 @@ class _RegisterPageState extends State<RegisterPage> {
         final user = userCredential.user;
 
         if (user != null) {
-          final userDoc = await _firestore.collection('users').doc(user.uid).get();
+          final userDoc =
+              await _firestore.collection('users').doc(user.uid).get();
 
           if (!userDoc.exists) {
             // Firestoreのユーザーデータがなければ初期化
@@ -150,8 +155,8 @@ class _RegisterPageState extends State<RegisterPage> {
           // final pendingCredential = e.credential; // 今回は使わず
 
           if (email != null) {
-            final List<String> signInMethods =
-                await _auth.fetchSignInMethodsForEmail(email);
+            final List<String> signInMethods = await _auth
+                .fetchSignInMethodsForEmail(email);
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -170,9 +175,9 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     } catch (e) {
       debugPrint('${loc.registerFailed}$e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${loc.googleLoginFailed}: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('${loc.googleLoginFailed}: $e')));
     }
   }
 
@@ -280,10 +285,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 // エラーメッセージ
                 if (errorMessage.isNotEmpty)
-                  Text(
-                    errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                  ),
+                  Text(errorMessage, style: const TextStyle(color: Colors.red)),
 
                 const SizedBox(height: 20),
 
@@ -302,13 +304,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 isLoading
                     ? const CircularProgressIndicator()
                     : GestureDetector(
-                        onTap: register,
-                        child: const Icon(
-                          Icons.expand_more,
-                          size: 60,
-                          color: Colors.black87,
-                        ),
+                      onTap: register,
+                      child: const Icon(
+                        Icons.expand_more,
+                        size: 60,
+                        color: Colors.black87,
                       ),
+                    ),
 
                 const SizedBox(height: 12),
               ],

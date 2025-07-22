@@ -95,5 +95,21 @@
 
   "choosingTheLevelOfPain": "程度の選択",
   
-  "showQrcode": "この画面を提示してください。"
+  "showQrcode": "この画面を提示してください。",
+
+
+    "loginFailed": "ログインに失敗しました。",
+    "questionnaireTitle": "問診票",
+    "questionnaireLoginRequired": "この問診票を閲覧するには、ログインが必要です。",
+    "questionnairePermissionDenied": "この問診票を閲覧する権限がありません。承認された医師アカウントでログインしてください。",
+    "questionnaireIdMissing": "問診票IDが指定されていません。",
+    "questionnaireNotFound": "指定された問診票データが見つかりません。",
+    "questionnaireNoData": "問診票データがありません。",
+    "questionnaireDataTitle": "問診票データ",
+    "loginButtonText": "ログインする",
+    "loginTitle": "ログイン",
+    "unknownError": "不明なエラーが発生しました。",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "firestoreError": "Firestoreエラー"
 }

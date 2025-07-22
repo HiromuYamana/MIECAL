@@ -158,7 +158,7 @@ abstract class AppLocalizations {
   /// No description provided for @unknownError.
   ///
   /// In en, this message translates to:
-  /// **'An expexted error has occurred.'**
+  /// **'An unknown error occurred.'**
   String get unknownError;
 
   /// No description provided for @add.
@@ -628,6 +628,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please show doctor or nurse this screen.'**
   String get showQrcode;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed.'**
+  String get loginFailed;
+
+  /// No description provided for @questionnaireTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Questionnaire'**
+  String get questionnaireTitle;
+
+  /// No description provided for @questionnaireLoginRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Login is required to view this questionnaire.'**
+  String get questionnaireLoginRequired;
+
+  /// No description provided for @questionnairePermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have permission to view this questionnaire. Please log in with an approved doctor account.'**
+  String get questionnairePermissionDenied;
+
+  /// No description provided for @questionnaireIdMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Questionnaire ID is missing.'**
+  String get questionnaireIdMissing;
+
+  /// No description provided for @questionnaireNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'The specified questionnaire data was not found.'**
+  String get questionnaireNotFound;
+
+  /// No description provided for @questionnaireNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'No questionnaire data available.'**
+  String get questionnaireNoData;
+
+  /// No description provided for @questionnaireDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Questionnaire Data'**
+  String get questionnaireDataTitle;
+
+  /// No description provided for @loginButtonText.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get loginButtonText;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginTitle;
+
+  /// No description provided for @firestoreError.
+  ///
+  /// In en, this message translates to:
+  /// **'Firestore Error'**
+  String get firestoreError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

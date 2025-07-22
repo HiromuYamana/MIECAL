@@ -38,17 +38,20 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
 
       final uid = user.uid;
 
-      await FirebaseFirestore.instance.collection('doctor_applications').doc(uid).set({
-        'userId': uid,
-        'name': _nameController.text.trim(),
-        'hospital': _hospitalController.text.trim(),
-        'status': 'pending',
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+      await FirebaseFirestore.instance
+          .collection('doctor_applications')
+          .doc(uid)
+          .set({
+            'userId': uid,
+            'name': _nameController.text.trim(),
+            'hospital': _hospitalController.text.trim(),
+            'status': 'pending',
+            'timestamp': FieldValue.serverTimestamp(),
+          });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('申請を送信しました。承認をお待ちください。')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('申請を送信しました。承認をお待ちください。')));
 
       Navigator.pop(context);
     } catch (e) {
@@ -138,38 +141,35 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
 
                 // エラーメッセージ表示
                 if (errorMessage.isNotEmpty)
-                  Text(
-                    errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                  ),
+                  Text(errorMessage, style: const TextStyle(color: Colors.red)),
                 if (errorMessage.isNotEmpty) const SizedBox(height: 16),
 
                 // 申請ボタン
                 _isSubmitting
                     ? const CircularProgressIndicator()
                     : GestureDetector(
-                        onTap: _submitApplication,
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.teal,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.teal.withOpacity(0.6),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              )
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.arrow_downward,
-                            size: 40,
-                            color: Colors.white,
-                          ),
+                      onTap: _submitApplication,
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.teal,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.teal.withOpacity(0.6),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.arrow_downward,
+                          size: 40,
+                          color: Colors.white,
                         ),
                       ),
+                    ),
                 const SizedBox(height: 24),
               ],
             ),
@@ -179,4 +179,3 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
     );
   }
 }
- 
