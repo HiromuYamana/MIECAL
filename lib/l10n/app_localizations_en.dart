@@ -217,6 +217,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get detailsNotEntered => 'Details: Not entered';
 
   @override
+  String get symptomSelection => 'Symptom Selection';
+
+  @override
+  String get symptomAllergy => 'Allergy';
+
+  @override
+  String get symptomStomachache => 'Stomachache';
+
+  @override
+  String get symptomWound => 'Wound';
+
+  @override
+  String get symptomFracture => 'Fracture';
+
+  @override
+  String get symptomMetabolic => 'Metabolic Syndrome';
+
+  @override
+  String get symptomCough => 'Cough';
+
+  @override
+  String get symptomBackpain => 'Back Pain';
+
+  @override
+  String get symptomFatigue => 'Fatigue';
+
+  @override
+  String get symptomFever => 'Fever';
+
+  @override
+  String get symptomSoreThroat => 'Sore Throat';
+
+  @override
+  String get symptomNausea => 'Nausea';
+
+  @override
+  String get symptomDizziness => 'Dizziness';
+
+  @override
+  String get symptomNumbness => 'Numbness';
+
+  @override
+  String get symptomRash => 'Rash';
+
+  @override
+  String get symptomJointPain => 'Joint Pain';
+
+  @override
+  String get symptomOther => 'Other';
+
+  @override
   String get affectedAreaSelection => 'Affected Area Selection';
 
   @override

@@ -45,7 +45,6 @@
   "day": "Day",
   "ageLabel": "Age: {age}",
 
-
   "signIn": "Sign in",
   "createNewAccount": "Create new account",
   "dontHaveAccount": "Don't you have account?",
@@ -73,6 +72,24 @@
   "qrSaveFailed": "Failed to save questionnaire data",
   "notLoggedIn": "Not logged in. Cannot save data.",
   "detailsNotEntered": "Details: Not entered",
+
+  "symptomSelection": "Symptom Selection",
+  "symptomAllergy": "Allergy",
+  "symptomStomachache": "Stomachache",
+  "symptomWound": "Wound",
+  "symptomFracture": "Fracture",
+  "symptomMetabolic": "Metabolic Syndrome",
+  "symptomCough": "Cough",
+  "symptomBackpain": "Back Pain",
+  "symptomFatigue": "Fatigue",
+  "symptomFever": "Fever",
+  "symptomSoreThroat": "Sore Throat",
+  "symptomNausea": "Nausea",
+  "symptomDizziness": "Dizziness",
+  "symptomNumbness": "Numbness",
+  "symptomRash": "Rash",
+  "symptomJointPain": "Joint Pain",
+  "symptomOther": "Other",
   
   "notSelected": "Not selected",
   "affectedAreaSelection":"Affected Area Selection",
