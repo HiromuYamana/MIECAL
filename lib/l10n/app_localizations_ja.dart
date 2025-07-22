@@ -51,7 +51,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get registerFailed => '登録に失敗しました';
 
   @override
-  String get unknownError => '予期せぬエラーが発生しました。';
+  String get unknownError => '不明なエラーが発生しました。';
 
   @override
   String get add => '追加';
@@ -341,4 +341,38 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get showQrcode => 'この画面を提示してください。';
+
+  @override
+  String get loginFailed => 'ログインに失敗しました。';
+
+  @override
+  String get questionnaireTitle => '問診票';
+
+  @override
+  String get questionnaireLoginRequired => 'この問診票を閲覧するには、ログインが必要です。';
+
+  @override
+  String get questionnairePermissionDenied =>
+      'この問診票を閲覧する権限がありません。承認された医師アカウントでログインしてください。';
+
+  @override
+  String get questionnaireIdMissing => '問診票IDが指定されていません。';
+
+  @override
+  String get questionnaireNotFound => '指定された問診票データが見つかりません。';
+
+  @override
+  String get questionnaireNoData => '問診票データがありません。';
+
+  @override
+  String get questionnaireDataTitle => '問診票データ';
+
+  @override
+  String get loginButtonText => 'ログインする';
+
+  @override
+  String get loginTitle => 'ログイン';
+
+  @override
+  String get firestoreError => 'Firestoreエラー';
 }

@@ -9,7 +9,7 @@ class AdminApprovalPage extends StatelessWidget {
   /// 申請承認処理
   Future<void> _approveApplication(DocumentSnapshot doc) async {
     final data = doc.data() as Map<String, dynamic>;
-    final uid  = doc.id;
+    final uid = doc.id;
     final name = data['name'] ?? '';
 
     // users/{uid} に role: doctor を付与
@@ -28,11 +28,12 @@ class AdminApprovalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // pending だけ取得
-    final Stream<QuerySnapshot> pendingStream = FirebaseFirestore.instance
-        .collection('doctor_applications')
-        .where('status', isEqualTo: 'pending')
-        .orderBy('timestamp')
-        .snapshots();
+    final Stream<QuerySnapshot> pendingStream =
+        FirebaseFirestore.instance
+            .collection('doctor_applications')
+            .where('status', isEqualTo: 'pending')
+            .orderBy('timestamp')
+            .snapshots();
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 218, 246, 250),
@@ -64,8 +65,10 @@ class AdminApprovalPage extends StatelessWidget {
           // ---- 3. データ無し ----
           if (docs.isEmpty) {
             return Center(
-              child: Text('保留中の申請はありません',
-                  style: GoogleFonts.poppins(fontSize: 18)),
+              child: Text(
+                '保留中の申請はありません',
+                style: GoogleFonts.poppins(fontSize: 18),
+              ),
             );
           }
 
@@ -76,7 +79,7 @@ class AdminApprovalPage extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (_, index) {
               final doc = docs[index];
-              final d   = doc.data() as Map<String, dynamic>;
+              final d = doc.data() as Map<String, dynamic>;
 
               return Container(
                 decoration: BoxDecoration(

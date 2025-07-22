@@ -23,28 +23,62 @@ import 'package:miecal/terms_of_service_page.dart';
 import 'package:miecal/role_provider.dart';
 import 'package:miecal/admin_approval_page.dart';
 import 'package:miecal/doctor_application_page.dart';
-import 'package:miecal/qr_scanner_page.dart';
+
+// ↓ 追加: QuestionnaireDisplayPage をインポート
+import 'package:miecal/questionnaire_display_page.dart';
+// ↓ 追加: Web環境かどうかを判定するためのインポート
+import 'package:flutter/foundation.dart' show kIsWeb;
+// ↓ 追加: WebのURLを解析するためのインポート
+import 'dart:html' as html;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
- runApp(
+  runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserInputModel()),
-        ChangeNotifierProvider(create: (_) {
-          final p = RoleProvider();
-          p.listenAuth();                       // ← 自動で Auth 変化を監視したい場合
-          return p;
-        }),
+        ChangeNotifierProvider(
+          create: (_) {
+            final p = RoleProvider();
+            p.listenAuth(); // ← 自動で Auth 変化を監視したい場合
+            return p;
+          },
+        ),
       ],
       child: const MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String? _initialRecordId;
+
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      final uri = Uri.parse(html.window.location.href);
+      // ↓ ここを修正: パスセグメントからIDを抽出
+      if (uri.pathSegments.length >= 2 &&
+          uri.pathSegments[0] == 'questionnaire_records') {
+        _initialRecordId = uri.pathSegments[1];
+        print(
+          'MainApp: Initial URL (Path Segment) Record ID: $_initialRecordId',
+        );
+      } else {
+        print('MainApp: No valid questionnaire_records ID found in path.');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -54,7 +88,6 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       initialRoute: '/',
-      //home: const AuthGate(),
       routes: {
         '/': (context) => const TopPage(),
         '/LoginPage': (context) => const LoginScreen(),
@@ -62,7 +95,9 @@ class MyApp extends StatelessWidget {
         '/PersonalInformationPage':
             (context) => const PersonalInformationPage(),
         '/Menupage': (context) {
-          final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final Map<String, dynamic>? args =
+              ModalRoute.of(context)?.settings.arguments
+                  as Map<String, dynamic>?;
           return MenuPage(
             userName: args?['userName'] as String?,
             userDateOfBirth: args?['userDateOfBirth'] as DateTime?, // 例: 生年月日
@@ -78,7 +113,9 @@ class MyApp extends StatelessWidget {
           );
         },
         '/SymptomPage': (context) {
-          final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final Map<String, dynamic>? args =
+              ModalRoute.of(context)?.settings.arguments
+                  as Map<String, dynamic>?;
 
           return SymptomPage(
             userName: args?['userName'] as String?,
@@ -104,7 +141,9 @@ class MyApp extends StatelessWidget {
         '/AdminApproval': (context) => const AdminApprovalPage(),
         '/TermsOfServicePage': (context) => const TermsOfServicePage(),
         '/QuestionnairePage': (context) {
-          final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final Map<String, dynamic>? args =
+              ModalRoute.of(context)?.settings.arguments
+                  as Map<String, dynamic>?;
 
           return QuestionnairePage(
             userName: args?['userName'] as String?,
@@ -120,12 +159,15 @@ class MyApp extends StatelessWidget {
             otherInformation: args?['otherInformation'] as String?, // その他情報
           );
         },
-        '/QrScannerPage': (context) => const QrScannerPage(),
       },
-      // 必要に応じてテーマを設定
+      home:
+          _initialRecordId != null && _initialRecordId!.isNotEmpty
+              ? QuestionnaireDisplayPage(
+                questionnaireRecordId: _initialRecordId!,
+              )
+              : const TopPage(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
-        // その他のテーマ設定
       ),
     );
   }

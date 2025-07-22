@@ -51,7 +51,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerFailed => 'Registration failed';
 
   @override
-  String get unknownError => 'An expexted error has occurred.';
+  String get unknownError => 'An unknown error occurred.';
 
   @override
   String get add => 'Add';
@@ -341,4 +341,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showQrcode => 'Please show doctor or nurse this screen.';
+
+  @override
+  String get loginFailed => 'Login failed.';
+
+  @override
+  String get questionnaireTitle => 'Questionnaire';
+
+  @override
+  String get questionnaireLoginRequired => 'Login is required to view this questionnaire.';
+
+  @override
+  String get questionnairePermissionDenied => 'You do not have permission to view this questionnaire. Please log in with an approved doctor account.';
+
+  @override
+  String get questionnaireIdMissing => 'Questionnaire ID is missing.';
+
+  @override
+  String get questionnaireNotFound => 'The specified questionnaire data was not found.';
+
+  @override
+  String get questionnaireNoData => 'No questionnaire data available.';
+
+  @override
+  String get questionnaireDataTitle => 'Questionnaire Data';
+
+  @override
+  String get loginButtonText => 'Log In';
+
+  @override
+  String get loginTitle => 'Login';
+
+  @override
+  String get firestoreError => 'Firestore Error';
 }

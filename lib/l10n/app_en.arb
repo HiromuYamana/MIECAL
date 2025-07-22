@@ -122,5 +122,20 @@
   "medication": "Medication",
   "pregnancy": "Pregnancy",
 
-  "showQrcode": "Please show doctor or nurse this screen."
+  "showQrcode": "Please show doctor or nurse this screen.",
+
+    "loginFailed": "Login failed.",
+    "questionnaireTitle": "Questionnaire",
+    "questionnaireLoginRequired": "Login is required to view this questionnaire.",
+    "questionnairePermissionDenied": "You do not have permission to view this questionnaire. Please log in with an approved doctor account.",
+    "questionnaireIdMissing": "Questionnaire ID is missing.",
+    "questionnaireNotFound": "The specified questionnaire data was not found.",
+    "questionnaireNoData": "No questionnaire data available.",
+    "questionnaireDataTitle": "Questionnaire Data",
+    "loginButtonText": "Log In",
+    "loginTitle": "Login",
+    "unknownError": "An unknown error occurred.",
+    "email": "Email",
+    "password": "Password",
+    "firestoreError": "Firestore Error"
 }
