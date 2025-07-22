@@ -115,7 +115,7 @@ class MenuPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _MenuIconButton(
-                          imagePath: 'assets/icons/monnsinnhyo.png',
+                          imagePath: 'assets/images/menu/monnsinnhyo.png',
                           label: local.symptomForm,
                           onTap: () {
                             Navigator.push(
@@ -139,7 +139,7 @@ class MenuPage extends StatelessWidget {
                           },
                         ),
                         _MenuIconButton(
-                          imagePath: 'assets/icons/profile.png',
+                          imagePath: 'assets/images/menu/profile.png',
                           label: local.profileEdit,
                           onTap: () {
                             Navigator.push(
@@ -156,7 +156,7 @@ class MenuPage extends StatelessWidget {
                       children: [
                         if (role != 'doctor')
                           _MenuIconButton(
-                            imagePath: 'assets/icons/QR.png',
+                            imagePath: 'assets/images/menu/QR.png',
                             label: 'QRを読み込む',
                             onTap: () {
                               Navigator.push(
@@ -166,7 +166,7 @@ class MenuPage extends StatelessWidget {
                             },
                           ),
                         _MenuIconButton(
-                          imagePath: 'assets/icons/medical_license.png',
+                          imagePath: 'assets/images/menu/medical_license.png',
                           label: '医師申請',
                           onTap: () {
                             Navigator.pushNamed(context, '/DoctorApplication');
@@ -174,7 +174,7 @@ class MenuPage extends StatelessWidget {
                         ),
                         if (role == 'admin')
                           _MenuIconButton(
-                            imagePath: 'assets/icons/approval.png',
+                            imagePath: 'assets/images/menu/approval.png',
                             label: '申請承認',
                             onTap: () {
                               Navigator.pushNamed(context, '/AdminApproval');

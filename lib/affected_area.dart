@@ -101,7 +101,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
   }
 
   Future<void> _loadMaskImage() async {
-    final byteData = await rootBundle.load('assets/body_mask.png');
+    final byteData = await rootBundle.load('assets/images/affected_area/body_mask.png');
     final buffer = byteData.buffer.asUint8List();
     final rawImage = img.decodeImage(buffer)!;
 
@@ -258,7 +258,7 @@ class _AffectedAreaPageState extends State<AffectedAreaPage> {
                             children: [
                               Positioned.fill(
                                 child: Image.asset(
-                                  'assets/human_outline.png',
+                                  'assets/images/affected_area/human_outline.png',
                                   key: _imageKey,
                                   fit: BoxFit.contain,
                                 ),

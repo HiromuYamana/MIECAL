@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           errorMessage = '${loc.googleLoginFailed}: user == null';
         });
-        return;                               // 以降の処理を中断
+        return; // 以降の処理を中断
       }
 
 
@@ -336,7 +336,7 @@ Future<void> signIn() async {
                 GestureDetector(
                   onTap: isLoading ? null : signInWithGoogle,
                   child: Image.asset(
-                    'assets/ios_light_google.png',
+                    'assets/images/login/ios_light_google.png',
                     fit: BoxFit.contain,
                   ),
                 ),

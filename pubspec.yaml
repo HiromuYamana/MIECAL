@@ -38,6 +38,14 @@ dev_dependencies:
 
 flutter:
   assets:
+    - assets/
+    - assets/images/
+    - assets/images/affected_area/
+    - assets/images/login/
+    - assets/images/menu/
+    - assets/images/suffer_level/
+    - assets/images/symptom/
+    - assets/images/top/
     - assets/sample_image1.png
     - assets/sample_image2.png
     - assets/sample_image3.png
@@ -46,15 +54,7 @@ flutter:
     - assets/sample_image6.png
     - assets/sample_image7.png
     - assets/sample_image8.png
-    - assets/onset_date.png
     - assets/show_screen.png
-    - assets/images/
-    - assets/
-    - assets/icons/
-    - assets/human_outline.png
-    - assets/body_mask.png
-    - assets/ios_light_google.png
-    - assets/google_light_new.png
     - assets/man_image.png
     - assets/woman_image.png
   uses-material-design: true

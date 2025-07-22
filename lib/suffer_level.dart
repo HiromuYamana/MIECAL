@@ -49,12 +49,12 @@ class _SufferLevelPageState extends State<SufferLevelPage> {
 
   // 表情画像のパスリスト
   final List<String> faceImages = [
-    'assets/images/face_very_happy.png', // 0: 0.0-1.99
-    'assets/images/face_happy.png', // 1: 2.0-3.99
-    'assets/images/face_neutral.png', // 2: 4.0-5.99
-    'assets/images/face_sad.png', // 3: 6.0-7.99
-    'assets/images/face_very_sad.png', // 4: 8.0-9.99
-    'assets/images/face_danger.png', // 5: 10.0
+    'assets/images/suffer_level/face_very_happy.png', // 0: 0.0-1.99
+    'assets/images/suffer_level/face_happy.png', // 1: 2.0-3.99
+    'assets/images/suffer_level/face_neutral.png', // 2: 4.0-5.99
+    'assets/images/suffer_level/face_sad.png', // 3: 6.0-7.99
+    'assets/images/suffer_level/face_very_sad.png', // 4: 8.0-9.99
+    'assets/images/suffer_level/face_danger.png', // 5: 10.0
   ];
 
   // 選択された程度を文字列としてまとめるヘルパー関数

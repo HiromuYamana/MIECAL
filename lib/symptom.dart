@@ -38,26 +38,26 @@ class SymptomPage extends StatefulWidget {
 class _SymptomPageState extends State<SymptomPage> {
   // 画像のパスと対応する日本語名をペアで保持するリスト
   final List<Map<String, String>> symptomItems = const [
-    {'path': 'assets/images/bienn.png', 'name': '鼻炎'},
-    {'path': 'assets/images/fukutuu.png', 'name': '腹痛'},
-    {'path': 'assets/images/gaishou.png', 'name': '外傷'},
-    {'path': 'assets/images/kossetu.png', 'name': '骨折'},
-    {'path': 'assets/images/metabo.png', 'name': 'メタボ'},
-    {'path': 'assets/images/seki.png', 'name': '咳'},
-    {'path': 'assets/images/youtuu.png', 'name': '腰痛'},
+    {'path': 'assets/images/symptom/bienn.png', 'name': '鼻炎'},
+    {'path': 'assets/images/symptom/fukutuu.png', 'name': '腹痛'},
+    {'path': 'assets/images/symptom/gaishou.png', 'name': '外傷'},
+    {'path': 'assets/images/symptom/kossetu.png', 'name': '骨折'},
+    {'path': 'assets/images/symptom/metabo.png', 'name': 'メタボ'},
+    {'path': 'assets/images/symptom/seki.png', 'name': '咳'},
+    {'path': 'assets/images/symptom/youtuu.png', 'name': '腰痛'},
 
     // 以下はダミー画像と仮定し、対応する日本語名を追加
-    {'path': 'assets/images/darusa.png', 'name': 'だるさ'},
-    {'path': 'assets/images/netu.png', 'name': '熱'},
-    {'path': 'assets/images/metabo.png', 'name': 'のどの痛み'},
-    {'path': 'assets/images/metabo.png', 'name': '吐き気'},
+    {'path': 'assets/images/symptom/darusa.png', 'name': 'だるさ'},
+    {'path': 'assets/images/symptom/netu.png', 'name': '熱'},
+    {'path': 'assets/images/symptom/metabo.png', 'name': 'のどの痛み'},
+    {'path': 'assets/images/symptom/metabo.png', 'name': '吐き気'},
 
-    {'path': 'assets/images/metabo.png', 'name': 'めまい'},
-    {'path': 'assets/images/metabo.png', 'name': 'しびれ'},
+    {'path': 'assets/images/symptom/metabo.png', 'name': 'めまい'},
+    {'path': 'assets/images/symptom/metabo.png', 'name': 'しびれ'},
 
-    {'path': 'assets/images/metabo.png', 'name': '湿疹'},
-    {'path': 'assets/images/metabo.png', 'name': '関節痛'},
-    {'path': 'assets/images/metabo.png', 'name': 'その他'},
+    {'path': 'assets/images/symptom/metabo.png', 'name': '湿疹'},
+    {'path': 'assets/images/symptom/metabo.png', 'name': '関節痛'},
+    {'path': 'assets/images/symptom/metabo.png', 'name': 'その他'},
   ];
 
   // 選択状態

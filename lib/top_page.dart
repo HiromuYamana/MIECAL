@@ -111,7 +111,7 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
             Align(
               alignment: Alignment(0.0, -0.2),
               child: Image.asset(
-                'assets/app_icon.png',
+                'assets/images/top/app_icon.png',
                 width: 280,
                 height: 280,
               ),
@@ -148,7 +148,7 @@ class _TopPageState extends State<TopPage> with TickerProviderStateMixin {
                 );
               },
               child: Image.asset(
-                'assets/タッチアイコン.png',
+                'assets/images/top/touch_icon.png',
                 width: 100,
               ),
             ),
