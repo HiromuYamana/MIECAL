@@ -18,7 +18,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get profileEdit => 'プロフィール';
 
   @override
-  String get email => 'メールアドレス';
+  String get qrScan => 'QRを読み込む';
+
+  @override
+  String get doctorApplication => '医師申請';
+
+  @override
+  String get applicationApproval => '申請承認';
+
+  @override
+  String get termsOfService => '利用規約を読む';
+
+  @override
+  String get email => 'Eメール';
 
   @override
   String get password => 'パスワード';
@@ -92,7 +104,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get yes => 'あり';
 
   @override
+  String get yes2 => 'はい';
+
+  @override
   String get no => 'なし';
+
+  @override
+  String get no2 => 'いいえ';
 
   @override
   String get saveFailed => '保存に失敗しました:';
@@ -277,6 +295,30 @@ class AppLocalizationsJa extends AppLocalizations {
   String get choosingTheLevelOfPain => '程度の選択';
 
   @override
+  String get labelAlcohol => '飲酒はしますか？';
+
+  @override
+  String get labelSmoking => '喫煙はしますか？';
+
+  @override
+  String get labelMedication => '現在使用しているお薬はありますか？';
+
+  @override
+  String get labelPregnancy => '現在妊娠の可能性はございますか？';
+
+  @override
+  String get alcohol => '飲酒';
+
+  @override
+  String get smoke => '喫煙';
+
+  @override
+  String get medication => '薬';
+
+  @override
+  String get pregnancy => '妊娠';
+
+  @override
   String get showQrcode => 'この画面を提示してください。';
 
   @override
@@ -289,7 +331,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get questionnaireLoginRequired => 'この問診票を閲覧するには、ログインが必要です。';
 
   @override
-  String get questionnairePermissionDenied => 'この問診票を閲覧する権限がありません。承認された医師アカウントでログインしてください。';
+  String get questionnairePermissionDenied =>
+      'この問診票を閲覧する権限がありません。承認された医師アカウントでログインしてください。';
 
   @override
   String get questionnaireIdMissing => '問診票IDが指定されていません。';

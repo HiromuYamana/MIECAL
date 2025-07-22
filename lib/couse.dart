@@ -36,15 +36,14 @@ class CousePage extends StatefulWidget {
 }
 
 class _CousePageState extends State<CousePage> {
-  // 画像のパスと対応する日本語名をペアで保持するリスト
-  // Mapのキーが画像パス、値が日本語名
   final List<Map<String, String>> couseItems = const [
-    {'path': 'assets/images/ziko.png', 'name': '事故'},
-    {'path': 'assets/images/tennraku.png', 'name': '転落'},
-    {'path': 'assets/images/fukutuu.png', 'name': '腹痛'},
-    {'path': 'assets/images/kossetu.png', 'name': '骨折'},
-    {'path': 'assets/images/metabo.png', 'name': 'メタボ'},
-    // 他の原因があればここに追加
+    {'path': 'assets/images/cause/ziko.png', 'name': '事故'},
+    {'path': 'assets/images/cause/tennraku.png', 'name': '転落'},
+    {'path': 'assets/images/cause/tenntou.png', 'name': '転倒'},
+    {'path': 'assets/images/cause/huka.png', 'name': '負荷'},
+    {'path': 'assets/images/cause/daboku.png', 'name': '打撲'},
+    {'path': 'assets/images/cause/humei.png', 'name': '不明'},
+    {'path': 'assets/images/cause/sonota.png', 'name': 'その他'},
   ];
 
   // 選択状態
@@ -71,6 +70,7 @@ class _CousePageState extends State<CousePage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!; 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
       appBar: AppBar(
@@ -109,12 +109,12 @@ class _CousePageState extends State<CousePage> {
             ),
           ),
           Expanded(
-            flex:1,
-            child:Container(
+            flex: 1,
+            child: Container(
               color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
                 child:Text(
-                  '原因',
+                  loc.cause,
                   style: TextStyle(
                   color: Colors.black,
                   fontSize: 22,

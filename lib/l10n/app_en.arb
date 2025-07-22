@@ -3,6 +3,10 @@
   "menuTitle": "Menu",
   "symptomForm": "Medical Form",
   "profileEdit": "Profile",
+  "qrScan": "Scan QR code",
+  "doctorApplication": "Doctor Application",
+  "applicationApproval": "Application Approval",
+  "termsOfService": "View Terms of Use",
 
   "email": "Email",
   "password": "Password",
@@ -29,7 +33,9 @@
   "loginRequest":"Please sign in.",
   "loadingError": "Loading Error",
   "yes": "Yes",
+  "yes2": "Yes",
   "no": "No",
+  "no2": "No",
   "saveFailed": "Saving failed",
   "allergy": "Allergy",
   "surgicalHistory": "Surgical history",
@@ -98,8 +104,16 @@
 
   "choosingTheLevelOfPain": "Choosing the level of pain",
 
-  "showQrcode": "Please show doctor or nurse this screen.",
+  "labelAlcohol": "Do you drink alcohol?",
+  "labelSmoking": "Do you smoke?",
+  "labelMedication": "Are you taking any medication?",
+  "labelPregnancy": "Is there a possibility of pregnancy?",
+  "alcohol": "Alcohol",
+  "smoke": "Smoking",
+  "medication": "Medication",
+  "pregnancy": "Pregnancy",
 
+  "showQrcode": "Please show doctor or nurse this screen.",
 
     "loginFailed": "Login failed.",
     "questionnaireTitle": "Questionnaire",

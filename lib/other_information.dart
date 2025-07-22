@@ -37,21 +37,13 @@ class OtherInformationPage extends StatefulWidget {
 }
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
-  // 各行で選択された項目のインデックスを保持 (0または1、未選択はnull)
-  List<int?> selectedInRow = [null, null, null, null]; // 4項目に対応
-
-  final List<Map<String, String>> imagePaths = [
-    {'path': 'assets/sample_image1.png', 'name': '飲む'},
-    {'path': 'assets/sample_image2.png', 'name': '飲まない'},
-    {'path': 'assets/sample_image3.png', 'name': '吸う'},
-    {'path': 'assets/sample_image4.png', 'name': '吸わない'},
-    {'path': 'assets/sample_image5.png', 'name': 'あり'},
-    {'path': 'assets/sample_image6.png', 'name': 'なし'},
-    {'path': 'assets/sample_image7.png', 'name': 'はい'},
-    {'path': 'assets/sample_image8.png', 'name': 'いいえ'},
-  ];
-
-  final List<String> labels = ['飲酒', '喫煙', 'お薬', '妊娠']; // 各行のラベル
+  List<bool> toggleValues = [false, false, false, false];
+  final List<String> imagePaths = [
+  'assets/images/other_information/drink.png',
+  'assets/images/other_information/smoke.png',
+  'assets/images/other_information/medicine.png',
+  'assets/images/other_information/pregnancy.png',
+];
 
   @override
   void initState() {
@@ -59,27 +51,16 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
     // ここで必要であれば、初期選択状態を復元することも可能
   }
 
-  // 選択された情報を文字列としてまとめるヘルパー関数
-  String _getOtherInformationSummary() {
-    List<String> selectedSummaryParts = [];
-    final loc = AppLocalizations.of(context)!;
-    for (int i = 0; i < selectedInRow.length; i++) {
-      if (selectedInRow[i] != null) {
-        // 選択された場合
-        int imageIndex = i * 2 + selectedInRow[i]!;
-        String selectedOptionName = imagePaths[imageIndex]['name']!;
-        selectedSummaryParts.add('${labels[i]}: $selectedOptionName');
-      } else {
-        // 未選択の場合も情報として含める
-        selectedSummaryParts.add('${labels[i]}:${loc.notSelected}');
-      }
-    }
-    // 全ての行の情報を含めて結合
-    return selectedSummaryParts.join('; '); // 各項目をセミコロンとスペースで区切る
-  }
-
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final List<String> labels2 = [
+      loc.alcohol,
+      loc.smoke,
+      loc.medication,
+      loc.pregnancy,
+    ];
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
       appBar: AppBar(
@@ -123,7 +104,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
               color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
                 child:Text(
-                  'その他情報',
+                  loc.otherInfo,
                   style: TextStyle(
                   color: Colors.black,
                   fontSize: 22
@@ -135,98 +116,69 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
 
           Expanded(
             flex: 12,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(4, (rowIndex) {
-                  // 4行に対応
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 120, 120, 120),
-                            border: Border.all(color: Colors.blueAccent),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 4,
-                                offset: Offset(2, 2),
+            child: ListView.builder(
+              itemCount: labels2.length,
+              itemBuilder: (context, index) {
+                final toggleValue = toggleValues[index];
+
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      child: Row(
+                        children: [
+                          // 左のアイコン
+                          Image.asset(
+                            imagePaths[index],
+                            width: 60,
+                            height: 60,
+                          ),
+                          const SizedBox(width: 12),
+                              Icon(
+                                toggleValues[index] ? Icons.check_circle : Icons.cancel,
+                                color: toggleValues[index] ? Colors.green : Colors.red,
+                                size: 24,
                               ),
-                            ],
+                              const SizedBox(width: 8),
+
+                          // ラベル
+                          Expanded(
+                            child: Text(
+                              labels2[index],
+                              style: const TextStyle(fontSize: 18),
+                            ),
                           ),
-                          child: Row(
-                            children: List.generate(2, (colIndex) {
-                              int index = rowIndex * 2 + colIndex;
-                              bool isSelected =
-                                  selectedInRow[rowIndex] == colIndex;
-                              if (index >= imagePaths.length) {
-                                return const SizedBox.shrink();
-                              }
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize: const Size(
-                                      100,
-                                      100,
-                                    ), // ボタンの固定サイズ
-                                    backgroundColor:
-                                        isSelected
-                                            ? const Color.fromARGB(
-                                              255,
-                                              225,
-                                              171,
-                                              85,
-                                            ) // 選択時
-                                            : const Color.fromARGB(255, 255, 255, 255), // 未選択時
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        16,
-                                      ), // ボタンの角丸
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedInRow[rowIndex] =
-                                          isSelected ? null : colIndex;
-                                    });
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 80,
-                                        height: 80,
-                                        child: Image.asset(
-                                          imagePaths[index]['path']!,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
+
+                          Text(
+                            loc.no,
+                            style: const TextStyle(fontSize: 14),
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          labels[rowIndex],
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ],
+
+                          const SizedBox(width: 4),
+
+                          // トグルスイッチ
+                          Switch(
+                            value: toggleValue,
+                            onChanged: (value) {
+                              setState(() {
+                                toggleValues[index] = value;
+                              });
+                            },
+                          ),
+
+                          const SizedBox(width: 4),
+
+                          Text(
+                            loc.yes,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ),
-                  );
-                }),
-              ),
+                    const Divider(),
+                  ],
+                );
+              },
             ),
           ),
           Expanded(
@@ -273,5 +225,23 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
         ],
       ),
     );
+  }
+  String _getOtherInformationSummary() {
+    final loc = AppLocalizations.of(context)!;
+    final List<String> labels = [loc.alcohol, loc.smoke, loc.medication, loc.pregnancy];
+    List<String> summary = [];
+
+    for (int i = 0; i < toggleValues.length; i++) {
+      final value = toggleValues[i];
+      String label = labels[i];
+      String result = value
+          ? loc.notSelected
+          : value
+              ? loc.yes // ← "はい"
+              : loc.no; // ← "いいえ"
+      summary.add('$label: $result');
+    }
+
+    return summary.join('; ');
   }
 }

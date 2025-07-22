@@ -18,6 +18,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileEdit => 'Profile';
 
   @override
+  String get qrScan => 'Scan QR code';
+
+  @override
+  String get doctorApplication => 'Doctor Application';
+
+  @override
+  String get applicationApproval => 'Application Approval';
+
+  @override
+  String get termsOfService => 'View Terms of Use';
+
+  @override
   String get email => 'Email';
 
   @override
@@ -92,7 +104,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yes => 'Yes';
 
   @override
+  String get yes2 => 'Yes';
+
+  @override
   String get no => 'No';
+
+  @override
+  String get no2 => 'No';
 
   @override
   String get saveFailed => 'Saving failed';
@@ -275,6 +293,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get choosingTheLevelOfPain => 'Choosing the level of pain';
+
+  @override
+  String get labelAlcohol => 'Do you drink alcohol?';
+
+  @override
+  String get labelSmoking => 'Do you smoke?';
+
+  @override
+  String get labelMedication => 'Are you taking any medication?';
+
+  @override
+  String get labelPregnancy => 'Is there a possibility of pregnancy?';
+
+  @override
+  String get alcohol => 'Alcohol';
+
+  @override
+  String get smoke => 'Smoking';
+
+  @override
+  String get medication => 'Medication';
+
+  @override
+  String get pregnancy => 'Pregnancy';
 
   @override
   String get showQrcode => 'Please show doctor or nurse this screen.';

@@ -335,7 +335,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 GestureDetector(
                   onTap: isLoading ? null : signInWithGoogle,
                   child: Image.asset(
-                    'assets/ios_light_google.png',
+                    'assets/images/login/ios_light_google.png',
                     fit: BoxFit.contain,
                   ),
                 ),
