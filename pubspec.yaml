@@ -51,8 +51,7 @@ flutter:
     - assets/show_screen.png
     - assets/man_image.png
     - assets/woman_image.png
-    - assets/doctor_icon.png
-    - assets/sinseikyoka.png
+
     - assets/monnsinnhyo.png
   uses-material-design: true
   generate: true
