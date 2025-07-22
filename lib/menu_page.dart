@@ -166,7 +166,7 @@ class MenuPage extends StatelessWidget {
                             },
                           ),
                         _MenuIconButton(
-                          imagePath: 'assets/images/menu/medical_license.png',
+                          imagePath: 'assets/images/menu/doctor_icon.png',
                           label: loc.doctorApplication,
                           onTap: () {
                             Navigator.pushNamed(context, '/DoctorApplication');
@@ -174,7 +174,7 @@ class MenuPage extends StatelessWidget {
                         ),
                         if (role == 'admin')
                           _MenuIconButton(
-                            imagePath: 'assets/images/menu/approval.png',
+                            imagePath: 'assets/images/menu/sinseikyoka.png',
                             label: loc.applicationApproval,
                             onTap: () {
                               Navigator.pushNamed(context, '/AdminApproval');
