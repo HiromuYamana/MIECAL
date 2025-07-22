@@ -113,6 +113,30 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get profileEdit;
 
+  /// No description provided for @qrScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get qrScan;
+
+  /// No description provided for @doctorApplication.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor Application'**
+  String get doctorApplication;
+
+  /// No description provided for @applicationApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Application Approval'**
+  String get applicationApproval;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'View Terms of Use'**
+  String get termsOfService;
+
   /// No description provided for @email.
   ///
   /// In en, this message translates to:
@@ -257,11 +281,23 @@ abstract class AppLocalizations {
   /// **'Yes'**
   String get yes;
 
+  /// No description provided for @yes2.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes2;
+
   /// No description provided for @no.
   ///
   /// In en, this message translates to:
   /// **'No'**
   String get no;
+
+  /// No description provided for @no2.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no2;
 
   /// No description provided for @saveFailed.
   ///
@@ -622,6 +658,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choosing the level of pain'**
   String get choosingTheLevelOfPain;
+
+  /// No description provided for @labelAlcohol.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you drink alcohol?'**
+  String get labelAlcohol;
+
+  /// No description provided for @labelSmoking.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you smoke?'**
+  String get labelSmoking;
+
+  /// No description provided for @labelMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you taking any medication?'**
+  String get labelMedication;
+
+  /// No description provided for @labelPregnancy.
+  ///
+  /// In en, this message translates to:
+  /// **'Is there a possibility of pregnancy?'**
+  String get labelPregnancy;
+
+  /// No description provided for @alcohol.
+  ///
+  /// In en, this message translates to:
+  /// **'Alcohol'**
+  String get alcohol;
+
+  /// No description provided for @smoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoking'**
+  String get smoke;
+
+  /// No description provided for @medication.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication'**
+  String get medication;
+
+  /// No description provided for @pregnancy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pregnancy'**
+  String get pregnancy;
 
   /// No description provided for @showQrcode.
   ///

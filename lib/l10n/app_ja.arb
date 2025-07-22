@@ -3,6 +3,10 @@
   "menuTitle": "メニュー",
   "symptomForm": "問診票",
   "profileEdit": "プロフィール",
+  "qrScan": "QRを読み込む",
+  "doctorApplication": "医師申請",
+  "applicationApproval": "申請承認",
+  "termsOfService": "利用規約を読む",
 
   "email": "Eメール",
   "password": "パスワード",
@@ -29,7 +33,9 @@
   "loginRequest":"ログインしてください",
   "loadingError": "読み込みエラー",
   "yes": "あり",
+  "yes2": "はい",
   "no": "なし",
+  "no2": "いいえ",
   "saveFailed": "保存に失敗しました:",
   "allergy": "アレルギー",
   "surgicalHistory": "手術歴",
@@ -94,6 +100,15 @@
   "dateOfOnset": "発症日",
 
   "choosingTheLevelOfPain": "程度の選択",
-  
+
+  "labelAlcohol": "飲酒はしますか？",
+  "labelSmoking": "喫煙はしますか？",
+  "labelMedication": "現在使用しているお薬はありますか？",
+  "labelPregnancy": "現在妊娠の可能性はございますか？",
+  "alcohol": "飲酒",
+  "smoke": "喫煙",
+  "medication": "薬",
+  "pregnancy": "妊娠",
+
   "showQrcode": "この画面を提示してください。"
 }

@@ -41,19 +41,13 @@ flutter:
     - assets/
     - assets/images/
     - assets/images/affected_area/
+    - assets/images/cause/
     - assets/images/login/
     - assets/images/menu/
+    - assets/images/other_information/
     - assets/images/suffer_level/
     - assets/images/symptom/
     - assets/images/top/
-    - assets/sample_image1.png
-    - assets/sample_image2.png
-    - assets/sample_image3.png
-    - assets/sample_image4.png
-    - assets/sample_image5.png
-    - assets/sample_image6.png
-    - assets/sample_image7.png
-    - assets/sample_image8.png
     - assets/show_screen.png
     - assets/man_image.png
     - assets/woman_image.png

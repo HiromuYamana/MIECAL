@@ -41,7 +41,7 @@ class MenuPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final local = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
 
     // 🔽 RoleProvider からロールとローディング状態を取得
     final roleProvider = context.watch<RoleProvider>();
@@ -79,9 +79,9 @@ class MenuPage extends StatelessWidget {
             ),
           Expanded(
             flex: 1,
-            child: const Text(
-              'メニュー',
-              style: TextStyle(
+            child: Text(
+              loc.menuTitle,
+              style: const TextStyle(
               color: Colors.black,
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -116,7 +116,7 @@ class MenuPage extends StatelessWidget {
                       children: [
                         _MenuIconButton(
                           imagePath: 'assets/images/menu/monnsinnhyo.png',
-                          label: local.symptomForm,
+                          label: loc.symptomForm,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -140,7 +140,7 @@ class MenuPage extends StatelessWidget {
                         ),
                         _MenuIconButton(
                           imagePath: 'assets/images/menu/profile.png',
-                          label: local.profileEdit,
+                          label: loc.profileEdit,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -157,7 +157,7 @@ class MenuPage extends StatelessWidget {
                         if (role != 'doctor')
                           _MenuIconButton(
                             imagePath: 'assets/images/menu/QR.png',
-                            label: 'QRを読み込む',
+                            label: loc.qrScan,
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -167,7 +167,7 @@ class MenuPage extends StatelessWidget {
                           ),
                         _MenuIconButton(
                           imagePath: 'assets/images/menu/medical_license.png',
-                          label: '医師申請',
+                          label: loc.doctorApplication,
                           onTap: () {
                             Navigator.pushNamed(context, '/DoctorApplication');
                           },
@@ -175,7 +175,7 @@ class MenuPage extends StatelessWidget {
                         if (role == 'admin')
                           _MenuIconButton(
                             imagePath: 'assets/images/menu/approval.png',
-                            label: '申請承認',
+                            label: loc.applicationApproval,
                             onTap: () {
                               Navigator.pushNamed(context, '/AdminApproval');
                             },
@@ -190,7 +190,7 @@ class MenuPage extends StatelessWidget {
                       },
                       icon: const Icon(Icons.logout, size: 18, color: Colors.grey),
                       label: Text(
-                        local.logout,
+                        loc.logout,
                         style: const TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                     ),
@@ -198,7 +198,7 @@ class MenuPage extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushNamed(context, '/TermsOfServicePage');
                       },
-                      child: const Text('利用規約を見る'),
+                      child: Text(loc.termsOfService),
                     ),
                   ],
                 ),
