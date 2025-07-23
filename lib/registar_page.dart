@@ -26,76 +26,71 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isLoading = false;
 
   Future<void> register() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
+  setState(() {
+    isLoading = true;
+    errorMessage = '';
+  });
 
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-    final confirm = confirmPasswordController.text.trim();
+  final email = emailController.text.trim();
+  final password = passwordController.text.trim();
+  final confirm = confirmPasswordController.text.trim();
     final loc = AppLocalizations.of(context)!;
 
-    if (password != confirm) {
-      setState(() {
-        errorMessage = loc.authWrongPassword;
-        isLoading = false;
-      });
-      return;
-    }
-
-    if (password.length < 6) {
-      setState(() {
-        errorMessage = loc.authShortPassword;
-        isLoading = false;
-      });
-      return;
-    }
-
-    try {
-      final userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      final user = userCredential.user;
-      if (user != null) {
-        final userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
-        if (!userDoc.exists) {
-          await _firestore.collection('users').doc(user.uid).set({
-            'email': email,
-            'role': 'patient',
-            'createdAt': FieldValue.serverTimestamp(),
-          });
-        }
-      }
-
-      if (!mounted) return;
-
-      // 新規登録成功後、個人情報入力ページへ遷移
-      Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message ?? loc.registerFailed;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = loc.unknownError;
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+  if (password != confirm) {
+    setState(() {
+      errorMessage = loc.authWrongPassword;
+      isLoading = false;
+    });
+    return;
   }
 
-  InputDecoration buildInputDecoration(
-    String hint,
-    Icon icon,
-    bool isObscure,
-    VoidCallback toggle,
-  ) {
+  if (password.length < 6) {
+    setState(() {
+      errorMessage = loc.authShortPassword;
+      isLoading = false;
+    });
+    return;
+  }
+
+  try {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final user = userCredential.user;
+    if (user != null) {
+      final userDoc = await _firestore.collection('users').doc(user.uid).get();
+      if (!userDoc.exists) {
+        await _firestore.collection('users').doc(user.uid).set({
+          'email': email,
+          'role': 'patient',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    }
+
+    if (!mounted) return;
+
+    // 新規登録成功後、個人情報入力ページへ遷移
+    Navigator.pushReplacementNamed(context, '/PersonalInformationPage');
+  } on FirebaseAuthException catch (e) {
+    setState(() {
+      errorMessage = e.message ?? loc.registerFailed;
+    });
+  } catch (e) {
+    setState(() {
+      errorMessage = loc.unknownError;
+    });
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+
+
+  InputDecoration buildInputDecoration(String hint, Icon icon, bool isObscure, VoidCallback toggle) {
     return InputDecoration(
       hintText: hint,
       prefixIcon: icon,
@@ -104,7 +99,9 @@ class _RegisterPageState extends State<RegisterPage> {
         onPressed: toggle,
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 18),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
     );
   }
 
@@ -115,8 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -128,8 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
         final user = userCredential.user;
 
         if (user != null) {
-          final userDoc =
-              await _firestore.collection('users').doc(user.uid).get();
+          final userDoc = await _firestore.collection('users').doc(user.uid).get();
 
           if (!userDoc.exists) {
             // Firestoreのユーザーデータがなければ初期化
@@ -155,8 +150,8 @@ class _RegisterPageState extends State<RegisterPage> {
           // final pendingCredential = e.credential; // 今回は使わず
 
           if (email != null) {
-            final List<String> signInMethods = await _auth
-                .fetchSignInMethodsForEmail(email);
+            final List<String> signInMethods =
+                await _auth.fetchSignInMethodsForEmail(email);
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -175,9 +170,9 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     } catch (e) {
       debugPrint('${loc.registerFailed}$e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('${loc.googleLoginFailed}: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${loc.googleLoginFailed}: $e')),
+      );
     }
   }
 
@@ -206,117 +201,163 @@ class _RegisterPageState extends State<RegisterPage> {
         backgroundColor: const Color.fromARGB(255, 75, 170, 248),
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 12,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  loc.createNewAccount,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 30),
-
-                // E-mail
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    hintText: loc.email,
-                    prefixIcon: const Icon(Icons.email_outlined),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Material(
+              color: const Color.fromARGB(255, 207, 227, 230),
+              child: InkWell(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: SizedBox(
+                  child: Center(
+                    child: const Icon(
+                      Icons.expand_less,
+                      color: Colors.white,
+                      size: 36,
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-
-                // Password
-                TextField(
-                  controller: passwordController,
-                  obscureText: obscurePassword,
-                  decoration: buildInputDecoration(
-                    loc.password,
-                    const Icon(Icons.lock_outline),
-                    obscurePassword,
-                    () {
-                      setState(() {
-                        obscurePassword = !obscurePassword;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // Confirm Password
-                TextField(
-                  controller: confirmPasswordController,
-                  obscureText: obscureConfirmPassword,
-                  decoration: buildInputDecoration(
-                    loc.confirmPassword,
-                    const Icon(Icons.lock_outline),
-                    obscureConfirmPassword,
-                    () {
-                      setState(() {
-                        obscureConfirmPassword = !obscureConfirmPassword;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // エラーメッセージ
-                if (errorMessage.isNotEmpty)
-                  Text(errorMessage, style: const TextStyle(color: Colors.red)),
-
-                const SizedBox(height: 20),
-
-                // Google登録ボタン
-                GestureDetector(
-                  onTap: isLoading ? null : signInWithGoogle,
-                  child: Image.asset(
-                    'assets/google_light_new.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // 登録ボタン（矢印）
-                isLoading
-                    ? const CircularProgressIndicator()
-                    : GestureDetector(
-                      onTap: register,
-                      child: const Icon(
-                        Icons.expand_more,
-                        size: 60,
-                        color: Colors.black87,
-                      ),
-                    ),
-
-                const SizedBox(height: 12),
-              ],
+              ),
             ),
           ),
-        ),
+          Expanded(
+            flex: 20,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 12,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        loc.createNewAccount,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+
+                      // E-mail
+                      TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          hintText: loc.email,
+                          prefixIcon: const Icon(Icons.email_outlined),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 18),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Password
+                      TextField(
+                        controller: passwordController,
+                        obscureText: obscurePassword,
+                        decoration: buildInputDecoration(
+                          loc.password,
+                          const Icon(Icons.lock_outline),
+                          obscurePassword,
+                          () {
+                            setState(() {
+                              obscurePassword = !obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Confirm Password
+                      TextField(
+                        controller: confirmPasswordController,
+                        obscureText: obscureConfirmPassword,
+                        decoration: buildInputDecoration(
+                          loc.confirmPassword,
+                          const Icon(Icons.lock_outline),
+                          obscureConfirmPassword,
+                          () {
+                            setState(() {
+                              obscureConfirmPassword = !obscureConfirmPassword;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // エラーメッセージ
+                      if (errorMessage.isNotEmpty)
+                        Text(
+                          errorMessage,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+
+                      const SizedBox(height: 20),
+
+                      // Google登録ボタン
+                      GestureDetector(
+                        onTap: isLoading ? null : signInWithGoogle,
+                        child: Image.asset(
+                          'assets/google_light_new.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 40), // 横の余白を追加
+              child: Center(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : register, // ローディング中は無効化
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 18, 81, 241), // ボタンの色
+                      foregroundColor: Colors.white, // テキストの色
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30), // 角丸
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 10), // 上下の余白
+                    ),
+                    child: isLoading
+                        ? const CircularProgressIndicator(
+                            color: Colors.white, // ローディングの色
+                          )
+                        : const Text(
+                            'Create', // ボタンのテキスト
+                            style: TextStyle(fontSize: 20), // テキストサイズ
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

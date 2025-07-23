@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:miecal/l10n/app_localizations.dart';
-import 'package:provider/provider.dart'; // ★ 追加
-import 'package:miecal/role_provider.dart'; // ★ 追加
+import 'package:provider/provider.dart';           // ★ 追加
+import 'package:miecal/role_provider.dart';        // ★ 追加
 import 'package:miecal/firestore_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -68,13 +68,12 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           errorMessage = '${loc.googleLoginFailed}: user == null';
         });
-        return; // 以降の処理を中断
+        return;                               // 以降の処理を中断
       }
 
-      await FirestoreService.instance.ensureUserDoc(
-        user.uid,
-        email: user.email! ?? '',
-      );
+
+      await FirestoreService.instance.ensureUserDoc(user.uid, email: user.email! ?? '');
+
 
       if (user == null) return;
 
@@ -86,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await _handleUserLogin(user, loc);
 
       context.read<RoleProvider>().fetchRole(user.uid);
+
     } catch (e) {
       setState(() {
         errorMessage = '${loc.googleLoginFailed}: $e';
@@ -98,44 +98,45 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // メールログイン
-  Future<void> signIn() async {
-    final loc = AppLocalizations.of(context)!;
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
+Future<void> signIn() async {
+  final loc = AppLocalizations.of(context)!;
+  setState(() {
+    isLoading = true;
+    errorMessage = '';
+  });
 
-    try {
-      // ① メール & パスワードでログイン
-      final credential = await _auth.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+  try {
+    // ① メール & パスワードでログイン
+    final credential = await _auth.signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
 
-      // ② User を取得し null チェック
-      final user = credential.user;
-      if (user == null) {
-        setState(() => errorMessage = loc.authUnknownError);
-        return;
-      }
-
-      // ③ users/{uid} が無ければ role: patient で作成
-      await FirestoreService.instance.ensureUserDoc(
-        user.uid,
-        email: user.email ?? '',
-      );
-
-      // ④ アプリ側のログイン後処理
-      await _handleUserLogin(user, loc);
-
-      // ⑤ RoleProvider を更新
-      context.read<RoleProvider>().fetchRole(user.uid);
-    } on FirebaseAuthException catch (e) {
-      setState(() => errorMessage = getLocalizedAuthError(e.code, loc));
-    } finally {
-      setState(() => isLoading = false);
+    // ② User を取得し null チェック
+    final user = credential.user;
+    if (user == null) {
+      setState(() => errorMessage = loc.authUnknownError);
+      return;
     }
+
+    // ③ users/{uid} が無ければ role: patient で作成
+    await FirestoreService.instance.ensureUserDoc(
+      user.uid,
+      email: user.email ?? '',
+    );
+
+    // ④ アプリ側のログイン後処理
+    await _handleUserLogin(user, loc);
+
+    // ⑤ RoleProvider を更新
+    context.read<RoleProvider>().fetchRole(user.uid);
+  } on FirebaseAuthException catch (e) {
+    setState(() => errorMessage = getLocalizedAuthError(e.code, loc));
+  } finally {
+    setState(() => isLoading = false);
   }
+}
+
 
   // Firestore情報取得
   Future<void> _handleUserLogin(User user, AppLocalizations loc) async {
@@ -335,7 +336,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 GestureDetector(
                   onTap: isLoading ? null : signInWithGoogle,
                   child: Image.asset(
-                    'assets/images/login/ios_light_google.png',
+                    'assets/ios_light_google.png',
                     fit: BoxFit.contain,
                   ),
                 ),

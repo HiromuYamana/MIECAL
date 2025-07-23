@@ -82,14 +82,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //locale: const Locale('en'),
+      locale: const Locale('en'),
       title: 'MIECAL',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      initialRoute: '/',
+//      initialRoute: '/',
       routes: {
-        '/': (context) => const TopPage(),
+//        '/': (context) => const TopPage(),
         '/LoginPage': (context) => const LoginScreen(),
         '/RegisterPage': (context) => const RegisterPage(),
         '/PersonalInformationPage':

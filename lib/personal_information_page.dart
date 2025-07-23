@@ -301,7 +301,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 child: SizedBox(
                   child: Center(
                     child: const Icon(
-                      Icons.arrow_upward,
+                      Icons.expand_less,
                       color: Colors.white,
                       size: 36,
                     ),
@@ -354,7 +354,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                         labelText: loc.allergy),
 
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(

@@ -503,6 +503,108 @@ abstract class AppLocalizations {
   /// **'Details: Not entered'**
   String get detailsNotEntered;
 
+  /// No description provided for @symptomSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom Selection'**
+  String get symptomSelection;
+
+  /// No description provided for @symptomAllergy.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergy'**
+  String get symptomAllergy;
+
+  /// No description provided for @symptomStomachache.
+  ///
+  /// In en, this message translates to:
+  /// **'Stomachache'**
+  String get symptomStomachache;
+
+  /// No description provided for @symptomWound.
+  ///
+  /// In en, this message translates to:
+  /// **'Wound'**
+  String get symptomWound;
+
+  /// No description provided for @symptomFracture.
+  ///
+  /// In en, this message translates to:
+  /// **'Fracture'**
+  String get symptomFracture;
+
+  /// No description provided for @symptomMetabolic.
+  ///
+  /// In en, this message translates to:
+  /// **'Metabolic Syndrome'**
+  String get symptomMetabolic;
+
+  /// No description provided for @symptomCough.
+  ///
+  /// In en, this message translates to:
+  /// **'Cough'**
+  String get symptomCough;
+
+  /// No description provided for @symptomBackpain.
+  ///
+  /// In en, this message translates to:
+  /// **'Back Pain'**
+  String get symptomBackpain;
+
+  /// No description provided for @symptomFatigue.
+  ///
+  /// In en, this message translates to:
+  /// **'Fatigue'**
+  String get symptomFatigue;
+
+  /// No description provided for @symptomFever.
+  ///
+  /// In en, this message translates to:
+  /// **'Fever'**
+  String get symptomFever;
+
+  /// No description provided for @symptomSoreThroat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sore Throat'**
+  String get symptomSoreThroat;
+
+  /// No description provided for @symptomNausea.
+  ///
+  /// In en, this message translates to:
+  /// **'Nausea'**
+  String get symptomNausea;
+
+  /// No description provided for @symptomDizziness.
+  ///
+  /// In en, this message translates to:
+  /// **'Dizziness'**
+  String get symptomDizziness;
+
+  /// No description provided for @symptomNumbness.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbness'**
+  String get symptomNumbness;
+
+  /// No description provided for @symptomRash.
+  ///
+  /// In en, this message translates to:
+  /// **'Rash'**
+  String get symptomRash;
+
+  /// No description provided for @symptomJointPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Joint Pain'**
+  String get symptomJointPain;
+
+  /// No description provided for @symptomOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get symptomOther;
+
   /// No description provided for @affectedAreaSelection.
   ///
   /// In en, this message translates to:
@@ -658,6 +760,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choosing the level of pain'**
   String get choosingTheLevelOfPain;
+
+  /// No description provided for @causeAccident.
+  ///
+  /// In en, this message translates to:
+  /// **'Accident'**
+  String get causeAccident;
+
+  /// No description provided for @causeFallFromHeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Fall from height'**
+  String get causeFallFromHeight;
+
+  /// No description provided for @causeFall.
+  ///
+  /// In en, this message translates to:
+  /// **'Slipping'**
+  String get causeFall;
+
+  /// No description provided for @causeStrain.
+  ///
+  /// In en, this message translates to:
+  /// **'Strain'**
+  String get causeStrain;
+
+  /// No description provided for @causeContusion.
+  ///
+  /// In en, this message translates to:
+  /// **'Contusion'**
+  String get causeContusion;
+
+  /// No description provided for @causeUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get causeUnknown;
+
+  /// No description provided for @causeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get causeOther;
 
   /// No description provided for @labelAlcohol.
   ///

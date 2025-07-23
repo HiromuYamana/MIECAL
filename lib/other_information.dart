@@ -228,17 +228,18 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
   }
   String _getOtherInformationSummary() {
     final loc = AppLocalizations.of(context)!;
-    final List<String> labels = [loc.alcohol, loc.smoke, loc.medication, loc.pregnancy];
+    final List<String> labels = [
+      loc.alcohol,
+      loc.smoke,
+      loc.medication,
+      loc.pregnancy
+    ];
     List<String> summary = [];
 
     for (int i = 0; i < toggleValues.length; i++) {
       final value = toggleValues[i];
       String label = labels[i];
-      String result = value
-          ? loc.notSelected
-          : value
-              ? loc.yes // ← "はい"
-              : loc.no; // ← "いいえ"
+      String result = value ? loc.yes : loc.no;
       summary.add('$label: $result');
     }
 

@@ -217,6 +217,57 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailsNotEntered => '詳細：未入力';
 
   @override
+  String get symptomSelection => '症状選択';
+
+  @override
+  String get symptomAllergy => '鼻炎';
+
+  @override
+  String get symptomStomachache => '腹痛';
+
+  @override
+  String get symptomWound => '外傷';
+
+  @override
+  String get symptomFracture => '骨折';
+
+  @override
+  String get symptomMetabolic => 'メタボ';
+
+  @override
+  String get symptomCough => '咳';
+
+  @override
+  String get symptomBackpain => '腰痛';
+
+  @override
+  String get symptomFatigue => 'だるさ';
+
+  @override
+  String get symptomFever => '熱';
+
+  @override
+  String get symptomSoreThroat => 'のどの痛み';
+
+  @override
+  String get symptomNausea => '吐き気';
+
+  @override
+  String get symptomDizziness => 'めまい';
+
+  @override
+  String get symptomNumbness => 'しびれ';
+
+  @override
+  String get symptomRash => '湿疹';
+
+  @override
+  String get symptomJointPain => '関節痛';
+
+  @override
+  String get symptomOther => 'その他';
+
+  @override
   String get affectedAreaSelection => '患部選択';
 
   @override
@@ -295,6 +346,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get choosingTheLevelOfPain => '程度の選択';
 
   @override
+  String get causeAccident => '事故';
+
+  @override
+  String get causeFallFromHeight => '転落';
+
+  @override
+  String get causeFall => '転倒';
+
+  @override
+  String get causeStrain => '負荷';
+
+  @override
+  String get causeContusion => '打撲';
+
+  @override
+  String get causeUnknown => '不明';
+
+  @override
+  String get causeOther => 'その他';
+
+  @override
   String get labelAlcohol => '飲酒はしますか？';
 
   @override
@@ -331,8 +403,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get questionnaireLoginRequired => 'この問診票を閲覧するには、ログインが必要です。';
 
   @override
-  String get questionnairePermissionDenied =>
-      'この問診票を閲覧する権限がありません。承認された医師アカウントでログインしてください。';
+  String get questionnairePermissionDenied => 'この問診票を閲覧する権限がありません。承認された医師アカウントでログインしてください。';
 
   @override
   String get questionnaireIdMissing => '問診票IDが指定されていません。';

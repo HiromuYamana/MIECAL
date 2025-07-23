@@ -36,29 +36,25 @@ class SymptomPage extends StatefulWidget {
 }
 
 class _SymptomPageState extends State<SymptomPage> {
-  // 画像のパスと対応する日本語名をペアで保持するリスト
   final List<Map<String, String>> symptomItems = const [
-    {'path': 'assets/images/symptom/bienn.png', 'name': '鼻炎'},
-    {'path': 'assets/images/symptom/fukutuu.png', 'name': '腹痛'},
-    {'path': 'assets/images/symptom/gaishou.png', 'name': '外傷'},
-    {'path': 'assets/images/symptom/kossetu.png', 'name': '骨折'},
-    {'path': 'assets/images/symptom/metabo.png', 'name': 'メタボ'},
-    {'path': 'assets/images/symptom/seki.png', 'name': '咳'},
-    {'path': 'assets/images/symptom/youtuu.png', 'name': '腰痛'},
-
-    // 以下はダミー画像と仮定し、対応する日本語名を追加
-    {'path': 'assets/images/symptom/darusa.png', 'name': 'だるさ'},
-    {'path': 'assets/images/symptom/netu.png', 'name': '熱'},
-    {'path': 'assets/images/symptom/metabo.png', 'name': 'のどの痛み'},
-    {'path': 'assets/images/symptom/metabo.png', 'name': '吐き気'},
-
-    {'path': 'assets/images/symptom/metabo.png', 'name': 'めまい'},
-    {'path': 'assets/images/symptom/metabo.png', 'name': 'しびれ'},
-
-    {'path': 'assets/images/symptom/metabo.png', 'name': '湿疹'},
-    {'path': 'assets/images/symptom/metabo.png', 'name': '関節痛'},
-    {'path': 'assets/images/symptom/metabo.png', 'name': 'その他'},
+    {'path': 'assets/images/symptom/bienn.png', 'key': 'symptomAllergy'},
+    {'path': 'assets/images/symptom/fukutuu.png', 'key': 'symptomStomachache'},
+    {'path': 'assets/images/symptom/gaishou.png', 'key': 'symptomWound'},
+    {'path': 'assets/images/symptom/kossetu.png', 'key': 'symptomFracture'},
+    {'path': 'assets/images/symptom/metabo.png', 'key': 'symptomMetabolic'},
+    {'path': 'assets/images/symptom/seki.png', 'key': 'symptomCough'},
+    {'path': 'assets/images/symptom/youtuu.png', 'key': 'symptomBackpain'},
+    {'path': 'assets/images/symptom/darusa.png', 'key': 'symptomFatigue'},
+    {'path': 'assets/images/symptom/netu.png', 'key': 'symptomFever'},
+    {'path': 'assets/images/symptom/metabo.png', 'key': 'symptomSoreThroat'},
+    {'path': 'assets/images/symptom/metabo.png', 'key': 'symptomNausea'},
+    {'path': 'assets/images/symptom/metabo.png', 'key': 'symptomDizziness'},
+    {'path': 'assets/images/symptom/metabo.png', 'key': 'symptomNumbness'},
+    {'path': 'assets/images/symptom/metabo.png', 'key': 'symptomRash'},
+    {'path': 'assets/images/symptom/metabo.png', 'key': 'symptomJointPain'},
+    {'path': 'assets/images/symptom/metabo.png', 'key': 'symptomOther'},
   ];
+
 
   // 選択状態
   late List<bool> isSelected;
@@ -70,21 +66,62 @@ class _SymptomPageState extends State<SymptomPage> {
     isSelected = List.filled(symptomItems.length, false);
   }
 
+  String _getLocalizedSymptom(AppLocalizations loc, String key) {
+    switch (key) {
+      case 'symptomAllergy':
+        return loc.symptomAllergy;
+      case 'symptomStomachache':
+        return loc.symptomStomachache;
+      case 'symptomWound':
+        return loc.symptomWound;
+      case 'symptomFracture':
+        return loc.symptomFracture;
+      case 'symptomMetabolic':
+        return loc.symptomMetabolic;
+      case 'symptomCough':
+        return loc.symptomCough;
+      case 'symptomBackpain':
+        return loc.symptomBackpain;
+      case 'symptomFatigue':
+        return loc.symptomFatigue;
+      case 'symptomFever':
+        return loc.symptomFever;
+      case 'symptomSoreThroat':
+        return loc.symptomSoreThroat;
+      case 'symptomNausea':
+        return loc.symptomNausea;
+      case 'symptomDizziness':
+        return loc.symptomDizziness;
+      case 'symptomNumbness':
+        return loc.symptomNumbness;
+      case 'symptomRash':
+        return loc.symptomRash;
+      case 'symptomJointPain':
+        return loc.symptomJointPain;
+      case 'symptomOther':
+        return loc.symptomOther;
+      default:
+        return '';
+    }
+  }
+
   // 選択された症状を日本語名でまとめるヘルパー関数
   String _getSelectedSymptomSummary() {
+    final loc = AppLocalizations.of(context)!;
     List<String> selectedSymptoms = [];
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
-        selectedSymptoms.add(symptomItems[i]['name']!); // 日本語名を取得
+        final key = symptomItems[i]['key']!;
+        selectedSymptoms.add(_getLocalizedSymptom(loc, key));
       }
     }
-    return selectedSymptoms.isEmpty ? '未選択' : selectedSymptoms.join(', ');
+    return selectedSymptoms.isEmpty ? loc.notSelected : selectedSymptoms.join(', ');
   }
+
 
   @override
   Widget build(BuildContext context) {
-    final double topPadding = MediaQuery.of(context).padding.top;
-
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -126,7 +163,7 @@ class _SymptomPageState extends State<SymptomPage> {
             child:Container( 
               color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
-                child: const Text('症状選択', style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+                child: Text(loc.symptomSelection, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
               )
             ),
           ),
@@ -195,14 +232,14 @@ class _SymptomPageState extends State<SymptomPage> {
                               horizontal: 8,
                             ),
                             child: Text(
-                              symptomItems[index]['name']!, // 日本語名を表示
+                              _getLocalizedSymptom(loc, symptomItems[index]['key']!), // ← 修正済み
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
-                              overflow: TextOverflow.ellipsis, // 長すぎる場合は省略
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),

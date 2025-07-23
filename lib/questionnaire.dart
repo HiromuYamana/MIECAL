@@ -580,7 +580,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                   Center(
                     child: ElevatedButton(
                       onPressed: () => _showQrCodePage(context),
-                      child: const Text('QRコード作成 Create QRcode'),
+                      child: Text(loc.createQrCode),
                     ),
                   ),
                 ],
