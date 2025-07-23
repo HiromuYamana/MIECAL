@@ -40,18 +40,15 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
 
       final uid = user.uid;
 
-      await FirebaseFirestore.instance
-          .collection('doctor_applications')
-          .doc(uid)
-          .set({
-            'userId': uid,
-            'name': _nameController.text.trim(),
-            'hospital': _hospitalController.text.trim(),
-            'licenseNumber': _licenseNumberController.text.trim(),
-            'notes': _notesController.text.trim(),
-            'status': 'pending',
-            'timestamp': FieldValue.serverTimestamp(),
-          });
+      await FirebaseFirestore.instance.collection('doctor_applications').doc(uid).set({
+        'userId': uid,
+        'name': _nameController.text.trim(),
+        'hospital': _hospitalController.text.trim(),
+        'license_number': _licenseNumberController.text.trim(),
+        'note': _notesController.text.trim(),
+        'status': 'pending',
+        'timestamp': FieldValue.serverTimestamp(),
+      });
 
       ScaffoldMessenger.of(
         context,
@@ -76,11 +73,8 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
   }
 
   Widget _buildTextField(
-    TextEditingController controller,
-    String hintText,
-    IconData icon, {
-    int maxLines = 1,
-  }) {
+    TextEditingController controller, String hintText, IconData icon,
+    {int maxLines = 1, bool isOptional = false}) {
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
@@ -88,12 +82,14 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
         hintText: hintText,
         prefixIcon: Icon(icon),
         contentPadding: const EdgeInsets.symmetric(vertical: 18),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
         filled: true,
         fillColor: Colors.white,
       ),
       validator: (value) {
-        if (value == null || value.trim().isEmpty) {
+        if (!isOptional && (value == null || value.trim().isEmpty)) {
           return '$hintText を入力してください';
         }
         return null;
@@ -155,64 +151,33 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      _buildTextField(
-                        _nameController,
-                        '氏名',
-                        Icons.person_outline,
-                      ),
+                      _buildTextField(_nameController, '氏名', Icons.person_outline),
                       const SizedBox(height: 20),
-                      _buildTextField(
-                        _hospitalController,
-                        '所属医療機関',
-                        Icons.local_hospital_outlined,
-                      ),
+                      _buildTextField(_hospitalController, '所属医療機関', Icons.local_hospital_outlined),
                       const SizedBox(height: 20),
-                      _buildTextField(
-                        _licenseNumberController,
-                        '医師ライセンス番号',
-                        Icons.badge_outlined,
-                      ),
+                      _buildTextField(_licenseNumberController, '医師登録番号', Icons.badge_outlined),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _notesController,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          hintText: '備考（任意）',
-                          prefixIcon: const Icon(Icons.note_alt_outlined),
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 18,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                      ),
+                      _buildTextField(_notesController, '備考（任意）', Icons.note_alt_outlined, maxLines: 3, isOptional: true),
                       const SizedBox(height: 20),
 
                       if (errorMessage.isNotEmpty)
-                        Text(
-                          errorMessage,
-                          style: const TextStyle(color: Colors.red),
-                        ),
+                        Text(errorMessage, style: const TextStyle(color: Colors.red)),
                       const SizedBox(height: 20),
 
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed: _isSubmitting ? null : _submitApplication,
-                          icon:
-                              _isSubmitting
-                                  ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                  : const Icon(Icons.send_rounded),
+                          icon: _isSubmitting
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(Icons.send_rounded),
                           label: Text(
                             _isSubmitting ? '送信中...' : '申請する',
                             style: const TextStyle(
@@ -221,30 +186,21 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              18,
-                              81,
-                              241,
-                            ),
+                            backgroundColor: const Color.fromARGB(255, 18, 81, 241),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 14,
-                              horizontal: 16,
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                             elevation: 6,
                             shadowColor: Colors.black.withOpacity(0.2),
                           ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
               ),
-
               const SizedBox(height: 32),
             ],
           ),
