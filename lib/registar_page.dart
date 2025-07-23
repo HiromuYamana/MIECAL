@@ -244,6 +244,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      const SizedBox(height: 25),
                       Text(
                         loc.createNewAccount,
                         style: GoogleFonts.montserrat(
@@ -315,7 +316,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       GestureDetector(
                         onTap: isLoading ? null : signInWithGoogle,
                         child: Image.asset(
-                          'assets/google_light_new.png',
+                          'assets/images/login/google_light_new.png',
                           fit: BoxFit.contain,
                         ),
                       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:miecal/couse.dart';
-
 import 'package:miecal/questionnaire.dart';
 import 'package:miecal/suffer_level.dart';
 import 'package:miecal/symptom.dart';
@@ -23,17 +22,18 @@ import 'package:miecal/terms_of_service_page.dart';
 import 'package:miecal/role_provider.dart';
 import 'package:miecal/admin_approval_page.dart';
 import 'package:miecal/doctor_application_page.dart';
-
-// ↓ 追加: QuestionnaireDisplayPage をインポート
 import 'package:miecal/questionnaire_display_page.dart';
-// ↓ 追加: Web環境かどうかを判定するためのインポート
+
+// Web向けのインポートは後で条件分岐する
 import 'package:flutter/foundation.dart' show kIsWeb;
-// ↓ 追加: WebのURLを解析するためのインポート
-import 'dart:html' as html;
+import 'package:miecal/utils/get_current_uri.dart';
 
 void main() async {
+  Uri? currentUri = getCurrentUri();
+  print("Current URI: $currentUri");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(
     MultiProvider(
       providers: [
@@ -64,17 +64,22 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
     if (kIsWeb) {
-      final uri = Uri.parse(html.window.location.href);
-      // ↓ ここを修正: パスセグメントからIDを抽出
-      if (uri.pathSegments.length >= 2 &&
-          uri.pathSegments[0] == 'questionnaire_records') {
+      // Web向け処理
+      final uri = Uri.parse(Uri.base.toString());
+      if (uri.pathSegments.length >= 2 && uri.pathSegments[0] == 'questionnaire_records') {
         _initialRecordId = uri.pathSegments[1];
-        print(
-          'MainApp: Initial URL (Path Segment) Record ID: $_initialRecordId',
-        );
+        print('MainApp: Initial URL Record ID: $_initialRecordId');
       } else {
         print('MainApp: No valid questionnaire_records ID found in path.');
+      }
+    } else {
+      // モバイル向けURL解析
+      final uri = getCurrentUri();
+      if (uri != null && uri.pathSegments.length >= 2 && uri.pathSegments[0] == 'questionnaire_records') {
+        _initialRecordId = uri.pathSegments[1];
+        print('MainApp: Initial URL Record ID: $_initialRecordId');
       }
     }
   }
@@ -87,36 +92,30 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-//      initialRoute: '/',
       routes: {
-//        '/': (context) => const TopPage(),
         '/LoginPage': (context) => const LoginScreen(),
         '/RegisterPage': (context) => const RegisterPage(),
-        '/PersonalInformationPage':
-            (context) => const PersonalInformationPage(),
+        '/PersonalInformationPage': (context) => const PersonalInformationPage(),
         '/Menupage': (context) {
           final Map<String, dynamic>? args =
-              ModalRoute.of(context)?.settings.arguments
-                  as Map<String, dynamic>?;
+              ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
           return MenuPage(
             userName: args?['userName'] as String?,
-            userDateOfBirth: args?['userDateOfBirth'] as DateTime?, // 例: 生年月日
+            userDateOfBirth: args?['userDateOfBirth'] as DateTime?,
             userHome: args?['userHome'] as String?,
             userGender: args?['userGender'] as String?,
             userTelNum: args?['userTelNum'] as String?,
-            selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?, // 発症日
-            symptom: args?['symptom'] as String?, // 症状
-            affectedArea: args?['affectedArea'] as String?, // 患部
-            sufferLevel: args?['sufferLevel'] as String?, // 程度
-            cause: args?['cause'] as String?, // 原因
-            otherInformation: args?['otherInformation'] as String?, // その他情報
+            selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?,
+            symptom: args?['symptom'] as String?,
+            affectedArea: args?['affectedArea'] as String?,
+            sufferLevel: args?['sufferLevel'] as String?,
+            cause: args?['cause'] as String?,
+            otherInformation: args?['otherInformation'] as String?,
           );
         },
         '/SymptomPage': (context) {
           final Map<String, dynamic>? args =
-              ModalRoute.of(context)?.settings.arguments
-                  as Map<String, dynamic>?;
-
+              ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
           return SymptomPage(
             userName: args?['userName'] as String?,
             userDateOfBirth: args?['userDateOfBirth'] as DateTime?,
@@ -142,30 +141,25 @@ class _MyAppState extends State<MyApp> {
         '/TermsOfServicePage': (context) => const TermsOfServicePage(),
         '/QuestionnairePage': (context) {
           final Map<String, dynamic>? args =
-              ModalRoute.of(context)?.settings.arguments
-                  as Map<String, dynamic>?;
-
+              ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
           return QuestionnairePage(
             userName: args?['userName'] as String?,
-            userDateOfBirth: args?['userDateOfBirth'] as DateTime?, // 例: 生年月日
+            userDateOfBirth: args?['userDateOfBirth'] as DateTime?,
             userHome: args?['userHome'] as String?,
             userGender: args?['userGender'] as String?,
             userTelNum: args?['userTelNum'] as String?,
-            selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?, // 発症日
-            symptom: args?['symptom'] as String?, // 症状
-            affectedArea: args?['affectedArea'] as String?, // 患部
-            sufferLevel: args?['sufferLevel'] as String?, // 程度
-            cause: args?['cause'] as String?, // 原因
-            otherInformation: args?['otherInformation'] as String?, // その他情報
+            selectedOnsetDay: args?['selectedOnsetDay'] as DateTime?,
+            symptom: args?['symptom'] as String?,
+            affectedArea: args?['affectedArea'] as String?,
+            sufferLevel: args?['sufferLevel'] as String?,
+            cause: args?['cause'] as String?,
+            otherInformation: args?['otherInformation'] as String?,
           );
         },
       },
-      home:
-          _initialRecordId != null && _initialRecordId!.isNotEmpty
-              ? QuestionnaireDisplayPage(
-                questionnaireRecordId: _initialRecordId!,
-              )
-              : const TopPage(),
+      home: _initialRecordId != null && _initialRecordId!.isNotEmpty
+          ? QuestionnaireDisplayPage(questionnaireRecordId: _initialRecordId!)
+          : const TopPage(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
       ),
