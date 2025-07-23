@@ -44,8 +44,8 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
         'userId': uid,
         'name': _nameController.text.trim(),
         'hospital': _hospitalController.text.trim(),
-        'licenseNumber': _licenseNumberController.text.trim(),
-        'notes': _notesController.text.trim(),
+        'license_number': _licenseNumberController.text.trim(),
+        'note': _notesController.text.trim(),
         'status': 'pending',
         'timestamp': FieldValue.serverTimestamp(),
       });
@@ -72,157 +72,140 @@ class _DoctorApplicationPageState extends State<DoctorApplicationPage> {
     super.dispose();
   }
 
-Widget _buildTextField(
+  Widget _buildTextField(
     TextEditingController controller, String hintText, IconData icon,
-    {int maxLines = 1}) {
-  return TextFormField(
-    controller: controller,
-    maxLines: maxLines,
-    decoration: InputDecoration(
-      hintText: hintText,
-      prefixIcon: Icon(icon),
-      contentPadding: const EdgeInsets.symmetric(vertical: 18),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30),
+    {int maxLines = 1, bool isOptional = false}) {
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        hintText: hintText,
+        prefixIcon: Icon(icon),
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        filled: true,
+        fillColor: Colors.white,
       ),
-      filled: true,
-      fillColor: Colors.white,
-    ),
-    validator: (value) {
-      if (value == null || value.trim().isEmpty) {
-        return '$hintText を入力してください';
-      }
-      return null;
-    },
-  );
-}
-
+      validator: (value) {
+        if (!isOptional && (value == null || value.trim().isEmpty)) {
+          return '$hintText を入力してください';
+        }
+        return null;
+      },
+    );
+  }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-    appBar: AppBar(
-      title: const Text(
-        "MIECAL",
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 24,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      appBar: AppBar(
+        title: const Text(
+          "MIECAL",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
         ),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 75, 170, 248),
+        automaticallyImplyLeading: true,
       ),
-      centerTitle: true,
-      backgroundColor: const Color.fromARGB(255, 75, 170, 248),
-      automaticallyImplyLeading: true,
-    ),
-    body: Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 32),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 32),
 
-            // 🔹 タイトル（カードの外）
-            Text(
-              '医師申請フォーム',
-              style: GoogleFonts.montserrat(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            // 🔸 中央の白カードボックス（フォーム）
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 12,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildTextField(_nameController, '氏名', Icons.person_outline),
-                    const SizedBox(height: 20),
-                    _buildTextField(_hospitalController, '所属医療機関', Icons.local_hospital_outlined),
-                    const SizedBox(height: 20),
-                    _buildTextField(_licenseNumberController, '医師登録番号', Icons.badge_outlined),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _notesController,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        hintText: '備考（任意）',
-                        prefixIcon: const Icon(Icons.note_alt_outlined),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    if (errorMessage.isNotEmpty)
-                      Text(errorMessage, style: const TextStyle(color: Colors.red)),
-                    const SizedBox(height: 20),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: _isSubmitting ? null : _submitApplication,
-                        icon: _isSubmitting
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Icon(Icons.send_rounded),
-                        label: Text(
-                          _isSubmitting ? '送信中...' : '申請する',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 18, 81, 241),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                          elevation: 6,
-                          shadowColor: Colors.black.withOpacity(0.2),
-                        ),
-                      ),
-                    )
-
-                  ],
+              // 🔹 タイトル（カードの外）
+              Text(
+                '医師申請フォーム',
+                style: GoogleFonts.montserrat(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
               ),
-            ),
+              const SizedBox(height: 32),
 
-            const SizedBox(height: 32),
-          ],
+              // 🔸 中央の白カードボックス（フォーム）
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 12,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      _buildTextField(_nameController, '氏名', Icons.person_outline),
+                      const SizedBox(height: 20),
+                      _buildTextField(_hospitalController, '所属医療機関', Icons.local_hospital_outlined),
+                      const SizedBox(height: 20),
+                      _buildTextField(_licenseNumberController, '医師登録番号', Icons.badge_outlined),
+                      const SizedBox(height: 20),
+                      _buildTextField(_notesController, '備考（任意）', Icons.note_alt_outlined, maxLines: 3, isOptional: true),
+                      const SizedBox(height: 20),
+
+                      if (errorMessage.isNotEmpty)
+                        Text(errorMessage, style: const TextStyle(color: Colors.red)),
+                      const SizedBox(height: 20),
+
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: _isSubmitting ? null : _submitApplication,
+                          icon: _isSubmitting
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(Icons.send_rounded),
+                          label: Text(
+                            _isSubmitting ? '送信中...' : '申請する',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 18, 81, 241),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                            elevation: 6,
+                            shadowColor: Colors.black.withOpacity(0.2),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }
